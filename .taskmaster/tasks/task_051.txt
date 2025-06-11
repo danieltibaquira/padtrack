@@ -1,0 +1,49 @@
+# Task ID: 51
+# Title: Implement Scale and Chord Modes
+# Status: pending
+# Dependencies: 50
+# Priority: medium
+# Description: Add scale and chord modes for the sequencer and keyboard.
+# Details:
+Implement scale and chord modes with:
+- Scale selection (major, minor, modes, etc.)
+- Chord selection and voicing
+- Scale/chord highlighting on the keyboard
+- Scale-constrained sequencing
+
+Add scale and chord settings to the data model. Implement UI for selecting scales and chords. Add scale highlighting on the keyboard. Implement scale-constrained sequencing to keep notes within the selected scale.
+
+# Test Strategy:
+Test scale selection and highlighting. Verify that scale-constrained sequencing works correctly. Test with various scales and chords. Test changing scales during playback.
+
+# Subtasks:
+## 1. Implement Scale Mode UI [pending]
+### Dependencies: None
+### Description: Create the user interface for the scale mode, including note display and selection
+### Details:
+1. Design UI mockups for scale mode
+2. Implement view controller and view model following VIPER architecture
+3. Create unit tests for view model logic
+4. Implement UI elements (buttons, labels, etc.)
+5. Add UI automation tests for basic interactions
+
+## 2. Develop Chord Mode Functionality [pending]
+### Dependencies: None
+### Description: Implement the core logic for chord mode, including chord recognition and display
+### Details:
+1. Define chord data structures and algorithms
+2. Implement chord recognition logic in the interactor layer
+3. Create unit tests for chord recognition
+4. Integrate chord logic with UI in the presenter
+5. Implement integration tests for chord mode functionality
+
+## 3. Integrate Scale and Chord Modes [pending]
+### Dependencies: 51.2
+### Description: Combine scale and chord modes, ensuring smooth transitions and data sharing between modes
+### Details:
+1. Implement mode switching mechanism
+2. Ensure data consistency between modes
+3. Create integration tests for mode switching
+4. Implement UI for mode selection
+5. Add UI automation tests for full workflow between modes
+

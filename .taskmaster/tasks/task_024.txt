@@ -1,0 +1,47 @@
+# Task ID: 24
+# Title: Implement WAVETONE Parameter Pages
+# Status: pending
+# Dependencies: 16, 23
+# Priority: medium
+# Description: Create the parameter pages for the WAVETONE machine.
+# Details:
+Implement parameter pages for WAVETONE with:
+- Page 1 (OSC): TUN, WAV, PD, LEV for each oscillator
+- Page 2 (MOD): OFS, TBL, MOD, RSET, DRIF
+- Page 3 (NOISE): ATK, HOLD, DEC, NLEV, BASE, WDTH, TYPE, CHAR
+- Page 4: Additional modulation and fine-tuning parameters
+
+Bind UI controls to the corresponding parameters in the WAVETONE machine. Implement proper value formatting and display. Use VIPER architecture with separate View, Interactor, Presenter, and Router components.
+
+# Test Strategy:
+Test that UI controls correctly update the underlying parameters. Verify that parameter changes are reflected in the audio output. Test parameter ranges and edge cases.
+
+# Subtasks:
+## 1. Set up VIPER architecture for wavetone parameter pages [pending]
+### Dependencies: None
+### Description: Implement the basic VIPER architecture components (View, Interactor, Presenter, Entity, Router) for the wavetone parameter pages
+### Details:
+1. Create protocol definitions for each VIPER component
+2. Implement empty classes for View, Interactor, Presenter, and Router
+3. Set up basic communication between components
+4. Write unit tests for each component's responsibilities
+
+## 2. Develop UI for wavetone parameter pages [pending]
+### Dependencies: None
+### Description: Create the user interface for wavetone parameter pages using a test-driven approach
+### Details:
+1. Design and implement UI components (sliders, buttons, labels)
+2. Create UI tests using XCTest framework
+3. Implement view logic in the View component
+4. Ensure proper data binding between View and Presenter
+
+## 3. Implement wavetone parameter functionality [pending]
+### Dependencies: 24.2
+### Description: Develop the core functionality for manipulating wavetone parameters using TDD
+### Details:
+1. Implement Interactor logic for parameter manipulation
+2. Write unit tests for each parameter function
+3. Integrate Interactor with Presenter
+4. Develop integration tests for full VIPER stack
+5. Implement UI automation tests for end-to-end functionality
+

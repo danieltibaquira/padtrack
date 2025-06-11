@@ -1,0 +1,48 @@
+# Task ID: 35
+# Title: Implement Variable Pattern Length
+# Status: pending
+# Dependencies: 6, 19
+# Priority: medium
+# Description: Add support for variable pattern lengths up to 128 steps.
+# Details:
+Implement variable pattern length with:
+- UI for setting pattern length (1-128 steps)
+- Storage in the data model
+- Visual indication of pattern length
+- Proper handling during playback
+
+Add pattern length to the Pattern entity. Implement UI controls for setting the length. Update the sequencer to respect the pattern length during playback. Add visual indication of the pattern length in the step grid.
+
+# Test Strategy:
+Test patterns with various lengths. Verify that playback correctly loops at the pattern end. Test changing pattern length during playback. Test with extreme values (1 step, 128 steps).
+
+# Subtasks:
+## 1. Design VIPER architecture for variable pattern length [pending]
+### Dependencies: None
+### Description: Create a detailed VIPER architecture design for implementing variable pattern length functionality
+### Details:
+1. Define interfaces for View, Interactor, Presenter, Entity, and Router
+2. Create class stubs for each VIPER component
+3. Design data flow between components
+4. Document component responsibilities
+
+## 2. Implement core logic for variable pattern length [pending]
+### Dependencies: None
+### Description: Develop the core logic for handling variable pattern length using TDD approach
+### Details:
+1. Write unit tests for pattern generation logic
+2. Implement pattern generation function
+3. Write unit tests for pattern validation
+4. Implement pattern validation function
+5. Refactor and optimize code
+
+## 3. Create UI for variable pattern length input [pending]
+### Dependencies: 35.2
+### Description: Develop the user interface for inputting and displaying variable pattern length
+### Details:
+1. Design UI mockups for pattern input
+2. Implement UI components using SwiftUI
+3. Write UI automation tests
+4. Integrate UI with VIPER architecture
+5. Perform usability testing
+

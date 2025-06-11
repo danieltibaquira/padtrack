@@ -1,0 +1,48 @@
+# Task ID: 50
+# Title: Implement On-Screen Keyboard
+# Status: pending
+# Dependencies: 7
+# Priority: high
+# Description: Create the on-screen musical keyboard for note input.
+# Details:
+Implement the on-screen keyboard with:
+- Piano-style layout with multiple octaves
+- Velocity sensitivity based on touch position
+- Octave shift controls
+- Scale and chord highlighting
+
+Implement the UI for the on-screen keyboard. Add touch handling for note input with velocity. Implement octave shift controls. Add scale and chord highlighting for musical guidance.
+
+# Test Strategy:
+Test note input from the keyboard. Verify that velocity is correctly captured based on touch position. Test octave shifting. Test scale and chord highlighting with various scales and chords.
+
+# Subtasks:
+## 1. Design On-Screen Keyboard UI [pending]
+### Dependencies: None
+### Description: Create a basic UI design for the on-screen keyboard using VIPER architecture principles
+### Details:
+1. Define keyboard layout and key placement
+2. Create UI mockups for normal and pressed key states
+3. Design a simple view for the text input area
+4. Implement basic UI elements without functionality
+
+## 2. Implement Key Press Functionality [pending]
+### Dependencies: None
+### Description: Develop the core functionality for key presses using test-driven development
+### Details:
+1. Write unit tests for key press events
+2. Implement key press logic in the Interactor
+3. Create a Presenter to handle UI updates
+4. Connect the View to display pressed keys
+5. Run and refine unit tests
+
+## 3. Integrate Text Input and Testing [pending]
+### Dependencies: 50.2
+### Description: Connect keyboard input to text display and implement comprehensive testing
+### Details:
+1. Implement text input area update logic
+2. Write integration tests for keyboard and text input
+3. Develop UI automation tests for full keyboard functionality
+4. Perform end-to-end testing of the on-screen keyboard
+5. Refactor and optimize based on test results
+

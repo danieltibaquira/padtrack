@@ -1,0 +1,48 @@
+# Task ID: 18
+# Title: Implement Multi-Mode Filter Parameter Page
+# Status: pending
+# Dependencies: 10, 16
+# Priority: high
+# Description: Create the parameter page for the Multi-Mode filter.
+# Details:
+Implement the parameter page for the Multi-Mode filter with:
+- CUTOFF: Filter cutoff frequency
+- RESO: Resonance amount
+- TYPE: Filter type morphing (LP-BP-HP)
+- DRIVE: Saturation amount
+- ENV: Envelope modulation amount
+- TRACK: Keyboard tracking amount
+
+Bind UI controls to the corresponding parameters in the Multi-Mode filter. Implement proper value formatting and display. Use VIPER architecture with separate View, Interactor, Presenter, and Router components.
+
+# Test Strategy:
+Test that UI controls correctly update the underlying parameters. Verify that parameter changes are reflected in the audio output. Test parameter ranges and edge cases.
+
+# Subtasks:
+## 1. Set up VIPER architecture for filter parameter page [pending]
+### Dependencies: None
+### Description: Create the basic VIPER structure (View, Interactor, Presenter, Entity, Router) for the multi-mode filter parameter page
+### Details:
+1. Create empty protocol files for View, Interactor, Presenter, and Router
+2. Implement basic Entity structs for filter parameters
+3. Set up unit test files for each VIPER component
+
+## 2. Implement UI for filter parameter page [pending]
+### Dependencies: None
+### Description: Design and implement the user interface for the multi-mode filter parameter page using TDD
+### Details:
+1. Write UI tests for each UI component
+2. Implement UI components (text fields, dropdowns, switches) for filter parameters
+3. Create a layout that adapts to different filter modes
+4. Implement UI tests using XCTest framework
+
+## 3. Develop filter parameter logic and integration [pending]
+### Dependencies: 18.2
+### Description: Implement the business logic for filter parameters and integrate it with the UI
+### Details:
+1. Write unit tests for filter parameter logic in the Interactor
+2. Implement filter parameter logic in the Interactor
+3. Write integration tests for Presenter-Interactor communication
+4. Implement Presenter logic to handle user interactions and update the View
+5. Write UI automation tests for the complete filter parameter page
+

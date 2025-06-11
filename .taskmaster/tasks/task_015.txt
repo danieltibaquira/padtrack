@@ -1,0 +1,62 @@
+# Task ID: 15
+# Title: Design Main Application Layout
+# Status: pending
+# Dependencies: 7
+# Priority: high
+# Description: Create the main application layout mimicking the Digitone hardware interface.
+# Details:
+Design the main application layout with:
+- Top section with LCD display area
+- Middle section with function buttons and encoders
+- Bottom section with 16 step buttons and transport controls
+- Navigation buttons for page selection
+- Mode selection buttons (GRID, LIVE, STEP)
+
+Use SwiftUI GeometryReader for responsive layout. Create a layout that works in both portrait and landscape orientations. Match the hardware aesthetic with appropriate colors, spacing, and typography.
+
+# Test Strategy:
+Test the layout on different iPad models and orientations. Verify that all UI elements are accessible and correctly positioned. Test with VoiceOver to ensure accessibility.
+
+# Subtasks:
+## 1. Create basic responsive layout structure [pending]
+### Dependencies: None
+### Description: Implement the foundational responsive layout structure using flexbox or grid
+### Details:
+Set up a container with three main sections (top, middle, bottom). Use media queries for different screen sizes. Ensure the layout adapts to both portrait and landscape orientations.
+
+## 2. Design and implement top section [pending]
+### Dependencies: None
+### Description: Create the top section of the layout, mimicking hardware aesthetics
+### Details:
+Design the top section to resemble physical hardware elements. Include status indicators, time display, and any other relevant information. Ensure proper scaling and positioning for different screen sizes.
+
+## 3. Design and implement middle section [pending]
+### Dependencies: None
+### Description: Create the middle section of the layout, focusing on the main content area
+### Details:
+Design the middle section to display the primary content. Implement scrolling if necessary. Ensure content adapts well to different screen sizes and orientations.
+
+## 4. Design and implement bottom section [pending]
+### Dependencies: None
+### Description: Create the bottom section of the layout, including navigation elements
+### Details:
+Design the bottom section to include navigation buttons or other interactive elements. Ensure proper spacing and touch targets for mobile devices. Adapt the layout for different screen sizes and orientations.
+
+## 5. Implement orientation handling [pending]
+### Dependencies: 15.2, 15.3, 15.4
+### Description: Ensure smooth transitions and appropriate layouts for both portrait and landscape orientations
+### Details:
+Implement JavaScript to detect orientation changes. Adjust layouts and element positioning based on the current orientation. Test and refine transitions between orientations.
+
+## 6. Implement accessibility features [pending]
+### Dependencies: 15.2, 15.3, 15.4
+### Description: Ensure the layout is accessible to users with disabilities
+### Details:
+Add appropriate ARIA labels and roles. Ensure proper heading structure. Implement keyboard navigation. Test with screen readers and other assistive technologies.
+
+## 7. Create and apply styling system [pending]
+### Dependencies: 15.2, 15.3, 15.4, 15.5, 15.6
+### Description: Develop a consistent styling system and apply it across the layout
+### Details:
+Create a set of reusable CSS classes or a CSS-in-JS system. Define color schemes, typography, and component styles. Apply the styling system consistently across all sections of the layout.
+

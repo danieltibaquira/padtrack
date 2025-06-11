@@ -1,0 +1,48 @@
+# Task ID: 33
+# Title: Implement LIVE Recording Mode
+# Status: pending
+# Dependencies: 19
+# Priority: high
+# Description: Create the LIVE recording mode for real-time input.
+# Details:
+Implement LIVE recording mode with:
+- Real-time note recording from on-screen keyboard
+- Quantization options
+- Record enable/disable
+- Count-in and metronome
+
+Implement the UI and interaction logic for LIVE mode. Add support for recording notes in real-time. Implement quantization to align notes to the grid. Add metronome functionality for timing reference.
+
+# Test Strategy:
+Test note recording with various quantization settings. Verify that notes are correctly stored in the data model. Test with different tempos and time signatures. Test record enable/disable functionality.
+
+# Subtasks:
+## 1. Set up VIPER architecture for live recording module [pending]
+### Dependencies: None
+### Description: Implement the basic VIPER architecture components for the live recording feature, including View, Interactor, Presenter, Entity, and Router.
+### Details:
+1. Create protocol definitions for each VIPER component
+2. Implement empty classes for View, Interactor, Presenter, Entity, and Router
+3. Set up dependency injection for the module
+4. Write unit tests for each component's basic functionality
+
+## 2. Implement core live recording functionality [pending]
+### Dependencies: None
+### Description: Develop the core functionality for live audio recording, focusing on the Interactor and Entity components.
+### Details:
+1. Implement audio capture using AVFoundation
+2. Create data models for recorded audio (Entity)
+3. Develop methods in Interactor to start, stop, and pause recording
+4. Write unit tests for recording functionality
+5. Implement integration tests between Interactor and Entity
+
+## 3. Design and implement UI for live recording [pending]
+### Dependencies: 33.2
+### Description: Create the user interface for the live recording feature, focusing on the View and Presenter components.
+### Details:
+1. Design UI mockups for recording screen
+2. Implement UI elements in View (record button, timer, waveform visualization)
+3. Develop Presenter logic to update View based on recording state
+4. Write unit tests for Presenter logic
+5. Implement UI automation tests for recording interactions
+

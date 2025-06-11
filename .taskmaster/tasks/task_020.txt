@@ -1,0 +1,48 @@
+# Task ID: 20
+# Title: Implement Parameter Lock (P-Lock) Functionality
+# Status: pending
+# Dependencies: 3, 6, 19
+# Priority: high
+# Description: Create the system for step-based parameter automation (P-Locks).
+# Details:
+Implement P-Lock functionality with:
+- Hold step + turn encoder to create a P-Lock
+- Visual indication of P-Locked parameters
+- Storage in the data model
+- Playback during sequencer operation
+
+Store P-Locks in the Trig entity with parameter ID and value. Implement efficient lookup during playback. Add UI for viewing and editing P-Locks.
+
+# Test Strategy:
+Test creating, editing, and deleting P-Locks. Verify that P-Locks are correctly applied during playback. Test with multiple P-Locks on a single step. Test P-Locks across different parameter pages.
+
+# Subtasks:
+## 1. Design and implement P-Lock UI [pending]
+### Dependencies: None
+### Description: Create the user interface for parameter lock functionality following VIPER architecture
+### Details:
+1. Design P-Lock UI mockups
+2. Implement View and Presenter components
+3. Create UI unit tests
+4. Implement UI automation tests
+
+## 2. Develop P-Lock core functionality [pending]
+### Dependencies: None
+### Description: Implement the core logic for parameter locking using test-driven development
+### Details:
+1. Write unit tests for Interactor
+2. Implement Interactor logic
+3. Create Entity models
+4. Develop Router for navigation
+5. Write integration tests
+
+## 3. Integrate P-Lock with existing modules [pending]
+### Dependencies: 20.2
+### Description: Ensure proper integration of P-Lock functionality with other system components
+### Details:
+1. Identify integration points
+2. Update affected modules
+3. Write integration tests
+4. Perform end-to-end testing
+5. Update documentation
+

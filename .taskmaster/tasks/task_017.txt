@@ -1,0 +1,46 @@
+# Task ID: 17
+# Title: Implement FM TONE Parameter Pages
+# Status: pending
+# Dependencies: 9, 16
+# Priority: high
+# Description: Create the parameter pages for the FM TONE machine.
+# Details:
+Implement the 4 parameter pages for FM TONE:
+- Page 1 (Core FM): ALGO, RATIO C/A/B, HARM, DTUN, FDBK, MIX
+- Page 2 (Modulator Levels & Envelopes): ATK, DEC, END, LEV for modulator operators A and B
+- Page 3 (Envelope Behavior): Envelope delay, trig mode, and phase reset controls
+- Page 4 (Offsets & Key Tracking): Fine-tuning for operator ratios and keyboard tracking
+
+Bind UI controls to the corresponding parameters in the FM TONE machine. Implement proper value formatting and display. Use VIPER architecture with separate View, Interactor, Presenter, and Router components.
+
+# Test Strategy:
+Test that UI controls correctly update the underlying parameters. Verify that parameter changes are reflected in the audio output. Test parameter ranges and edge cases.
+
+# Subtasks:
+## 1. Design FM Tone Parameter UI [pending]
+### Dependencies: None
+### Description: Create a detailed UI design for the FM tone parameter pages, focusing on user-friendly layouts and intuitive controls.
+### Details:
+1. Sketch wireframes for FM tone parameter pages
+2. Design UI components (sliders, knobs, buttons)
+3. Create a style guide for consistent look and feel
+4. Implement responsive design for various screen sizes
+
+## 2. Implement FM Tone Parameter View [pending]
+### Dependencies: None
+### Description: Develop the View component for FM tone parameters using VIPER architecture and TDD methodology.
+### Details:
+1. Set up VIPER folder structure for FM tone module
+2. Write unit tests for View component
+3. Implement View UI based on design from subtask 1
+4. Create UI automation tests for basic interactions
+
+## 3. Develop FM Tone Parameter Interactor [pending]
+### Dependencies: 17.2
+### Description: Create the Interactor component to handle FM tone parameter logic and data management.
+### Details:
+1. Define Interactor protocol and write unit tests
+2. Implement Interactor methods for parameter manipulation
+3. Create integration tests for Interactor and View communication
+4. Refactor and optimize based on test results
+

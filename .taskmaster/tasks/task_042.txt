@@ -1,0 +1,49 @@
+# Task ID: 42
+# Title: Implement MIDI Input for Live Recording
+# Status: pending
+# Dependencies: 33, 41
+# Priority: medium
+# Description: Add support for recording notes from external MIDI controllers.
+# Details:
+Implement MIDI input for live recording with:
+- MIDI note to sequencer note mapping
+- Velocity and aftertouch handling
+- Integration with LIVE recording mode
+- MIDI channel routing to tracks
+
+Connect MIDI input to the sequencer's live recording functionality. Implement mapping from MIDI notes to sequencer notes. Add support for velocity and aftertouch. Implement MIDI channel routing to direct input to specific tracks.
+
+# Test Strategy:
+Test recording notes from MIDI input. Verify that notes, velocity, and aftertouch are correctly captured. Test with different MIDI controllers. Test MIDI channel routing to tracks.
+
+# Subtasks:
+## 1. Set up MIDI input module [pending]
+### Dependencies: None
+### Description: Create a MIDI input module following VIPER architecture principles
+### Details:
+1. Create Interactor for MIDI input handling
+2. Implement Presenter for MIDI data processing
+3. Design Entity for MIDI message representation
+4. Develop Router for MIDI-related navigation
+5. Write unit tests for each component
+
+## 2. Implement live recording UI [pending]
+### Dependencies: None
+### Description: Develop a user interface for live MIDI recording
+### Details:
+1. Design UI mockups for recording interface
+2. Implement View component with record button and visual feedback
+3. Connect View to Presenter from MIDI input module
+4. Create UI automation tests for recording functionality
+5. Conduct usability testing with sample users
+
+## 3. Integrate MIDI recording with existing modules [pending]
+### Dependencies: 42.2
+### Description: Ensure proper integration of MIDI recording with other app components
+### Details:
+1. Update existing modules to accommodate MIDI recording feature
+2. Implement integration tests between MIDI and other modules
+3. Refactor code to maintain VIPER architecture principles
+4. Perform end-to-end testing of MIDI recording workflow
+5. Document integration points and API changes
+

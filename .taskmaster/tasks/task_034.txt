@@ -1,0 +1,44 @@
+# Task ID: 34
+# Title: Implement STEP Recording Mode
+# Status: pending
+# Dependencies: 19
+# Priority: high
+# Description: Create the STEP recording mode for step-by-step input.
+# Details:
+Implement STEP recording mode with:
+- Step-by-step note entry
+- Automatic advancement to next step
+- Note property editing (velocity, length)
+- Integration with P-Lock system
+
+Implement the UI and interaction logic for STEP mode. Add support for entering notes one step at a time. Implement automatic advancement to the next step after note entry. Integrate with the existing sequencer and data model.
+
+# Test Strategy:
+Test step-by-step note entry. Verify that notes are correctly stored in the data model. Test automatic advancement. Test with various pattern lengths and time signatures.
+
+# Subtasks:
+## 1. Design VIPER architecture for step recording mode [pending]
+### Dependencies: None
+### Description: Create a detailed VIPER architecture design for the step recording mode, including View, Interactor, Presenter, Entity, and Router components.
+### Details:
+1. Define interfaces for each VIPER component
+2. Create class diagrams for the architecture
+3. Document component interactions and data flow
+
+## 2. Implement basic UI for step recording mode [pending]
+### Dependencies: None
+### Description: Develop the initial user interface for the step recording mode, focusing on essential elements and interactions.
+### Details:
+1. Create UI mockups and wireframes
+2. Implement basic UI components (record button, step list, etc.)
+3. Set up UI tests using XCTest framework
+
+## 3. Develop core functionality for step recording [pending]
+### Dependencies: 34.2
+### Description: Implement the core logic for recording steps, following TDD principles and VIPER architecture.
+### Details:
+1. Write unit tests for step recording logic
+2. Implement step recording functionality in Interactor
+3. Create Presenter methods for updating View
+4. Integrate with UI components
+

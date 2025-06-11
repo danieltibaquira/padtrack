@@ -1,0 +1,45 @@
+# Task ID: 28
+# Title: Implement Additional Filter Machines
+# Status: pending
+# Dependencies: 4, 5
+# Priority: low
+# Description: Create additional filter types (Comb, EQ, etc.).
+# Details:
+Implement additional filter machines with:
+- Comb Filter: Positive and negative feedback with tunable frequency
+- EQ: Multi-band equalizer with low, mid, and high controls
+- Additional filter types as specified
+
+Implement each filter as a separate class conforming to the FilterMachine protocol. Use efficient DSP algorithms appropriate for each filter type. Ensure consistent parameter naming and behavior across filter types.
+
+# Test Strategy:
+Test each filter type with various input signals. Verify frequency response using FFT analysis. Test parameter ranges and edge cases. Ensure stability with extreme settings.
+
+# Subtasks:
+## 1. Design and implement filter machine interface [pending]
+### Dependencies: None
+### Description: Create a protocol for filter machines and implement basic structure following VIPER architecture
+### Details:
+1. Define FilterMachine protocol
+2. Create FilterMachinePresenter and FilterMachineInteractor
+3. Implement basic View and Router
+4. Write unit tests for each component
+
+## 2. Develop UI for filter selection [pending]
+### Dependencies: None
+### Description: Create user interface elements for selecting and applying filters
+### Details:
+1. Design filter selection UI
+2. Implement UI components in FilterMachineView
+3. Add user interaction handling in Presenter
+4. Write UI automation tests for filter selection
+
+## 3. Implement filter application logic [pending]
+### Dependencies: 28.2
+### Description: Develop the core functionality for applying selected filters to images
+### Details:
+1. Implement filter application logic in Interactor
+2. Create unit tests for filter application
+3. Integrate filter application with UI in Presenter
+4. Perform integration tests between UI and filter logic
+

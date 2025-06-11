@@ -1,0 +1,99 @@
+# Task ID: 82
+# Title: Validate and Test All Voice Machines for Checkpoint 7
+# Status: pending
+# Dependencies: 21, 23, 25
+# Priority: high
+# Description: Perform comprehensive testing and validation of the FM DRUM, WAVETONE, and SWARMER voice machines with their parameter pages to ensure they meet quality standards across all target iPad devices.
+# Details:
+This task involves thorough validation of all voice machines to ensure they're ready for Checkpoint 7:
+
+1. Voice Machine Functionality Testing:
+   - Verify FM DRUM produces high-quality percussion sounds with proper transient behavior
+   - Test WAVETONE's wavetable and phase distortion synthesis across its full parameter range
+   - Validate SWARMER's unison-based swarm synthesis with various detune and spread settings
+   - Ensure all machines respond correctly to MIDI input and automation
+
+2. Parameter Page Validation:
+   - Verify all parameter pages display correctly on different iPad screen sizes
+   - Test parameter controls for responsiveness and accurate sound modification
+   - Validate parameter value ranges and ensure no out-of-bounds conditions
+   - Check parameter tooltips and documentation for accuracy
+
+3. Audio Quality Assessment:
+   - Perform critical listening tests for each voice machine
+   - Compare output against reference sounds to ensure quality
+   - Check for unwanted artifacts, aliasing, or distortion
+   - Verify consistent volume levels across machines
+
+4. Performance Benchmarking:
+   - Measure CPU usage for each voice machine under various conditions
+   - Test polyphony limits and determine optimal voice count
+   - Measure memory usage during extended operation
+   - Identify and optimize any performance bottlenecks
+
+5. Multi-machine Testing:
+   - Test combinations of multiple voice machines running simultaneously
+   - Verify no degradation in audio quality or UI responsiveness
+   - Test complex routing scenarios between machines
+   - Validate CPU usage remains within acceptable limits
+
+6. Sound Design Workflow Evaluation:
+   - Assess the efficiency of sound design workflows
+   - Verify parameter organization is logical and intuitive
+   - Test preset saving and loading functionality
+   - Gather feedback from sound designers on usability
+
+7. Cross-device Testing:
+   - Deploy to all target devices: iPad Pro 11-inch, iPad Pro 12.9-inch, iPad Air, and iPad mini
+   - Verify consistent performance and functionality across all devices
+   - Test with different iOS versions to ensure compatibility
+   - Check for device-specific issues or optimizations needed
+
+Document all findings in a comprehensive test report with recommendations for any necessary improvements before final checkpoint approval.
+
+# Test Strategy:
+1. Automated Testing:
+   - Run automated unit tests for each voice machine component
+   - Execute integration tests for parameter control systems
+   - Use audio analysis tools to verify frequency response and harmonic content
+   - Implement performance benchmarking scripts to measure CPU and memory usage
+
+2. Manual Testing Protocol:
+   - Create a test matrix covering all machines, parameters, and devices
+   - Develop specific test cases for each voice machine's unique features
+   - Perform A/B testing against reference implementations
+   - Record before/after audio samples for quality comparison
+
+3. Device Testing:
+   - Install test builds on each target device (iPad Pro 11-inch, iPad Pro 12.9-inch, iPad Air, iPad mini)
+   - Execute the same test suite on each device and compare results
+   - Document any device-specific issues or performance differences
+   - Test with various audio interfaces and output configurations
+
+4. Performance Testing:
+   - Measure baseline performance for each voice machine
+   - Incrementally increase polyphony until performance degradation occurs
+   - Monitor CPU, memory, and thermal performance during extended use
+   - Document maximum recommended polyphony for each device
+
+5. Regression Testing:
+   - Verify no regressions in previously implemented functionality
+   - Test integration with sequencer and other system components
+   - Ensure parameter automation works correctly with all machines
+   - Validate MIDI mapping functionality
+
+6. User Experience Testing:
+   - Conduct sound design workflow tests with experienced users
+   - Time common operations and compare to efficiency benchmarks
+   - Gather qualitative feedback on parameter organization and control
+   - Test preset management and sharing capabilities
+
+7. Acceptance Criteria Validation:
+   - Verify all checkpoint requirements are met:
+     * All voice machines functional with expected sound quality
+     * Parameter pages responsive and correctly displayed
+     * Audio quality consistent across all machines
+     * Multi-machine performance within specifications
+     * Sound design workflow efficient and intuitive
+   - Document test results with audio samples, screenshots, and performance metrics
+   - Prepare final validation report for checkpoint approval

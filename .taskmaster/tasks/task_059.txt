@@ -1,0 +1,47 @@
+# Task ID: 59
+# Title: Implement Copy/Paste System
+# Status: pending
+# Dependencies: 3
+# Priority: medium
+# Description: Add copy and paste functionality for various elements.
+# Details:
+Implement the copy/paste system with:
+- Support for various element types (steps, tracks, patterns, etc.)
+- Clipboard storage in the data model
+- UI controls for copy/paste
+- Cross-pattern and cross-project paste
+
+Implement the logic for copying and pasting various element types. Add clipboard storage in the data model. Implement UI controls for copy/paste operations. Add support for pasting across patterns and projects.
+
+# Test Strategy:
+Test copy and paste for various element types. Verify that all properties are correctly preserved. Test cross-pattern and cross-project paste. Test with complex elements containing nested data.
+
+# Subtasks:
+## 1. Design VIPER architecture for copy/paste system [pending]
+### Dependencies: None
+### Description: Create a detailed VIPER architecture design for the copy/paste system, including View, Interactor, Presenter, Entity, and Router components.
+### Details:
+1. Define interfaces for each VIPER component
+2. Create class diagrams for the architecture
+3. Document component interactions and data flow
+
+## 2. Implement core copy/paste functionality with TDD [pending]
+### Dependencies: None
+### Description: Develop the core copy/paste functionality using test-driven development, focusing on the Interactor component.
+### Details:
+1. Write unit tests for copy operation
+2. Implement copy functionality
+3. Write unit tests for paste operation
+4. Implement paste functionality
+5. Refactor and optimize as needed
+
+## 3. Create UI for copy/paste system [pending]
+### Dependencies: 59.2
+### Description: Develop the user interface for the copy/paste system, including buttons and visual feedback, following VIPER's View component guidelines.
+### Details:
+1. Design UI mockups
+2. Implement UI elements
+3. Write UI automation tests
+4. Integrate UI with core functionality
+5. Perform usability testing
+

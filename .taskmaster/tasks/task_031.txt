@@ -1,0 +1,44 @@
+# Task ID: 31
+# Title: Implement Trig Conditions
+# Status: pending
+# Dependencies: 6, 19
+# Priority: medium
+# Description: Add conditional triggering to sequencer steps.
+# Details:
+Implement trig conditions with:
+- Condition types (% fill, every X, etc.)
+- Visual indication of conditions in the UI
+- Storage in the data model
+- Evaluation during sequencer operation
+
+Add condition parameters to the Trig entity. Implement condition evaluation during playback. Add UI controls for setting condition values. Support all condition types from the hardware (fill, probability, every X, etc.).
+
+# Test Strategy:
+Test each condition type individually. Verify that conditions are evaluated correctly during playback. Test with complex patterns using multiple condition types. Test edge cases and boundary conditions.
+
+# Subtasks:
+## 1. Set up VIPER architecture for trig conditions module [pending]
+### Dependencies: None
+### Description: Create the basic VIPER structure (View, Interactor, Presenter, Entity, Router) for the trig conditions feature
+### Details:
+1. Create empty files for View, Interactor, Presenter, Entity, and Router
+2. Define protocols for each component
+3. Implement basic initializations and connections between components
+
+## 2. Implement trig conditions logic with TDD [pending]
+### Dependencies: None
+### Description: Develop the core logic for trig conditions using test-driven development
+### Details:
+1. Write unit tests for trig condition calculations
+2. Implement trig condition logic in the Interactor
+3. Ensure all tests pass and refactor as needed
+
+## 3. Create UI for trig conditions and integrate with VIPER [pending]
+### Dependencies: 31.2
+### Description: Design and implement the user interface for trig conditions, integrating it with the VIPER architecture
+### Details:
+1. Design UI mockups for trig conditions
+2. Implement UI in the View component
+3. Connect UI to Presenter and test interactions
+4. Write UI automation tests for the trig conditions feature
+

@@ -1,0 +1,116 @@
+# Task ID: 21
+# Title: Implement FM DRUM Voice Machine
+# Status: pending
+# Dependencies: 8
+# Priority: medium
+# Description: Create the FM DRUM voice machine for percussion sounds.
+# Details:
+Implement the FM DRUM voice machine with:
+- Body component for fundamental tone
+- Noise/Transient component for attack
+- Pitch sweep for punchy transients
+- Wavefolding for complex harmonics
+- Specialized envelopes for percussion
+
+Optimize for percussive sounds with short, punchy envelopes. Implement efficient algorithms for transient generation. Use the same underlying FM engine as FM TONE but with specialized parameter mappings.
+
+# Test Strategy:
+Test various drum sound types (kick, snare, hi-hat, etc.). Verify that the machine can create a wide range of percussion sounds. Test extreme parameter settings for stability.
+
+# Subtasks:
+## 1. Implement FM body component [pending]
+### Dependencies: None
+### Description: Create the core FM synthesis engine for the drum body
+### Details:
+Design and implement a multi-operator FM synthesis algorithm optimized for percussion sounds. Include at least 3 operators with configurable ratios and modulation indices.
+
+## 2. Develop noise/transient component [pending]
+### Dependencies: None
+### Description: Create a flexible noise generator for drum transients
+### Details:
+Implement a noise generator with variable color (white, pink, etc.) and a bandpass filter for shaping. Add an envelope generator for precise transient control.
+
+## 3. Implement pitch sweep module [pending]
+### Dependencies: None
+### Description: Design a pitch envelope generator for drum pitch sweeps
+### Details:
+Create an envelope generator specifically for controlling the pitch of the FM operators. Allow for both linear and exponential sweeps with adjustable range and time.
+
+## 4. Develop wavefolding algorithm [pending]
+### Dependencies: None
+### Description: Implement a wavefolding distortion for added harmonics
+### Details:
+Design a wavefolding algorithm that can be applied to the FM output. Include parameters for fold amount and asymmetry to create complex timbres.
+
+## 5. Create specialized ADSR envelopes [pending]
+### Dependencies: None
+### Description: Implement custom envelope generators for various drum parameters
+### Details:
+Develop ADSR envelope generators with curved segments and looping capabilities. Create separate instances for amplitude, filter cutoff, and modulation amount.
+
+## 6. Design parameter mapping system [pending]
+### Dependencies: 21.2, 21.3, 21.4, 21.5
+### Description: Create a flexible mapping system for user parameters to synthesis controls
+### Details:
+Implement a system that allows for non-linear mapping of user-facing parameters to internal synthesis parameters. Include options for scaling, offsetting, and curve shaping.
+
+## 7. Implement voice allocation system [pending]
+### Dependencies: 21.2, 21.3, 21.4, 21.5
+### Description: Design a voice management system for polyphonic playback
+### Details:
+Create a voice allocation algorithm that efficiently manages multiple drum voices. Include voice stealing and prioritization based on note velocity and timing.
+
+## 8. Optimize DSP algorithms [pending]
+### Dependencies: 21.2, 21.3, 21.4
+### Description: Refine and optimize core DSP algorithms for real-time performance
+### Details:
+Profile the DSP code and optimize critical paths. Implement SIMD instructions where applicable and minimize memory allocations in the audio thread.
+
+## 9. Implement filter module [pending]
+### Dependencies: 21.2
+### Description: Design a multi-mode filter for further sound shaping
+### Details:
+Create a resonant multi-mode filter (lowpass, highpass, bandpass) with variable slope (12dB/oct, 24dB/oct). Implement oversampling for alias reduction at high resonance settings.
+
+## 10. Develop modulation matrix [pending]
+### Dependencies: 21.2, 21.3, 21.4, 21.5, 21.9
+### Description: Create a flexible modulation routing system
+### Details:
+Implement a modulation matrix allowing any modulation source (LFOs, envelopes, etc.) to be routed to any synthesis parameter. Include scaling and polarity inversion options.
+
+## 11. Implement drum-specific presets [pending]
+### Dependencies: 21.2, 21.3, 21.4, 21.5, 21.9, 21.10
+### Description: Create a set of preset algorithms for common drum types
+### Details:
+Develop specialized synthesis algorithms and parameter settings for kick, snare, hi-hat, tom, and percussion sounds. Ensure each preset is highly tweakable.
+
+## 12. Design user interface [pending]
+### Dependencies: 21.6
+### Description: Create an intuitive UI for controlling the FM DRUM voice machine
+### Details:
+Design a user interface with clear sections for each synthesis component. Include visualization for envelopes, FM operators, and modulation routing.
+
+## 13. Implement MIDI input handling [pending]
+### Dependencies: 21.7
+### Description: Develop MIDI input processing for note and controller data
+### Details:
+Create a MIDI input system that handles note on/off events, velocity sensitivity, and continuous controller messages. Map MIDI CCs to synthesis parameters.
+
+## 14. Develop audio output stage [pending]
+### Dependencies: 21.2, 21.9
+### Description: Implement the final output stage with mixing and effects
+### Details:
+Create a mixing stage for balancing the various synthesis components. Implement basic effects such as distortion and reverb for final sound shaping.
+
+## 15. Perform CPU usage optimization [pending]
+### Dependencies: 21.8
+### Description: Optimize overall CPU usage of the FM DRUM voice machine
+### Details:
+Profile the entire system under various load conditions. Implement dynamic voice reduction and selective component bypassing to manage CPU usage under heavy loads.
+
+## 16. Conduct final testing and refinement [pending]
+### Dependencies: 21.2, 21.3, 21.4, 21.5, 21.6, 21.7, 21.8, 21.9, 21.10, 21.11, 21.12, 21.13, 21.14, 21.15
+### Description: Perform comprehensive testing and make final adjustments
+### Details:
+Conduct thorough testing of all drum sounds, presets, and modulation routings. Fine-tune synthesis parameters and optimize the overall sound quality and responsiveness.
+

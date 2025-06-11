@@ -1,0 +1,59 @@
+# Task ID: 14
+# Title: Implement Master Effects
+# Status: pending
+# Dependencies: 5
+# Priority: medium
+# Description: Create the master effects (Compressor and Overdrive).
+# Details:
+Implement the master effects with:
+- Compressor: Threshold, ratio, attack, release, and makeup gain
+- Overdrive: Drive amount and tone control
+
+Place these effects at the end of the signal chain. Implement a true peak limiter after the master effects to prevent clipping. Use look-ahead for the compressor if possible for transparent operation.
+
+# Test Strategy:
+Test the compressor with dynamic content to verify gain reduction behavior. Test the overdrive with various input levels. Verify that the master chain prevents digital clipping even with extreme settings.
+
+# Subtasks:
+## 1. Design compressor algorithm [pending]
+### Dependencies: None
+### Description: Develop the core algorithm for the compressor effect
+### Details:
+Implement attack and release envelope, threshold detection, and gain reduction calculation. Include options for different compression curves (e.g., soft knee, hard knee).
+
+## 2. Implement overdrive effect [pending]
+### Dependencies: None
+### Description: Create the overdrive distortion algorithm
+### Details:
+Design a non-linear transfer function for soft clipping. Include drive and tone controls. Implement oversampling to reduce aliasing artifacts.
+
+## 3. Develop true peak limiter [pending]
+### Dependencies: None
+### Description: Create a look-ahead limiter with true peak detection
+### Details:
+Implement inter-sample peak detection, look-ahead buffering, and gain reduction algorithm. Ensure minimal distortion and transparent limiting.
+
+## 4. Design parameter control interface [pending]
+### Dependencies: 14.2, 14.3
+### Description: Create a unified interface for controlling effect parameters
+### Details:
+Develop a flexible parameter system that allows real-time control of all effect parameters. Include MIDI mapping capabilities.
+
+## 5. Implement signal chain integration [pending]
+### Dependencies: 14.2, 14.3
+### Description: Create a system for chaining multiple effects together
+### Details:
+Design a flexible routing system that allows effects to be added, removed, and reordered in the signal chain. Implement proper gain staging between effects.
+
+## 6. Optimize performance [pending]
+### Dependencies: 14.2, 14.3, 14.4, 14.5
+### Description: Analyze and optimize the performance of all implemented effects
+### Details:
+Profile CPU usage, optimize critical code paths, and implement SIMD instructions where applicable. Ensure real-time performance across various buffer sizes.
+
+## 7. Implement preset system [pending]
+### Dependencies: 14.4, 14.5
+### Description: Create a system for saving and loading effect presets
+### Details:
+Design a file format for storing presets. Implement functions for saving current settings, loading presets, and managing preset libraries.
+

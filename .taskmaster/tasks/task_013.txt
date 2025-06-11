@@ -1,0 +1,66 @@
+# Task ID: 13
+# Title: Implement Global Send Effects
+# Status: pending
+# Dependencies: 5
+# Priority: medium
+# Description: Create the global send effects (Delay, Reverb, Chorus).
+# Details:
+Implement the global send effects with:
+- Delay: Stereo delay with feedback, time, and filter controls
+- Reverb: Algorithmic reverb with size, damping, and modulation
+- Chorus: Multi-voice chorus with depth and rate controls
+
+Implement send routing architecture with per-track send levels. Use efficient algorithms suitable for mobile devices. For reverb, consider using a feedback delay network (FDN) design for quality and efficiency.
+
+# Test Strategy:
+Test each effect with various input signals. Verify parameter ranges produce musically useful results. Test CPU usage under heavy load. Ensure effects can be bypassed cleanly.
+
+# Subtasks:
+## 1. Design send routing architecture [pending]
+### Dependencies: None
+### Description: Create a high-level design for the send routing system
+### Details:
+Define signal flow, bus structure, and integration with existing audio engine
+
+## 2. Implement delay algorithm [pending]
+### Dependencies: None
+### Description: Develop a digital delay effect algorithm
+### Details:
+Research and implement a suitable delay algorithm, including feedback and filtering
+
+## 3. Implement reverb algorithm [pending]
+### Dependencies: None
+### Description: Create a reverb effect algorithm
+### Details:
+Develop a reverb algorithm, possibly using convolution or algorithmic methods
+
+## 4. Implement chorus effect [pending]
+### Dependencies: None
+### Description: Design and code a chorus effect
+### Details:
+Create a chorus algorithm with modulation and blending capabilities
+
+## 5. Develop per-track send level control [pending]
+### Dependencies: None
+### Description: Implement individual send level controls for each track
+### Details:
+Create UI and backend logic for adjusting send levels on a per-track basis
+
+## 6. Integrate effects into send architecture [pending]
+### Dependencies: 13.2, 13.3, 13.4
+### Description: Connect the developed effects to the send routing system
+### Details:
+Ensure proper signal routing and processing through the send effects chain
+
+## 7. Optimize performance [pending]
+### Dependencies: 13.6
+### Description: Analyze and improve the efficiency of the global send effects
+### Details:
+Profile code, identify bottlenecks, and optimize for CPU and memory usage
+
+## 8. Test and debug [pending]
+### Dependencies: 13.7
+### Description: Thoroughly test the implemented global send effects system
+### Details:
+Create test cases, perform audio quality checks, and fix any identified issues
+

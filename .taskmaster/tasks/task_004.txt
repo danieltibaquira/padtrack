@@ -1,0 +1,92 @@
+# Task ID: 4
+# Title: Define MachineProtocols Swift Package
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Create the MachineProtocols package with shared protocols to prevent circular dependencies.
+# Details:
+Implement the MachineProtocols Swift Package with:
+- VoiceMachine protocol defining the interface for all synthesizer voices
+- FilterMachine protocol for all filter implementations
+- FXProcessor protocol for effects
+- Common data structures and enums used across modules
+- Parameter definitions and ranges
+
+Ensure protocols include methods for processing audio, handling parameter changes, and serialization/deserialization for preset storage.
+
+# Test Strategy:
+Create mock implementations of each protocol to verify the interface design. Test that the protocols can be adopted by concrete types without issues.
+
+# Subtasks:
+## 1. Design Protocol Hierarchy [pending]
+### Dependencies: None
+### Description: Create a high-level design for the protocol hierarchy, including base protocols and type-specific protocols.
+### Details:
+Define the relationships between MachineProtocol, VoiceMachineProtocol, FilterMachineProtocol, and FXProcessorProtocol. Ensure proper abstraction and avoid circular dependencies.
+
+## 2. Implement Core MachineProtocol [pending]
+### Dependencies: None
+### Description: Develop the base MachineProtocol with common properties and methods for all machine types.
+### Details:
+Include properties like unique identifier, name, and common methods for initialization, reset, and status querying.
+
+## 3. Create Shared Data Structures [pending]
+### Dependencies: None
+### Description: Define common data structures used across different machine types.
+### Details:
+Implement structures for audio buffers, MIDI data, time information, and any other shared data types.
+
+## 4. Design Parameter System [pending]
+### Dependencies: 4.2, 4.3
+### Description: Create a flexible parameter system that can be used across all machine types.
+### Details:
+Implement parameter protocols, value ranges, default values, and update mechanisms.
+
+## 5. Implement VoiceMachineProtocol [pending]
+### Dependencies: 4.2, 4.3, 4.4
+### Description: Develop the specific protocol for voice machines, extending the core MachineProtocol.
+### Details:
+Include methods for voice allocation, polyphony settings, and voice-specific parameters.
+
+## 6. Implement FilterMachineProtocol [pending]
+### Dependencies: 4.2, 4.3, 4.4
+### Description: Create the protocol for filter machines, building upon the core MachineProtocol.
+### Details:
+Define methods for filter types, cutoff frequency, resonance, and filter-specific parameters.
+
+## 7. Implement FXProcessorProtocol [pending]
+### Dependencies: 4.2, 4.3, 4.4
+### Description: Develop the protocol for FX processors, extending the core MachineProtocol.
+### Details:
+Include methods for effect types, wet/dry mix, and effect-specific parameters.
+
+## 8. Design Serialization Mechanism [pending]
+### Dependencies: 4.2, 4.3, 4.4, 4.5, 4.6, 4.7
+### Description: Create a system for serializing and deserializing machine states and configurations.
+### Details:
+Implement Codable conformance and custom encoding/decoding if necessary. Ensure all machine types can be properly serialized.
+
+## 9. Implement Mock VoiceMachine [pending]
+### Dependencies: 4.5
+### Description: Create a mock implementation of VoiceMachineProtocol for testing purposes.
+### Details:
+Implement a basic synthesizer with simple waveforms and ADSR envelopes to test the protocol.
+
+## 10. Implement Mock FilterMachine [pending]
+### Dependencies: 4.6
+### Description: Develop a mock implementation of FilterMachineProtocol for testing.
+### Details:
+Create a basic filter implementation with low-pass, high-pass, and band-pass modes to verify the protocol.
+
+## 11. Implement Mock FXProcessor [pending]
+### Dependencies: 4.7
+### Description: Create a mock implementation of FXProcessorProtocol for testing purposes.
+### Details:
+Implement a simple effect processor with delay and reverb capabilities to test the protocol.
+
+## 12. Write Comprehensive Tests [pending]
+### Dependencies: 4.8, 4.9, 4.10, 4.11
+### Description: Develop a suite of unit and integration tests for all protocols and mock implementations.
+### Details:
+Create tests for individual protocol methods, parameter systems, serialization, and interactions between different machine types using mock implementations.
+

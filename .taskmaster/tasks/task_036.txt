@@ -1,0 +1,49 @@
+# Task ID: 36
+# Title: Implement Variable Track Length and Speed
+# Status: pending
+# Dependencies: 6, 19, 35
+# Priority: medium
+# Description: Add support for individual track lengths and speeds.
+# Details:
+Implement variable track length and speed with:
+- UI for setting track length and speed
+- Storage in the data model
+- Visual indication of track settings
+- Proper handling during playback
+
+Add length and speed parameters to the Track entity. Implement UI controls for setting these values. Update the sequencer to handle different track lengths and speeds during playback. Add visual indication of track settings in the UI.
+
+# Test Strategy:
+Test tracks with various lengths and speeds. Verify that playback correctly handles different track configurations. Test polyrhythmic patterns with different track lengths. Test changing track settings during playback.
+
+# Subtasks:
+## 1. Implement variable track length UI [pending]
+### Dependencies: None
+### Description: Create UI elements for users to input and adjust track length
+### Details:
+1. Design UI mockups for track length input
+2. Implement UI elements in SwiftUI
+3. Add input validation for track length
+4. Write unit tests for UI components
+5. Create UI automation tests for track length adjustment
+
+## 2. Develop variable speed functionality [pending]
+### Dependencies: None
+### Description: Implement backend logic for adjusting track speed
+### Details:
+1. Create SpeedManager class in VIPER Interactor
+2. Implement speed calculation algorithms
+3. Write unit tests for speed calculations
+4. Integrate SpeedManager with existing modules
+5. Perform integration tests with UI components
+
+## 3. Integrate length and speed features [pending]
+### Dependencies: 36.2
+### Description: Combine track length and speed functionalities
+### Details:
+1. Update VIPER Presenter to handle length and speed interactions
+2. Implement real-time updates in UI based on length and speed changes
+3. Write integration tests for combined functionality
+4. Perform end-to-end testing of the entire feature
+5. Optimize performance and refactor as needed
+

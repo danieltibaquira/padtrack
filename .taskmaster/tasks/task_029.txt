@@ -1,0 +1,48 @@
+# Task ID: 29
+# Title: Implement Micro Timing for Sequencer
+# Status: pending
+# Dependencies: 6, 19
+# Priority: medium
+# Description: Add micro timing adjustments to sequencer steps.
+# Details:
+Implement micro timing with:
+- Per-step timing offset controls
+- Visual indication of micro timing in the UI
+- Storage in the data model
+- Playback during sequencer operation
+
+Add timing offset to the Trig entity. Implement precise timing adjustments during playback. Add UI controls for setting micro timing values.
+
+# Test Strategy:
+Test micro timing with various offset values. Verify that notes are triggered at the correct adjusted times. Test with extreme timing values. Measure timing accuracy with audio analysis.
+
+# Subtasks:
+## 1. Set up VIPER architecture for micro timing module [pending]
+### Dependencies: None
+### Description: Create the basic VIPER structure for the micro timing feature, including View, Interactor, Presenter, Entity, and Router components.
+### Details:
+1. Create empty files for View, Interactor, Presenter, Entity, and Router
+2. Define basic protocols for each component
+3. Implement basic initialization and connections between components
+4. Write unit tests for component interactions
+
+## 2. Implement core micro timing logic [pending]
+### Dependencies: None
+### Description: Develop the core functionality for micro timing in the Interactor, following TDD principles.
+### Details:
+1. Write failing tests for micro timing calculations
+2. Implement micro timing logic in the Interactor
+3. Refactor and optimize the code
+4. Ensure all tests pass
+5. Add integration tests for timing accuracy
+
+## 3. Create UI for micro timing display [pending]
+### Dependencies: 29.2
+### Description: Design and implement the user interface for displaying micro timing information in the sequencer.
+### Details:
+1. Create a basic UI layout for micro timing display
+2. Implement data binding between Presenter and View
+3. Add real-time updates for timing information
+4. Write UI automation tests for timing display
+5. Perform usability testing and gather feedback
+

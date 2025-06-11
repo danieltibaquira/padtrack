@@ -1,0 +1,54 @@
+# Task ID: 37
+# Title: Implement Song Mode
+# Status: pending
+# Dependencies: 6, 19
+# Priority: medium
+# Description: Create the Song Mode for arranging patterns.
+# Details:
+Implement Song Mode with:
+- UI for adding patterns to the arrangement
+- Repetition count for each pattern
+- Mute/unmute controls for tracks
+- Playback of the full arrangement
+
+Add Song entity to the data model with references to patterns and repetition counts. Implement UI for creating and editing song arrangements. Update the sequencer to play through the song arrangement. Add transport controls specific to Song Mode.
+
+# Test Strategy:
+Test creating and playing song arrangements. Verify that patterns play in the correct order with the specified repetitions. Test mute/unmute functionality. Test editing the arrangement during playback.
+
+# Subtasks:
+## 1. Set up VIPER architecture for Song Mode [pending]
+### Dependencies: None
+### Description: Create the basic VIPER structure for Song Mode, including View, Interactor, Presenter, Entity, and Router components.
+### Details:
+1. Create SongModeView protocol and implementation
+2. Define SongModeInteractor protocol and stub
+3. Implement SongModePresenter
+4. Define SongModeEntity
+5. Create SongModeRouter
+6. Set up initial unit tests for each component
+
+## 2. Implement core Song Mode functionality [pending]
+### Dependencies: None
+### Description: Develop the main features of Song Mode using test-driven development approach.
+### Details:
+1. Write failing tests for song selection functionality
+2. Implement song selection in Interactor and Presenter
+3. Write failing tests for play/pause functionality
+4. Implement play/pause in Interactor and Presenter
+5. Write failing tests for song progress tracking
+6. Implement song progress tracking
+7. Update View to reflect implemented functionality
+8. Run and refine unit tests
+
+## 3. Develop Song Mode UI and integration tests [pending]
+### Dependencies: 37.2
+### Description: Create the user interface for Song Mode and implement integration and UI automation tests.
+### Details:
+1. Design and implement Song Mode UI components
+2. Connect UI to VIPER components
+3. Write integration tests for Song Mode module
+4. Implement UI automation tests using XCTest framework
+5. Perform manual testing and bug fixes
+6. Refine UI based on visual progress and user feedback
+

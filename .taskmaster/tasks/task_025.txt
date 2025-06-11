@@ -1,0 +1,116 @@
+# Task ID: 25
+# Title: Implement SWARMER Voice Machine
+# Status: pending
+# Dependencies: 4, 5
+# Priority: medium
+# Description: Create the SWARMER voice machine with unison-based swarm synthesis.
+# Details:
+Implement the SWARMER voice machine with:
+- Main oscillator with basic waveforms
+- Six detuned swarm oscillators
+- Animation parameter for internal movement
+- Detune and spread controls
+- Modulation options for evolving textures
+
+Implement efficient unison algorithm with minimal CPU usage. Use detuning strategies that create rich, chorus-like effects. Add modulation for the swarm parameters to create evolving textures.
+
+# Test Strategy:
+Test with various detune and animation settings. Verify that the swarm creates rich, evolving textures. Test CPU usage with multiple voices. Perform spectral analysis to verify the expected frequency spreading.
+
+# Subtasks:
+## 1. Implement main oscillator [pending]
+### Dependencies: None
+### Description: Create the primary oscillator for the SWARMER voice machine
+### Details:
+Implement a high-quality, anti-aliased oscillator with multiple waveform options (sine, saw, square, triangle). Use efficient DSP techniques like wavetable synthesis or BLIT (Band-Limited Impulse Train) method.
+
+## 2. Develop swarm oscillators [pending]
+### Dependencies: None
+### Description: Create multiple detuned oscillators to form the swarm
+### Details:
+Implement a system to generate and manage multiple instances of the main oscillator with individual detune values. Consider using a circular buffer for efficient memory management.
+
+## 3. Implement animation parameter [pending]
+### Dependencies: 25.2
+### Description: Add an animation control for evolving swarm behavior
+### Details:
+Create a parameter that modulates the detune values of swarm oscillators over time. Use low-frequency oscillators (LFOs) or envelope generators to control the animation.
+
+## 4. Implement detune control [pending]
+### Dependencies: 25.2
+### Description: Add user control for overall detune amount
+### Details:
+Create a parameter that scales the detune values of all swarm oscillators. Implement efficient scaling algorithms to minimize CPU usage.
+
+## 5. Implement spread control [pending]
+### Dependencies: 25.2
+### Description: Add user control for stereo spread of swarm oscillators
+### Details:
+Develop a system to pan individual swarm oscillators across the stereo field. Use efficient panning algorithms like constant power panning.
+
+## 6. Design modulation matrix [pending]
+### Dependencies: 25.2, 25.3, 25.4, 25.5
+### Description: Create a flexible modulation routing system
+### Details:
+Implement a modulation matrix allowing various sources (LFOs, envelopes, etc.) to modulate different parameters of the SWARMER. Use an efficient data structure for quick lookups and updates.
+
+## 7. Optimize unison algorithm [pending]
+### Dependencies: 25.2
+### Description: Improve efficiency of generating multiple detuned oscillators
+### Details:
+Analyze and optimize the unison algorithm. Consider techniques like phase accumulation and shared wavetables to reduce CPU load.
+
+## 8. Implement advanced detuning strategies [pending]
+### Dependencies: 25.2, 25.4
+### Description: Add multiple detuning modes for diverse sound character
+### Details:
+Implement various detuning strategies such as linear, logarithmic, and Fibonacci series. Optimize calculations for real-time performance.
+
+## 9. Develop modulation sources [pending]
+### Dependencies: 25.6
+### Description: Create various modulation sources for the modulation matrix
+### Details:
+Implement LFOs, envelopes, and other modulation sources. Optimize for CPU efficiency, considering techniques like lookup tables for trigonometric functions.
+
+## 10. Implement voice allocation system [pending]
+### Dependencies: 25.2
+### Description: Create a system to manage polyphony and voice stealing
+### Details:
+Develop an efficient voice allocation algorithm that handles polyphony and implements voice stealing when necessary. Consider priority queues for managing active voices.
+
+## 11. Implement anti-aliasing for swarm oscillators [pending]
+### Dependencies: 25.2, 25.7
+### Description: Ensure high-quality sound at high frequencies
+### Details:
+Implement efficient anti-aliasing techniques for the swarm oscillators, such as PolyBLEP or oversampling. Optimize for the best balance between sound quality and CPU usage.
+
+## 12. Develop CPU usage monitoring system [pending]
+### Dependencies: 25.7
+### Description: Create tools to analyze and optimize CPU performance
+### Details:
+Implement a system to monitor CPU usage of different components of the SWARMER. Use this data to identify and optimize performance bottlenecks.
+
+## 13. Implement SIMD optimizations [pending]
+### Dependencies: 25.7, 25.11
+### Description: Use SIMD instructions for parallel processing
+### Details:
+Implement SIMD (Single Instruction, Multiple Data) optimizations for key DSP operations to improve performance on modern CPUs.
+
+## 14. Develop preset system [pending]
+### Dependencies: 25.2, 25.3, 25.4, 25.5, 25.6, 25.8
+### Description: Create a system for saving and loading SWARMER presets
+### Details:
+Implement a preset system that can save and load all relevant parameters of the SWARMER. Consider using a serialization format like JSON for preset data.
+
+## 15. Implement modulation visualization [pending]
+### Dependencies: 25.6, 25.9
+### Description: Create a visual representation of modulation routing
+### Details:
+Develop a user interface component that visually represents the current modulation routing. Optimize the rendering for efficiency in real-time updates.
+
+## 16. Conduct final performance optimization [pending]
+### Dependencies: 25.2, 25.3, 25.4, 25.5, 25.6, 25.7, 25.8, 25.9, 25.10, 25.11, 25.12, 25.13
+### Description: Perform overall optimization and fine-tuning
+### Details:
+Conduct comprehensive performance analysis and optimization. Profile the code, identify bottlenecks, and implement final optimizations for CPU efficiency and sound quality.
+

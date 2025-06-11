@@ -1,0 +1,46 @@
+# Task ID: 30
+# Title: Implement Retrig Functionality
+# Status: pending
+# Dependencies: 6, 19
+# Priority: medium
+# Description: Add retrig capability to sequencer steps.
+# Details:
+Implement retrig functionality with:
+- Per-step retrig count and rate
+- Visual indication of retrigs in the UI
+- Storage in the data model
+- Playback during sequencer operation
+
+Add retrig parameters to the Trig entity. Implement precise timing for retriggered notes. Add UI controls for setting retrig values. Ensure proper handling of overlapping retrigs.
+
+# Test Strategy:
+Test retrigs with various count and rate values. Verify that notes are retriggered the correct number of times. Test with extreme retrig values. Test interaction with micro timing.
+
+# Subtasks:
+## 1. Set up VIPER architecture for retrig feature [pending]
+### Dependencies: None
+### Description: Create the basic VIPER structure (View, Interactor, Presenter, Entity, Router) for the retrig functionality
+### Details:
+1. Create empty protocol files for View, Interactor, Presenter, and Router
+2. Implement basic Entity structure for retrig data
+3. Set up initial module assembly
+
+## 2. Implement retrig UI components [pending]
+### Dependencies: None
+### Description: Develop the user interface elements for the retrig feature following TDD principles
+### Details:
+1. Write UI tests for retrig button and status indicator
+2. Implement retrig button in View
+3. Add status indicator to View
+4. Ensure all UI tests pass
+
+## 3. Develop retrig core functionality [pending]
+### Dependencies: 30.2
+### Description: Implement the core retrig logic in the Interactor and integrate with Presenter
+### Details:
+1. Write unit tests for retrig logic in Interactor
+2. Implement retrig functionality in Interactor
+3. Write integration tests for Presenter-Interactor communication
+4. Implement Presenter logic for handling retrig actions and updating View
+5. Ensure all unit and integration tests pass
+

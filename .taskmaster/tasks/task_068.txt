@@ -1,0 +1,67 @@
+# Task ID: 68
+# Title: Implement Voice Stealing Algorithm
+# Status: pending
+# Dependencies: 5, 9
+# Priority: medium
+# Description: Create a voice stealing algorithm for managing polyphony.
+# Details:
+Implement voice stealing with:
+- Priority-based voice allocation
+- Stealing strategies (oldest, quietest, etc.)
+- Release phase handling
+- CPU load monitoring
+
+Implement the voice stealing algorithm for managing limited polyphony. Add priority-based voice allocation for important notes. Implement different stealing strategies for flexibility. Add CPU load monitoring to adjust polyphony dynamically.
+
+# Test Strategy:
+Test with high polyphony demands. Verify that voice stealing behaves as expected. Test different stealing strategies. Test with CPU load monitoring to ensure stability under heavy load.
+
+# Subtasks:
+## 1. Design priority-based allocation system [pending]
+### Dependencies: None
+### Description: Create a system to assign priorities to voices based on factors like note age, velocity, and musical context
+### Details:
+Define priority criteria, implement priority calculation function, create data structure for voice prioritization
+
+## 2. Implement basic voice stealing mechanism [pending]
+### Dependencies: None
+### Description: Develop the core logic for stealing voices when polyphony limit is reached
+### Details:
+Create function to identify lowest priority voice, implement voice reallocation logic, handle edge cases
+
+## 3. Develop advanced stealing strategies [pending]
+### Dependencies: 68.2
+### Description: Implement multiple stealing strategies like oldest note first, quietest note first, and intelligent context-aware stealing
+### Details:
+Design strategy interface, implement each strategy, create mechanism to switch between strategies
+
+## 4. Handle release phase in voice stealing [pending]
+### Dependencies: 68.2, 68.3
+### Description: Ensure proper handling of voices in release phase during the stealing process
+### Details:
+Modify stealing logic to consider release phase, implement graceful voice termination, optimize release handling for smooth transitions
+
+## 5. Implement CPU load monitoring [pending]
+### Dependencies: None
+### Description: Create a system to monitor and report CPU usage of the voice engine
+### Details:
+Implement CPU usage measurement, create reporting mechanism, set up thresholds for load management
+
+## 6. Integrate CPU load with voice stealing [pending]
+### Dependencies: 68.3, 68.5
+### Description: Adjust voice stealing behavior based on current CPU load
+### Details:
+Modify stealing strategies to consider CPU load, implement dynamic polyphony limit, optimize voice allocation under high CPU load
+
+## 7. Develop comprehensive testing suite [pending]
+### Dependencies: 68.4, 68.6
+### Description: Create a set of tests to verify the correctness and efficiency of the voice stealing algorithm
+### Details:
+Design test cases for various scenarios, implement unit tests for each component, create integration tests for the entire system
+
+## 8. Optimize and fine-tune the algorithm [pending]
+### Dependencies: 68.7
+### Description: Analyze performance and make necessary optimizations to the voice stealing algorithm
+### Details:
+Profile code for bottlenecks, optimize critical paths, fine-tune parameters for best performance, conduct A/B testing for different strategies
+

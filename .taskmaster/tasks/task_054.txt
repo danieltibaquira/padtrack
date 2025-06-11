@@ -1,0 +1,49 @@
+# Task ID: 54
+# Title: Implement LFOs
+# Status: pending
+# Dependencies: 5
+# Priority: medium
+# Description: Add LFOs for parameter modulation.
+# Details:
+Implement LFOs with:
+- Multiple waveforms (sine, triangle, square, etc.)
+- Rate and depth controls
+- Sync options (free, tempo-synced)
+- Destination routing to parameters
+
+Implement the LFO engine with multiple independent LFOs. Add UI for controlling LFO parameters. Implement destination routing to assign LFOs to parameters. Add sync options for tempo-synchronized modulation.
+
+# Test Strategy:
+Test LFOs with various waveforms and settings. Verify that parameters are correctly modulated. Test sync options. Test with multiple LFOs assigned to different parameters.
+
+# Subtasks:
+## 1. Set up LFO module structure [pending]
+### Dependencies: None
+### Description: Create the basic VIPER architecture for the LFO module, including protocols for View, Interactor, Presenter, Entity, and Router
+### Details:
+1. Define LFOView protocol
+2. Create LFOInteractor protocol
+3. Implement LFOPresenter protocol
+4. Establish LFOEntity structure
+5. Set up LFORouter protocol
+
+## 2. Implement LFO core functionality [pending]
+### Dependencies: None
+### Description: Develop the core LFO functionality using test-driven development, focusing on the Interactor and Entity components
+### Details:
+1. Write unit tests for LFO waveform generation
+2. Implement LFO waveform generation in Entity
+3. Create unit tests for LFO parameter management
+4. Develop LFO parameter management in Interactor
+5. Write integration tests for Interactor and Entity interaction
+
+## 3. Design and implement LFO UI [pending]
+### Dependencies: 54.2
+### Description: Create the user interface for LFO control, following VIPER architecture and including UI automation tests
+### Details:
+1. Design LFO control UI mockups
+2. Implement LFO View component
+3. Write UI automation tests for LFO controls
+4. Integrate View with Presenter
+5. Conduct integration tests for full VIPER stack
+

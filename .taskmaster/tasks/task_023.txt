@@ -1,0 +1,128 @@
+# Task ID: 23
+# Title: Implement WAVETONE Voice Machine
+# Status: pending
+# Dependencies: 4, 5
+# Priority: medium
+# Description: Create the WAVETONE voice machine with wavetable and phase distortion synthesis.
+# Details:
+Implement the WAVETONE voice machine with:
+- Dual oscillator engine
+- Wavetable synthesis with multiple tables
+- Phase distortion synthesis
+- Oscillator modulation (Ring Mod, Hard Sync)
+- Flexible noise generator
+
+Implement wavetable interpolation for smooth transitions. Create a library of wavetables covering classic and modern sounds. Implement efficient phase distortion algorithms. Add modulation options between oscillators.
+
+# Test Strategy:
+Test each synthesis method individually. Verify wavetable interpolation quality. Test oscillator modulation techniques for expected results. Perform spectral analysis to verify harmonic content.
+
+# Subtasks:
+## 1. Design dual oscillator engine architecture [pending]
+### Dependencies: None
+### Description: Create the core structure for the dual oscillator engine, including oscillator objects and their interconnections.
+### Details:
+Define oscillator class with frequency, phase, and output parameters. Implement methods for waveform generation and modulation. Design a mixing stage for combining oscillator outputs.
+
+## 2. Implement wavetable synthesis for oscillators [pending]
+### Dependencies: None
+### Description: Develop the wavetable synthesis algorithm for generating complex waveforms in each oscillator.
+### Details:
+Create wavetable data structure. Implement linear interpolation between table entries. Develop phase accumulation algorithm for table lookup. Optimize for efficient CPU usage.
+
+## 3. Develop phase distortion synthesis [pending]
+### Dependencies: 23.2
+### Description: Implement phase distortion techniques to modify the timbre of oscillator outputs.
+### Details:
+Design transfer functions for phase distortion. Implement real-time phase mapping algorithm. Create controls for adjusting distortion amount and character.
+
+## 4. Create oscillator modulation system [pending]
+### Dependencies: 23.2, 23.3
+### Description: Develop a flexible modulation system for cross-modulating oscillators and other parameters.
+### Details:
+Implement FM, AM, and PM algorithms. Design modulation matrix for routing modulation sources to destinations. Optimize for minimal latency in modulation processing.
+
+## 5. Implement noise generator [pending]
+### Dependencies: None
+### Description: Create a versatile noise generator with various noise types and filtering options.
+### Details:
+Implement white, pink, and brown noise algorithms. Develop real-time noise filtering techniques. Integrate noise generator with oscillator mixing stage.
+
+## 6. Develop wavetable interpolation techniques [pending]
+### Dependencies: 23.2
+### Description: Implement advanced interpolation methods for smooth transitions between wavetable entries.
+### Details:
+Research and implement higher-order interpolation algorithms (e.g., cubic, spline). Analyze trade-offs between sound quality and computational cost. Optimize for real-time performance.
+
+## 7. Create wavetable library [pending]
+### Dependencies: 23.2
+### Description: Develop a comprehensive library of wavetables for various timbres and sound characteristics.
+### Details:
+Analyze and sample existing synthesizers and acoustic instruments. Develop tools for creating and editing wavetables. Implement efficient storage and retrieval system for wavetables.
+
+## 8. Implement wavetable morphing [pending]
+### Dependencies: 23.2, 23.6, 23.7
+### Description: Develop techniques for smoothly transitioning between different wavetables in real-time.
+### Details:
+Design algorithm for interpolating between multiple wavetables. Implement user controls for morphing parameters. Optimize for smooth transitions without audio artifacts.
+
+## 9. Develop anti-aliasing techniques [pending]
+### Dependencies: 23.2, 23.3
+### Description: Implement anti-aliasing methods to reduce digital artifacts in high-frequency content.
+### Details:
+Research and implement oversampling techniques. Develop efficient anti-aliasing filters. Analyze and optimize CPU usage vs. audio quality trade-offs.
+
+## 10. Implement polyphony and voice allocation [pending]
+### Dependencies: 23.2, 23.3, 23.4, 23.5
+### Description: Develop a system for managing multiple simultaneous voices and efficient voice allocation.
+### Details:
+Design voice object with all synthesis parameters. Implement voice stealing algorithm for limited polyphony. Optimize CPU usage for multiple simultaneous voices.
+
+## 11. Create modulation envelope generator [pending]
+### Dependencies: 23.4
+### Description: Implement a flexible envelope generator for modulating synthesis parameters over time.
+### Details:
+Design ADSR envelope with customizable stages. Implement non-linear envelope shapes. Develop system for routing envelopes to multiple modulation destinations.
+
+## 12. Implement LFO (Low Frequency Oscillator) system [pending]
+### Dependencies: 23.4
+### Description: Develop a versatile LFO system for periodic modulation of synthesis parameters.
+### Details:
+Implement multiple LFO waveforms (sine, triangle, square, etc.). Design LFO sync and phase options. Create system for routing LFOs to multiple modulation destinations.
+
+## 13. Develop filter section [pending]
+### Dependencies: 23.4, 23.11, 23.12
+### Description: Implement a multi-mode filter section with various filter types and modulation options.
+### Details:
+Implement low-pass, high-pass, band-pass, and notch filters. Develop filter envelope and LFO modulation. Optimize filter algorithms for real-time performance.
+
+## 14. Create effects processing section [pending]
+### Dependencies: 23.13
+### Description: Implement a chain of audio effects for further sound shaping and enhancement.
+### Details:
+Develop algorithms for distortion, chorus, delay, and reverb effects. Implement effect parameter modulation. Optimize effects chain for minimal latency.
+
+## 15. Implement MIDI input handling [pending]
+### Dependencies: 23.10
+### Description: Develop a system for receiving and processing MIDI input for note and control data.
+### Details:
+Implement MIDI note on/off handling. Develop MIDI CC mapping to synthesis parameters. Create MIDI clock sync for tempo-based modulations.
+
+## 16. Develop user interface for parameter control [pending]
+### Dependencies: 23.2, 23.3, 23.4, 23.5, 23.6, 23.7, 23.8, 23.11, 23.12, 23.13, 23.14
+### Description: Create a comprehensive UI for controlling all synthesis parameters and modulations.
+### Details:
+Design intuitive layout for oscillator, modulation, and effect controls. Implement real-time parameter visualization. Develop preset management system.
+
+## 17. Optimize overall CPU and memory usage [pending]
+### Dependencies: 23.2, 23.3, 23.4, 23.5, 23.6, 23.7, 23.8, 23.9, 23.10, 23.11, 23.12, 23.13, 23.14
+### Description: Analyze and optimize the entire synthesis engine for efficient resource utilization.
+### Details:
+Profile CPU usage across all synthesis components. Implement SIMD optimizations where applicable. Optimize memory allocation and management for real-time performance.
+
+## 18. Conduct extensive testing and refinement [pending]
+### Dependencies: 23.2, 23.3, 23.4, 23.5, 23.6, 23.7, 23.8, 23.9, 23.10, 23.11, 23.12, 23.13, 23.14, 23.15, 23.16, 23.17
+### Description: Perform comprehensive testing of all synthesis components and refine based on results.
+### Details:
+Develop automated test suite for synthesis engine. Conduct listening tests for sound quality assessment. Iterate on algorithms and optimizations based on test results.
+

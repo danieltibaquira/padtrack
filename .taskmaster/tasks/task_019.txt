@@ -1,0 +1,47 @@
+# Task ID: 19
+# Title: Implement Basic Sequencer UI
+# Status: pending
+# Dependencies: 6, 7, 15
+# Priority: high
+# Description: Create the UI for the basic sequencer functionality.
+# Details:
+Implement the basic sequencer UI with:
+- 16 step buttons with state indication (active, current, p-locked)
+- Transport controls (play, stop, record)
+- Mode selection (GRID, LIVE, STEP)
+- Track selection buttons
+- Pattern selection interface
+
+Bind UI controls to the sequencer module. Implement visual feedback for the current step during playback. Use animations for smooth visual updates.
+
+# Test Strategy:
+Test step button interaction for creating and deleting steps. Verify that transport controls work correctly. Test that the current step is correctly highlighted during playback. Test track and pattern selection.
+
+# Subtasks:
+## 1. Set up VIPER architecture for sequencer module [pending]
+### Dependencies: None
+### Description: Create the basic VIPER structure for the sequencer module, including View, Interactor, Presenter, Entity, and Router components.
+### Details:
+1. Create empty files for SequencerView, SequencerInteractor, SequencerPresenter, SequencerEntity, and SequencerRouter
+2. Define basic protocols for each component
+3. Implement initial unit tests for each component
+
+## 2. Implement basic sequencer UI layout [pending]
+### Dependencies: None
+### Description: Design and implement the basic UI layout for the sequencer, focusing on essential elements like step buttons and playback controls.
+### Details:
+1. Create a storyboard or SwiftUI view for the sequencer layout
+2. Implement UI elements: step buttons, play/pause button, and tempo control
+3. Write UI automation tests for basic interactions
+4. Ensure layout is responsive and follows design guidelines
+
+## 3. Develop core sequencer logic [pending]
+### Dependencies: 19.2
+### Description: Implement the core sequencer logic in the Interactor, including step activation and basic playback functionality.
+### Details:
+1. Implement step activation logic in the Interactor
+2. Develop basic playback functionality (play/pause)
+3. Write unit tests for sequencer logic
+4. Integrate sequencer logic with UI through the Presenter
+5. Implement integration tests for sequencer module
+

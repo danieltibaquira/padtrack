@@ -1,0 +1,127 @@
+# Task ID: 9
+# Title: Implement FM TONE Voice Machine
+# Status: pending
+# Dependencies: 8
+# Priority: high
+# Description: Create the FM TONE voice machine implementing the VoiceMachine protocol.
+# Details:
+Implement the FM TONE voice machine with:
+- All parameters from the specification (ALGO, RATIO, HARM, DTUN, FDBK, MIX)
+- Envelope generators for each operator
+- Parameter mapping from normalized values to DSP parameters
+- Voice allocation and note handling
+
+Organize parameters into the 4 pages as specified in the PRD. Implement proper parameter ranges and scaling. Use SIMD operations where possible for performance.
+
+# Test Strategy:
+Test each parameter for correct audio effect. Verify envelope shapes and timing. Test polyphonic operation with multiple simultaneous notes. Perform FFT analysis to verify harmonic content matches expectations.
+
+# Subtasks:
+## 1. Design parameter mapping structure [pending]
+### Dependencies: None
+### Description: Create a comprehensive parameter mapping structure for the FM TONE voice machine
+### Details:
+Define a data structure to map all FM synthesis parameters, including carrier and modulator frequencies, modulation index, and envelope parameters. Consider using a hash table or struct for efficient access.
+
+## 2. Implement envelope generator [pending]
+### Dependencies: None
+### Description: Develop a flexible envelope generator for amplitude and modulation envelopes
+### Details:
+Create a reusable envelope generator class that supports ADSR (Attack, Decay, Sustain, Release) and custom envelope shapes. Ensure it can handle different time scales and curve types.
+
+## 3. Design voice allocation system [pending]
+### Dependencies: None
+### Description: Create a system for efficiently allocating and managing voices
+### Details:
+Implement a voice pool with a fixed number of voices. Develop algorithms for voice stealing and priority assignment based on note age and velocity.
+
+## 4. Organize parameters into logical groups [pending]
+### Dependencies: None
+### Description: Structure parameters into categories for easier management and user interface design
+### Details:
+Group parameters into categories such as oscillator settings, envelope settings, modulation settings, and global settings. Use namespaces or nested structures for organization.
+
+## 5. Implement value scaling functions [pending]
+### Dependencies: 9.4
+### Description: Develop functions to scale parameter values between internal and user-facing representations
+### Details:
+Create mapping functions for each parameter type (e.g., linear, logarithmic, exponential) to convert between normalized (0-1) values and actual parameter ranges.
+
+## 6. Integrate envelopes with voice parameters [pending]
+### Dependencies: 9.2, 9.3
+### Description: Connect envelope generators to relevant voice parameters
+### Details:
+Apply amplitude envelopes to carrier oscillators and modulation envelopes to modulation indices. Ensure proper scaling and timing of envelope output.
+
+## 7. Implement voice management functions [pending]
+### Dependencies: 9.3, 9.6
+### Description: Develop functions for starting, stopping, and updating voices
+### Details:
+Create functions to handle note-on and note-off events, including voice allocation, envelope triggering, and release handling. Implement a function to update all active voices each audio frame.
+
+## 8. Design parameter update system [pending]
+### Dependencies: 9.4, 9.5
+### Description: Create a system for efficiently updating voice parameters in real-time
+### Details:
+Implement a parameter update queue to handle changes from user input or automation. Develop a strategy to apply updates efficiently without audio artifacts.
+
+## 9. Implement MIDI input handling [pending]
+### Dependencies: 9.7
+### Description: Develop functions to process incoming MIDI messages
+### Details:
+Create handlers for MIDI note-on, note-off, and control change messages. Map MIDI controllers to voice parameters and implement MIDI learn functionality.
+
+## 10. Optimize for real-time performance [pending]
+### Dependencies: 9.6, 9.7, 9.8
+### Description: Analyze and optimize the voice machine for efficient real-time processing
+### Details:
+Profile the code to identify performance bottlenecks. Optimize critical paths, considering techniques like SIMD instructions or GPU acceleration where appropriate.
+
+## 11. Implement polyphony management [pending]
+### Dependencies: 9.3, 9.7
+### Description: Develop a system to handle multiple simultaneous voices
+### Details:
+Create a polyphony manager that tracks active voices, handles voice allocation, and implements voice stealing when the maximum polyphony is reached. Consider different voice stealing strategies.
+
+## 12. Design and implement modulation matrix [pending]
+### Dependencies: 9.4, 9.8
+### Description: Create a flexible modulation routing system
+### Details:
+Develop a modulation matrix that allows any modulation source (e.g., LFOs, envelopes) to be routed to any modulatable parameter. Implement efficient modulation processing in the audio loop.
+
+## 13. Implement preset management system [pending]
+### Dependencies: 9.4, 9.5
+### Description: Develop functions for saving, loading, and managing voice presets
+### Details:
+Create a serialization format for voice parameters. Implement functions to save and load presets from files. Develop a preset browser and management interface.
+
+## 14. Design and implement audio output stage [pending]
+### Dependencies: 9.7, 9.10
+### Description: Create the final stage of audio processing before output
+### Details:
+Implement a summing mixer for all active voices. Add a limiter to prevent clipping. Consider implementing oversampling for improved audio quality.
+
+## 15. Develop unit tests for core components [pending]
+### Dependencies: 9.2, 9.5, 9.7, 9.8
+### Description: Create a comprehensive suite of unit tests for individual components
+### Details:
+Write unit tests for envelope generators, parameter scaling functions, voice management functions, and parameter update system. Use a testing framework appropriate for your development environment.
+
+## 16. Implement integration tests [pending]
+### Dependencies: 9.15
+### Description: Develop tests to verify the interaction between different components
+### Details:
+Create integration tests that cover voice allocation, polyphony management, modulation routing, and preset loading/saving. Test edge cases and stress test the system with high polyphony.
+
+## 17. Perform audio quality assessment [pending]
+### Dependencies: 9.14
+### Description: Develop tools and procedures for assessing audio quality
+### Details:
+Implement spectrum analysis tools. Create test patches to evaluate frequency response, harmonic distortion, and aliasing. Develop automated tests to catch regressions in audio quality.
+
+## 18. Optimize CPU and memory usage [pending]
+### Dependencies: 9.10, 9.14
+### Description: Analyze and optimize resource usage of the voice machine
+### Details:
+Profile CPU usage across different polyphony levels and patch complexities. Analyze memory usage and implement pooling strategies for frequently allocated objects. Consider implementing voice freezing for inactive voices.
+

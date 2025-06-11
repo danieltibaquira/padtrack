@@ -1,0 +1,49 @@
+# Task ID: 32
+# Title: Implement GRID Recording Mode
+# Status: pending
+# Dependencies: 19
+# Priority: high
+# Description: Create the GRID recording mode for step-based input.
+# Details:
+Implement GRID recording mode with:
+- Step button interaction for placing/removing notes
+- Visual feedback for active steps
+- Integration with P-Lock system
+- Support for setting note properties (velocity, length)
+
+Implement the UI and interaction logic for GRID mode. Add support for selecting steps and modifying their properties. Integrate with the existing sequencer and data model.
+
+# Test Strategy:
+Test step creation and deletion. Verify that steps are correctly stored in the data model. Test interaction with P-Locks. Test with various pattern lengths and time signatures.
+
+# Subtasks:
+## 1. Implement Grid Recording Mode UI [pending]
+### Dependencies: None
+### Description: Create the user interface for the grid recording mode following VIPER architecture principles
+### Details:
+1. Design and implement the View layer for grid recording mode
+2. Create a ViewController to handle user interactions
+3. Implement a Presenter to manage the View's logic
+4. Write unit tests for the Presenter
+5. Create UI automation tests for the grid recording mode interface
+
+## 2. Develop Grid Recording Logic [pending]
+### Dependencies: None
+### Description: Implement the core functionality for grid recording mode using test-driven development
+### Details:
+1. Write unit tests for the Interactor responsible for grid recording logic
+2. Implement the Interactor to handle grid recording functionality
+3. Create an Entity to represent grid data
+4. Develop a Router to manage navigation within the grid recording feature
+5. Implement integration tests to ensure proper communication between components
+
+## 3. Integrate Grid Recording with Existing Modules [pending]
+### Dependencies: 32.2
+### Description: Ensure proper integration of the grid recording mode with other app modules
+### Details:
+1. Update the app's main Router to include the grid recording feature
+2. Modify existing modules to support grid recording mode
+3. Implement data persistence for grid recordings
+4. Write integration tests to verify proper interaction between modules
+5. Conduct end-to-end testing of the grid recording feature within the app
+

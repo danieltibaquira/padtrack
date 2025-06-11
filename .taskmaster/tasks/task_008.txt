@@ -1,0 +1,140 @@
+# Task ID: 8
+# Title: Implement Basic FM Synthesis Engine
+# Status: pending
+# Dependencies: 4, 5
+# Priority: high
+# Description: Create the core FM synthesis engine for the FM TONE machine.
+# Details:
+Implement the basic FM synthesis engine with:
+- 4-operator architecture (C, A, B1, B2)
+- 8 algorithms for different operator routing
+- Sine wave oscillators with phase accumulation
+- Frequency ratio calculation and tuning
+- Feedback paths as specified in algorithms
+
+Use efficient DSP techniques with the Accelerate framework for vector operations. Implement anti-aliasing where necessary. Use lookup tables for sine generation to optimize performance.
+
+# Test Strategy:
+Test each algorithm configuration for correct audio output. Verify frequency ratios produce the expected harmonic content using FFT analysis. Test extreme parameter values to ensure stability.
+
+# Subtasks:
+## 1. Design operator structure [pending]
+### Dependencies: None
+### Description: Create the basic structure for FM operators
+### Details:
+Define a class or struct for operators with properties for frequency, phase, amplitude, and modulation input
+
+## 2. Implement frequency calculation [pending]
+### Dependencies: None
+### Description: Develop accurate frequency calculation for operators
+### Details:
+Implement pitch-to-frequency conversion, considering MIDI note numbers and pitch bend
+
+## 3. Implement phase accumulation [pending]
+### Dependencies: 8.2
+### Description: Create an efficient phase accumulation mechanism
+### Details:
+Use a phase accumulator with proper overflow handling to generate the operator's phase
+
+## 4. Design FM algorithm structure [pending]
+### Dependencies: None
+### Description: Create a flexible structure for implementing various FM algorithms
+### Details:
+Develop a system to connect operators in different configurations (e.g., series, parallel, feedback)
+
+## 5. Implement modulation index control [pending]
+### Dependencies: 8.4
+### Description: Add control over the modulation index for each operator
+### Details:
+Implement scaling of modulation inputs based on user-defined modulation index parameters
+
+## 6. Add feedback paths [pending]
+### Dependencies: 8.4
+### Description: Implement feedback loops in the FM algorithm
+### Details:
+Add support for operators to modulate themselves or previous operators in the chain
+
+## 7. Implement anti-aliasing techniques [pending]
+### Dependencies: 8.3
+### Description: Add anti-aliasing to reduce digital artifacts
+### Details:
+Implement oversampling and/or polynomial transition regions (PTR) for anti-aliasing
+
+## 8. Optimize FM algorithm processing [pending]
+### Dependencies: 8.4, 8.5, 8.6
+### Description: Improve the efficiency of the core FM processing loop
+### Details:
+Use SIMD instructions, loop unrolling, and other optimization techniques to improve performance
+
+## 9. Implement polyphony support [pending]
+### Dependencies: 8.4, 8.8
+### Description: Add multi-voice capability to the FM engine
+### Details:
+Create a voice management system to handle multiple simultaneous notes
+
+## 10. Add parameter interpolation [pending]
+### Dependencies: 8.5
+### Description: Implement smooth transitions for parameter changes
+### Details:
+Use linear or exponential interpolation for smooth changes in frequency, amplitude, and modulation index
+
+## 11. Design FM engine API [pending]
+### Dependencies: 8.9, 8.10
+### Description: Create a user-friendly API for the FM synthesis engine
+### Details:
+Define clear interfaces for note on/off, parameter control, and audio output
+
+## 12. Implement envelope generators [pending]
+### Dependencies: 8.5
+### Description: Add ADSR envelopes for amplitude and modulation control
+### Details:
+Create efficient envelope generators with customizable attack, decay, sustain, and release stages
+
+## 13. Add LFO functionality [pending]
+### Dependencies: 8.5
+### Description: Implement low-frequency oscillators for modulation
+### Details:
+Create LFOs with various waveforms (sine, triangle, square) and rate control
+
+## 14. Implement FM algorithm presets [pending]
+### Dependencies: 8.4, 8.11
+### Description: Create a system for storing and loading FM algorithm presets
+### Details:
+Develop a preset management system with factory presets and user preset capabilities
+
+## 15. Add modulation matrix [pending]
+### Dependencies: 8.5, 8.12, 8.13
+### Description: Implement a flexible modulation routing system
+### Details:
+Create a matrix for routing modulation sources (LFOs, envelopes) to various FM parameters
+
+## 16. Implement FM operator waveforms [pending]
+### Dependencies: 8.3
+### Description: Add support for different operator waveforms beyond sine waves
+### Details:
+Implement additional waveforms like square, saw, and triangle for FM operators
+
+## 17. Add FM-specific effects [pending]
+### Dependencies: 8.4, 8.8
+### Description: Implement effects tailored for FM synthesis
+### Details:
+Add effects like FM feedback, cross-modulation, and operator sync
+
+## 18. Optimize CPU usage [pending]
+### Dependencies: 8.8, 8.9
+### Description: Implement CPU usage optimization techniques
+### Details:
+Add voice stealing, dynamic operator culling, and adaptive quality settings
+
+## 19. Implement MIDI CC mapping [pending]
+### Dependencies: 8.11
+### Description: Add support for mapping MIDI CC messages to FM parameters
+### Details:
+Create a flexible system for assigning MIDI CC numbers to various FM synthesis parameters
+
+## 20. Develop comprehensive test suite [pending]
+### Dependencies: 8.11, 8.14, 8.15, 8.16, 8.17, 8.18, 8.19
+### Description: Create a set of unit and integration tests for the FM engine
+### Details:
+Implement tests for individual components, full voice rendering, and overall system performance
+

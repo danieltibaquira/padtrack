@@ -1,0 +1,329 @@
+# Overview
+The DigitonePad is a feature-complete, 1:1 software replica of the Elektron Digitone II, designed for the iPad. It aims to provide an authentic and tactile user experience for existing Digitone users and a powerful, portable FM synthesis and sequencing environment for all music producers. The application is built on a modular architecture, ensuring maintainability and future extensibility.
+
+# Core Features
+1.  **Elektron-Style Sequencer**
+    -   16 tracks (Audio or MIDI)
+    -   Up to 128 steps per track with individual length and speed
+    -   Parameter Locks (P-Locks) for step-based automation
+    -   Micro Timing, Retrigs, and Trig Conditions
+    -   GRID, LIVE, and STEP recording modes
+    -   Song Mode for arranging patterns
+
+2.  **Swappable "Machine" Architecture**
+    -   **Voice Machines (SYN):**
+        -   `FM TONE`: 4-operator FM engine with 8 algorithms.
+        -   `FM DRUM`: Percussion-focused FM engine.
+        -   `WAVETONE`: Wavetable and Phase Distortion synthesis.
+        -   `SWARMER`: Unison-based swarm synthesizer.
+    -   **Filter Machines (FLTR):**
+        -   `Multi-Mode`: Morphing LP-BP-HP filter.
+        -   `Lowpass 4`: 4-pole lowpass filter.
+        -   And more (Comb, EQ, etc.).
+
+3.  **Comprehensive FX Section**
+    -   **Track FX:** Bit Reduction, Sample Rate Reduction, Overdrive per track.
+    -   **Send FX:** Global Delay, Reverb, Chorus.
+    -   **Master FX:** Master Compressor and Overdrive.
+
+4.  **Data and Preset Management**
+    -   Core Data-based project structure (`Project` -> `Pattern` -> `Kit` -> `Track` -> `Preset`).
+    -   Emulated "+Drive" for storing multiple projects and presets.
+    -   Preset Pool for quick access to sounds within a project.
+
+5.  **Modular Swift Package Architecture**
+    -   Core functionalities (Audio, Sequencer, Data) are isolated in Swift Packages.
+    -   Enables independent development, testing, and reuse.
+    -   Architecture designed to easily accommodate new "Machines" in the future.
+    -   Always attaining to VIPER architecture and philosophy.
+
+6.  **Full MIDI Integration**
+    -   MIDI I/O for connecting external gear.
+    -   Live recording from MIDI controllers.
+    -   CC mapping for parameter control.
+    -   MIDI tracks for sequencing external hardware.
+
+# Synth Machine Specifications
+This section details the functional and technical characteristics of each Voice "SYN" Machine available in the DigitonePad.
+
+## 1. FM TONE
+A 4-operator Frequency Modulation (FM) synthesis engine designed for creating a wide range of melodic and harmonic sounds.
+
+**Core Characteristics:**
+-   **Operators:** Four sine-wave operators (C, A, B1, B2) that can modulate each other.
+-   **Algorithms:** 8 selectable routing algorithms determine which operators are carriers (produce sound) and which are modulators.
+-   **Envelopes:** Dedicated modulator envelopes (ADE or ASDE) for dynamic timbre shaping.
+-   **Harmonics:** A `HARM` parameter alters the operator waveforms, taking them beyond pure sine waves for richer starting tones.
+
+**Key Parameters:**
+-   **Page 1 (Core FM):** `ALGO`, `RATIO C/A/B`, `HARM`, `DTUN`, `FDBK`, `MIX`.
+-   **Page 2 (Modulator Levels & Envelopes):** `ATK`, `DEC`, `END`, `LEV` for modulator operators A and B.
+-   **Page 3 (Envelope Behavior):** Envelope delay, trig mode, and phase reset controls.
+-   **Page 4 (Offsets & Key Tracking):** Fine-tuning for operator ratios and keyboard tracking for modulation levels.
+
+## 2. FM DRUM
+A specialized FM engine optimized for creating percussive and drum sounds.
+
+**Core Characteristics:**
+-   **Sound Components:** The architecture is split into a "Body" component for the fundamental tone and a "Noise/Transient" component for the initial attack.
+-   **Punch & Complexity:** Features like pitch sweep and wavefolding are included to create punchy, complex transients characteristic of modern drum synthesis.
+
+## 3. WAVETONE
+A versatile synthesis engine combining wavetable and phase distortion techniques.
+
+**Core Characteristics:**
+-   **Oscillators:** A dual-oscillator engine. Each oscillator can use wavetable or phase distortion synthesis.
+-   **Modulation:** Includes classic oscillator modulation options like Ring Modulation and Hard Sync.
+-   **Noise Generator:** A flexible noise generator with multiple types (Grain, Tuned, Sample & Hold) and its own envelope (`ATK`, `HOLD`, `DEC`).
+
+**Key Parameters:**
+-   **Page 1 (OSC):** `TUN`, `WAV`, `PD`, `LEV` for each of the two oscillators.
+-   **Page 2 (MOD):** `OFS` (Wavetable Offset), `TBL` (Wavetable), `MOD` (Modulation Type), `RSET` (Reset), `DRIF` (Drift).
+-   **Page 3 (NOISE):** `ATK`, `HOLD`, `DEC`, `NLEV`, `BASE`, `WDTH`, `TYPE`, `CHAR`.
+
+## 4. SWARMER
+A synthesizer designed for creating rich, thick, chorus-like sounds.
+
+**Core Characteristics:**
+-   **Swarm Oscillators:** Features a main oscillator accompanied by a "swarm" of six detuned oscillators.
+-   **Internal Movement:** An "Animation" parameter modulates the swarm, creating lush, evolving textures.
+
+# User Experience
+**User Personas:**
+1.  **The Hardware Enthusiast**
+    -   **Needs:** A faithful recreation of the hardware workflow they know and love.
+    -   **Goals:** Create music on their iPad with the same efficiency as on their physical Digitone.
+    -   **Pain Points:** Software that doesn't respect the muscle memory and key-combo-driven interface of the original.
+
+2.  **The Mobile Producer**
+    -   **Needs:** A deep, professional-grade synthesizer and sequencer on a portable platform.
+    -   **Goals:** Sketch out ideas, create full tracks, and integrate with their existing mobile setup.
+    -   **Pain Points:** Overly simplistic "toy" apps that lack depth and robust sequencing capabilities.
+
+**Key User Flows:**
+1.  **Sound Design Flow**
+    -   Select a track.
+    -   Choose a `SYN` Machine (e.g., `FM TONE`).
+    -   Navigate parameter pages using dedicated buttons.
+    -   Turn on-screen encoders to modify sound parameters (`RATIO`, `FDBK`, etc.).
+    -   Save the sound as a `Preset` to the `Kit` or `Pool`.
+
+2.  **Sequencing Flow**
+    -   Enter `GRID RECORDING` mode.
+    -   Tap the 16 `[TRIG]` keys to place notes.
+    -   Hold a `[TRIG]` key and turn an encoder to create a `P-Lock`.
+    -   Switch to `LIVE RECORDING` to play a melody on the on-screen keyboard.
+    -   Chain patterns to create longer sequences.
+
+3.  **Arrangement Flow**
+    -   Enter `SONG MODE`.
+    -   Add patterns to the arrangement list.
+    -   Specify repetitions and mutes for each row.
+    -   Play the full song arrangement.
+
+**UI/UX Considerations:**
+-   **Authenticity:** The UI will be a 1:1 visual and functional replication of the hardware layout.
+-   **Tactile Feedback:** Buttons and encoders will provide visual and potentially haptic feedback to feel responsive.
+-   **Key Combos:** All major hardware key combinations (`[FUNC]` + key) will be implemented.
+-   **iPad Native:** While replicating hardware, the design will leverage iPad capabilities like touch gestures for enhanced interaction (e.g., long-press for p-locks).
+
+# Technical Architecture
+**System Components:**
+1.  **AppShell:** Main application target, SwiftUI views, and VIPER module coordination.
+2.  **AudioEngine:** `AVAudioEngine`-based low-level audio processing, routing graph (`AudioGraphManager`).
+3.  **DataLayer:** CoreData stack, entities (`Project`, `Pattern`, etc.), and persistence logic.
+4.  **SequencerModule:** The "Elektron Brain" - clock, sequencing logic, and event publishing (`Combine`).
+5.  **VoiceModule:** Houses all `VoiceMachine` implementations (e.g., `FMToneMachine`).
+6.  **FilterModule:** Houses all `FilterMachine` implementations (e.g., `MultiModeFilter`).
+7.  **FXModule:** Houses all track, send, and master effects.
+8.  **MIDIModule:** Handles all `CoreMIDI` interactions.
+9.  **UIComponents:** Reusable SwiftUI components (`DigitoneButton`, `DigitoneEncoder`).
+10. **MachineProtocols:** Shared protocols (`VoiceMachine`, `FilterMachine`) to prevent circular dependencies.
+
+**Data Models (CoreData Entities):**
+1.  **Project:** Contains `Patterns` and a `PresetPool`.
+2.  **Pattern:** Contains a `Kit`, `Tracks`, tempo, length.
+3.  **Kit:** A collection of 16 `Presets` + FX/Mixer settings.
+4.  **Track:** Contains `Trigs` and a reference to a `Preset`.
+5.  **Trig:** Contains step data, pitch, velocity, duration, and `pLocks`.
+6.  **Preset:** Contains all parameters for a specific `Machine`.
+
+**APIs and Integrations:**
+-   **Internal Protocols:** `VoiceMachine`, `FilterMachine` protocols for interaction between `AudioEngine` and sound-generating modules.
+-   **Apple Frameworks:** `SwiftUI`, `AVAudioEngine`, `CoreData`, `Combine`, `CoreMIDI`.
+-   **Dependency Management:** Swift Package Manager managed via `project.yml` and `Xcodegen`.
+
+**Infrastructure:**
+-   **IDE:** Xcode.
+-   **Build System:** `Xcodegen` for project generation.
+-   **Dependencies:** Swift Package Manager.
+-   **CI/CD:** GitHub Actions.
+
+# Development Roadmap
+**Phase 1: Foundation (Complete)**
+-   Project structure with Swift Packages.
+-   Basic `AudioEngine` and `DataLayer` implementation.
+-   Basic `SequencerModule` triggering events.
+
+**Phase 2: Synthesis Core (Complete)**
+-   `VoiceMachine` and `FilterMachine` protocols defined.
+-   `FM TONE` and `Multi-Mode Filter` machines implemented.
+-   Sequencer connected to audio and data layers.
+
+**Phase 3: UI & Interaction (Complete)**
+-   Hardware layout replicated in SwiftUI.
+-   Parameter pages with real-time data binding to CoreData and DSP.
+-   Parameter Locking (P-Locks) implemented.
+
+**Phase 4: Full Feature Implementation (In Progress)**
+-   Implement remaining Voice, Filter, and FX machines.
+-   Implement advanced sequencer features (Micro Timing, Trig Conditions).
+-   Implement full MIDI module capabilities.
+
+**Phase 5: Testing & Release (Blocked)**
+-   Final unit and UI testing.
+-   Performance profiling with Instruments.
+-   TestFlight beta testing.
+-   App Store submission.
+-   *Note: This phase is blocked by outstanding build and stability issues from the refactoring phase.*
+
+**Phase 6: Refactoring & Stabilization (In Progress)**
+-   Solidify core protocols and data types.
+-   Refactor and add unit tests to each module (`VoiceModule`, `FilterModule`, etc.).
+-   *Note: This phase is critical to unblock final testing and release.*
+
+# Testing Strategy
+1.  **Unit & DSP Testing (XCTest)**
+    -   **AudioEngine:** Test `AudioGraphManager` connections, disconnections, and node management.
+    -   **Voice/Filter/FX Modules:** Offline render tests for each machine. Pass a known signal (or generate one) and use FFT analysis to verify DSP parameters (e.g., filter cutoff, FM ratio harmonics) produce the correct spectral output.
+    -   **DataLayer:** Test CRUD operations for all CoreData entities. Ensure relationships are correctly established and saved.
+    -   **SequencerModule:** Test `SequencerClock` timing. Subscribe to event publishers to assert that notes are fired for the correct steps in a test pattern.
+
+2.  **UI/Interaction Testing (XCUITest)**
+    -   Automate critical user flows (creating a pattern, p-locking a parameter).
+    -   Verify that UI elements exist and are interactive.
+    -   Test navigation between different parameter pages.
+
+3.  **Integration Testing**
+    -   Test the full data flow: UI Encoder -> Presenter -> Interactor -> CoreData -> AudioEngine -> DSP. Verify that turning a knob audibly changes the sound in real-time.
+    -   Test the full sequencer flow: Sequencer reads `Trig` from `DataLayer`, sends note to `AudioEngine`, which configures the correct `VoiceMachine` with `Preset` data and plays the sound.
+
+4.  **Performance Testing**
+    -   Profile CPU and memory usage with Xcode Instruments on target iPad hardware.
+    -   Test for audio thread overloads under heavy load (e.g., 16 tracks with complex machines and FX).
+    -   Identify and optimize any bottlenecks.
+
+# Build & Dependency Management
+1.  **Project Generation**
+    -   The primary Xcode project (`DigitonePad.xcodeproj`) is generated and managed by `Xcodegen`.
+    -   The `project.yml` file serves as the single source of truth for all targets, dependencies, build settings, and schemes. This ensures consistency and simplifies project configuration.
+
+2.  **Dependency Management**
+    -   All internal modules (`AudioEngine`, `DataLayer`, etc.) are defined as local Swift Packages.
+    -   Dependencies between these packages are explicitly defined in `project.yml`.
+    -   No external binary dependencies are used; all code is managed within the monorepo via SPM.
+
+3.  **Build Schemes**
+    -   Separate schemes are defined for the main `AppShell` application and for each testable Swift Package.
+    -   This allows for running tests for a specific module in isolation, improving development speed and focus.
+
+# Module Architecture
+1.  **VIPER Architecture**
+    -   Feature sets (e.g., parameter pages) are implemented using the VIPER (View, Interactor, Presenter, Entity, Router) design pattern.
+    -   **View:** Dumb SwiftUI views that render state and forward user input to the Presenter.
+    -   **Interactor:** Contains the core business logic (e.g., updating data in `CoreData`). Does not know about the UI.
+    -   **Presenter:** "Glue" layer that formats data for the View and handles user input.
+    -   **Entity:** CoreData `NSManagedObject` subclasses. The data models.
+    -   **Router:** Handles navigation between modules.
+
+2.  **Example Module Structure**
+    ```swift
+    FMToneModule/
+    ├── Sources/
+    │   ├── FMToneModule/
+    │   │   ├── View/
+    │   │   │   └── FMToneView.swift
+    │   │   ├── Interactor/
+    │   │   │   └── FMToneInteractor.swift
+    │   │   ├── Presenter/
+    │   │   │   └── FMTonePresenter.swift
+    │   │   └── Router/
+    │   │       └── FMToneRouter.swift
+    │   └── ... (DSP code separate from VIPER stack)
+    └── Tests/
+        └── FMToneModuleTests/
+    ```
+
+# CI/CD Pipeline
+1.  **GitHub Actions Workflow**
+    ```yaml
+    name: CI
+    
+    on:
+      push:
+        branches: [ main ]
+      pull_request:
+        branches: [ main ]
+    
+    jobs:
+      test:
+        name: Run Unit & Integration Tests
+        runs-on: macos-latest
+    
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v3
+    
+          - name: Select Xcode version
+            uses: maxim-lobanov/setup-xcode@v1
+            with:
+              xcode-version: 'latest'
+    
+          - name: Generate Xcode Project
+            run: xcodegen generate
+    
+          - name: Run DataLayer Tests
+            run: xcodebuild test -scheme DataLayer -destination 'platform=iOS Simulator,name=iPad Pro (12.9-inch)'
+    
+          - name: Run SequencerModule Tests
+            run: xcodebuild test -scheme SequencerModule -destination 'platform=iOS Simulator,name=iPad Pro (12.9-inch)'
+    
+          # ... add steps for all other testable schemes
+    ```
+
+# Risks and Mitigations
+**Technical Challenges:**
+1.  **Build Stability & Tooling**
+    -   **Risk:** The project has a history of build failures stemming from complex dependencies and unreliable development tools, blocking progress.
+    -   **Mitigation:**
+        -   Prioritize the `Phase 6: Refactoring & Stabilization` plan.
+        -   Simplify dependencies where possible.
+        -   Thoroughly test and validate any changes to `project.yml` before merging.
+        -   Establish a stable, reliable local development environment for all contributors.
+
+2.  **Real-Time Audio Performance**
+    -   **Risk:** The DSP code for multiple machines and FX could overload the CPU's real-time audio thread, causing glitches, pops, and clicks.
+    -   **Mitigation:**
+        -   Aggressively profile with Instruments throughout development.
+        -   Write efficient DSP code (avoid allocations, use vectorized instructions via Accelerate framework where appropriate).
+        -   Implement a "voice stealing" algorithm to manage polyphony under heavy load.
+
+3.  **State Management Complexity**
+    -   **Risk:** With P-Locks, presets, and real-time UI updates, the state of any given parameter can become inconsistent between the UI, the data layer, and the audio engine.
+    -   **Mitigation:**
+        -   Strictly adhere to a unidirectional data flow (UI -> Data -> Audio).
+        -   Use `Combine` to reactively update components when data changes in the `DataLayer` (the single source of truth).
+        -   Implement robust unit tests for state changes.
+
+# Appendix
+**Technical Specifications:**
+-   **Platform:** iPadOS
+-   **Language:** Swift
+-   **UI:** SwiftUI
+-   **Audio:** AVAudioEngine
+-   **Database:** CoreData
+-   **Reactivity:** Combine
+-   **Build Tooling:** Xcodegen, Swift Package Manager
+
+**Reference Documents:**
+-   `digitone-manual.md`: The functional specification, based on the hardware unit. 

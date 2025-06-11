@@ -1,0 +1,105 @@
+# Task ID: 2
+# Title: Define Core Data Models
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Design and implement the Core Data model entities for the application.
+# Details:
+Create the Core Data model with the following entities and relationships:
+1. Project: Contains Patterns and a PresetPool
+2. Pattern: Contains a Kit, Tracks, tempo, length
+3. Kit: A collection of 16 Presets + FX/Mixer settings
+4. Track: Contains Trigs and a reference to a Preset
+5. Trig: Contains step data, pitch, velocity, duration, and pLocks
+6. Preset: Contains all parameters for a specific Machine
+
+Implement NSManagedObject subclasses for each entity with appropriate properties and relationships. Use Core Data code generation for attribute classes.
+
+# Test Strategy:
+Write unit tests to verify CRUD operations for all entities. Test relationship integrity and constraints. Verify that saving and loading operations work correctly.
+
+# Subtasks:
+## 1. Design Core Data model diagram [pending]
+### Dependencies: None
+### Description: Create a comprehensive diagram of the Core Data model, including all entities, attributes, and relationships.
+### Details:
+Use a diagramming tool to visually represent the Core Data model. Include entities: Project, Pattern, Kit, Track, Trig, and Preset. Show all attributes and relationships between entities.
+
+## 2. Implement Project entity [pending]
+### Dependencies: None
+### Description: Create the Project entity with all necessary attributes and relationships.
+### Details:
+Define attributes such as name, creationDate, and lastModifiedDate. Set up relationships with Pattern, Kit, and Preset entities. Implement any required validation rules.
+
+## 3. Implement Pattern entity [pending]
+### Dependencies: 2.2
+### Description: Create the Pattern entity with all necessary attributes and relationships.
+### Details:
+Define attributes such as name, length, and tempo. Set up relationships with Project, Track, and Trig entities. Implement any required validation rules.
+
+## 4. Implement Kit entity [pending]
+### Dependencies: 2.2
+### Description: Create the Kit entity with all necessary attributes and relationships.
+### Details:
+Define attributes such as name and soundFiles. Set up relationships with Project and Track entities. Implement any required validation rules.
+
+## 5. Implement Track entity [pending]
+### Dependencies: 2.3, 2.4
+### Description: Create the Track entity with all necessary attributes and relationships.
+### Details:
+Define attributes such as name, volume, and pan. Set up relationships with Pattern, Kit, and Trig entities. Implement any required validation rules.
+
+## 6. Implement Trig entity [pending]
+### Dependencies: 2.3, 2.5
+### Description: Create the Trig entity with all necessary attributes and relationships.
+### Details:
+Define attributes such as position, velocity, and probability. Set up relationships with Pattern and Track entities. Implement any required validation rules.
+
+## 7. Implement Preset entity [pending]
+### Dependencies: 2.2
+### Description: Create the Preset entity with all necessary attributes and relationships.
+### Details:
+Define attributes such as name, settings, and category. Set up relationships with Project entity. Implement any required validation rules.
+
+## 8. Set up Core Data stack [pending]
+### Dependencies: 2.2, 2.3, 2.4, 2.5, 2.6, 2.7
+### Description: Implement the Core Data stack to manage the persistent store and context.
+### Details:
+Create a CoreDataStack class to handle the managed object context, persistent store coordinator, and persistent container. Implement methods for saving and fetching data.
+
+## 9. Generate NSManagedObject subclasses [pending]
+### Dependencies: 2.2, 2.3, 2.4, 2.5, 2.6, 2.7
+### Description: Create custom NSManagedObject subclasses for each entity in the Core Data model.
+### Details:
+Use Xcode's code generation feature or manually create NSManagedObject subclasses for Project, Pattern, Kit, Track, Trig, and Preset entities. Implement custom methods and computed properties as needed.
+
+## 10. Implement data validation rules [pending]
+### Dependencies: 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.9
+### Description: Create and implement data validation rules for all entities and their attributes.
+### Details:
+Define validation rules for each entity's attributes (e.g., required fields, value ranges, format checks). Implement these rules in the NSManagedObject subclasses or using Core Data's validation methods.
+
+## 11. Create CRUD operations [pending]
+### Dependencies: 2.8, 2.9
+### Description: Implement Create, Read, Update, and Delete operations for all entities.
+### Details:
+Create methods to perform CRUD operations on each entity. Implement error handling and ensure data consistency across related entities.
+
+## 12. Implement data migration strategy [pending]
+### Dependencies: 2.8
+### Description: Design and implement a strategy for handling future Core Data model changes.
+### Details:
+Create a versioning and migration strategy for the Core Data model. Implement lightweight migrations and prepare for potential heavy migrations in the future.
+
+## 13. Write unit tests for Core Data model [pending]
+### Dependencies: 2.9, 2.10, 2.11
+### Description: Create comprehensive unit tests for all Core Data entities and operations.
+### Details:
+Write tests for entity creation, relationship management, validation rules, CRUD operations, and edge cases. Use in-memory store for testing to improve performance.
+
+## 14. Perform code review and optimization [pending]
+### Dependencies: 2.11, 2.12, 2.13
+### Description: Review and optimize the Core Data implementation for performance and maintainability.
+### Details:
+Conduct a thorough code review of the Core Data implementation. Optimize queries, indexing, and fetching strategies. Ensure proper error handling and logging are in place.
+
