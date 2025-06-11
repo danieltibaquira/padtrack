@@ -1,0 +1,254 @@
+name: DigitonePad
+options:
+  bundleIdPrefix: com.digitonepad
+  deploymentTarget:
+    iOS: "16.0"
+  developmentLanguage: en
+  createIntermediateGroups: true
+  groupSortPosition: top
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    PRODUCT_NAME: DigitonePad
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.9"
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+    TARGETED_DEVICE_FAMILY: "1,2"
+    SUPPORTS_MACCATALYST: false
+    ENABLE_BITCODE: false
+    SWIFT_STRICT_CONCURRENCY: complete
+
+packages:
+  # Add any external dependencies here as needed
+
+targets:
+  DigitonePad:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources
+        excludes:
+          - "**/*.md"
+    resources:
+      - path: Resources
+        optional: true
+    dependencies:
+      - target: MachineProtocols
+      - target: DataLayer
+      - target: AudioEngine
+      - target: SequencerModule
+      - target: VoiceModule
+      - target: FilterModule
+      - target: FXModule
+      - target: MIDIModule
+      - target: UIComponents
+      - target: AppShell
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.app
+        INFOPLIST_FILE: Resources/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ENABLE_PREVIEWS: true
+        DEVELOPMENT_ASSET_PATHS: "\"Resources/Preview Content\""
+    info:
+      path: Resources/Info.plist
+      properties:
+        CFBundleDisplayName: DigitonePad
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        UILaunchStoryboardName: LaunchScreen
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        NSMicrophoneUsageDescription: "DigitonePad needs microphone access for audio input and recording."
+        NSBluetoothAlwaysUsageDescription: "DigitonePad uses Bluetooth for MIDI device connectivity."
+        UIBackgroundModes:
+          - audio
+        AVAudioSessionCategory: AVAudioSessionCategoryPlayAndRecord
+        AVAudioSessionCategoryOptions:
+          - AVAudioSessionCategoryOptionMixWithOthers
+          - AVAudioSessionCategoryOptionAllowBluetooth
+
+  # Framework targets for each module
+  MachineProtocols:
+    type: framework
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources/MachineProtocols
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.machineprotocols
+
+  DataLayer:
+    type: framework
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources/DataLayer
+    dependencies:
+      - target: MachineProtocols
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.datalayer
+
+  AudioEngine:
+    type: framework
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources/AudioEngine
+    dependencies:
+      - target: MachineProtocols
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.audioengine
+
+  SequencerModule:
+    type: framework
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources/SequencerModule
+    dependencies:
+      - target: MachineProtocols
+      - target: DataLayer
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.sequencermodule
+
+  VoiceModule:
+    type: framework
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources/VoiceModule
+    dependencies:
+      - target: MachineProtocols
+      - target: AudioEngine
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.voicemodule
+
+  FilterModule:
+    type: framework
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources/FilterModule
+    dependencies:
+      - target: MachineProtocols
+      - target: AudioEngine
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.filtermodule
+
+  FXModule:
+    type: framework
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources/FXModule
+    dependencies:
+      - target: MachineProtocols
+      - target: AudioEngine
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.fxmodule
+
+  MIDIModule:
+    type: framework
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources/MIDIModule
+    dependencies:
+      - target: MachineProtocols
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.midimodule
+
+  UIComponents:
+    type: framework
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources/UIComponents
+    dependencies:
+      - target: MachineProtocols
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.uicomponents
+
+  AppShell:
+    type: framework
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources/AppShell
+    dependencies:
+      - target: DataLayer
+      - target: AudioEngine
+      - target: SequencerModule
+      - target: VoiceModule
+      - target: FilterModule
+      - target: FXModule
+      - target: MIDIModule
+      - target: UIComponents
+      - target: MachineProtocols
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.appshell
+
+  # Test targets
+  DigitonePadTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+        excludes:
+          - "**/*.md"
+    dependencies:
+      - target: DigitonePad
+      - target: MachineProtocols
+      - target: DataLayer
+      - target: AudioEngine
+      - target: SequencerModule
+      - target: VoiceModule
+      - target: FilterModule
+      - target: FXModule
+      - target: MIDIModule
+      - target: UIComponents
+      - target: AppShell
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.tests
+
+schemes:
+  DigitonePad:
+    build:
+      targets:
+        DigitonePad: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - name: DigitonePadTests
+          parallelizable: true
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release 
