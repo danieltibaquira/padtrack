@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="DigitonePad" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22770" systemVersion="24.0.0" minimumToolsVersion="11.0">
+    <entity name="Project" representedClassName="Project">
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="patterns" toMany="YES" destinationEntity="Pattern" inverseName="project" inverseEntity="Pattern"/>
+    </entity>
+    <entity name="Pattern" representedClassName="Pattern">
+        <attribute name="name" attributeType="String"/>
+        <attribute name="length" attributeType="Integer 16" defaultValueString="64"/>
+        <attribute name="tempo" attributeType="Double" defaultValueString="120.0"/>
+        <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="patterns" inverseEntity="Project"/>
+        <relationship name="tracks" toMany="YES" destinationEntity="Track"/>
+        <relationship name="kit" toMany="NO" destinationEntity="Kit"/>
+    </entity>
+    <entity name="Track" representedClassName="Track">
+        <relationship name="pattern" toMany="NO" destinationEntity="Pattern" inverseName="tracks" inverseEntity="Pattern"/>
+    </entity>
+    <entity name="Kit" representedClassName="Kit">
+        <relationship name="pattern" toMany="NO" destinationEntity="Pattern" inverseName="kit" inverseEntity="Pattern"/>
+    </entity>
+    <elements>
+        <element name="Project" positionX="-63" positionY="-16" width="128" height="90"/>
+        <element name="Pattern" positionX="89" positionY="-29" width="128" height="104"/>
+        <element name="Track" positionX="268" positionY="-22" width="128" height="60"/>
+        <element name="Kit" positionX="92" positionY="111" width="128" height="60"/>
+    </elements>
+</model> 

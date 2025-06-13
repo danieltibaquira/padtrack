@@ -1,22 +1,32 @@
 // AudioEngine.swift
-// DigitonePad - AudioEngine Module
+// DigitonePad - AudioEngine
+//
+// This module handles audio processing and playback.
 
 import Foundation
+import AVFoundation
 import MachineProtocols
 
-/// Main audio engine for DigitonePad
-public class AudioEngine {
-    public static let shared = AudioEngine()
+/// Main interface for audio operations
+public class AudioEngineManager {
+    public static let shared = AudioEngineManager()
+    
+    private let engine = AVAudioEngine()
     
     private init() {}
     
+    /// Initialize the audio engine
+    public func initialize() {
+        // TODO: Setup audio engine nodes and connections
+    }
+    
     /// Start the audio engine
     public func start() throws {
-        // TODO: Initialize AVAudioEngine
+        try engine.start()
     }
     
     /// Stop the audio engine
     public func stop() {
-        // TODO: Stop audio processing
+        engine.stop()
     }
 } 

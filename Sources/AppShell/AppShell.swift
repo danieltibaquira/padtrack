@@ -1,7 +1,10 @@
 // AppShell.swift
-// DigitonePad - AppShell
+// DigitonePad - AppShell Module
+//
+// This module provides the main application shell and coordination.
 
 import Foundation
+import MachineProtocols
 import DataLayer
 import AudioEngine
 import SequencerModule
@@ -10,9 +13,8 @@ import FilterModule
 import FXModule
 import MIDIModule
 import UIComponents
-import MachineProtocols
 
-/// Main application coordinator
+/// Main application shell that coordinates all modules
 public class AppShell {
     public static let shared = AppShell()
     
@@ -20,11 +22,17 @@ public class AppShell {
     
     /// Initialize the entire application
     public func initialize() {
-        DataLayerManager.shared.initialize()
+        // Initialize all core modules using their shared instances
         MIDIManager.shared.initialize()
+        AudioEngineManager.shared.initialize()
+        SequencerManager.shared.initialize()
+        VoiceManager.shared.initialize()
+        FilterManager.shared.initialize()
+        FXManager.shared.initialize()
         
+        // Start audio engine
         do {
-            try AudioEngine.shared.start()
+            try AudioEngineManager.shared.start()
         } catch {
             print("Failed to start audio engine: \(error)")
         }
@@ -32,8 +40,8 @@ public class AppShell {
     
     /// Shutdown the application
     public func shutdown() {
-        AudioEngine.shared.stop()
-        Sequencer.shared.stop()
+        AudioEngineManager.shared.stop()
+        // TODO: Add proper shutdown for other modules
     }
     
     /// Get current app version

@@ -4,22 +4,47 @@
 // This module handles data persistence and Core Data management.
 
 import Foundation
+import CoreData
 import MachineProtocols
 
 /// Main interface for data persistence operations
 public class DataLayerManager {
     public static let shared = DataLayerManager()
     
-    private init() {}
+    private let container: NSPersistentContainer
     
-    /// Initialize the data layer
-    public func initialize() {
-        // TODO: Initialize Core Data stack
+    private init() {
+        // Correctly locate the model in the package
+        guard let modelURL = Bundle.module.url(forResource: "DigitonePad", withExtension: "momd") else {
+            fatalError("Failed to find data model")
+        }
+        guard let managedObjectModel = NSManagedObjectModel(contentsOf: modelURL) else {
+            fatalError("Failed to create model from file: \(modelURL)")
+        }
+
+        container = NSPersistentContainer(name: "DigitonePad", managedObjectModel: managedObjectModel)
+        container.loadPersistentStores { _, error in
+            if let error = error as NSError? {
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+        }
+    }
+    
+    /// The main view context
+    public var viewContext: NSManagedObjectContext {
+        return container.viewContext
     }
     
     /// Save current context
     public func save() throws {
-        // TODO: Implement save functionality
+        let context = container.viewContext
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                throw error
+            }
+        }
     }
 }
 

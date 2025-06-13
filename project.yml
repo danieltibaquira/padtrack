@@ -32,7 +32,7 @@ targets:
     platform: iOS
     deploymentTarget: "16.0"
     sources:
-      - path: Sources
+      - path: Sources/AppShell
         excludes:
           - "**/*.md"
     resources:
@@ -92,6 +92,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.machineprotocols
+        PRODUCT_NAME: MachineProtocols
+        GENERATE_INFOPLIST_FILE: true
 
   DataLayer:
     type: framework
@@ -104,6 +106,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.datalayer
+        PRODUCT_NAME: DataLayer
+        GENERATE_INFOPLIST_FILE: true
 
   AudioEngine:
     type: framework
@@ -116,6 +120,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.audioengine
+        PRODUCT_NAME: AudioEngine
+        GENERATE_INFOPLIST_FILE: true
 
   SequencerModule:
     type: framework
@@ -129,6 +135,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.sequencermodule
+        PRODUCT_NAME: SequencerModule
+        GENERATE_INFOPLIST_FILE: true
 
   VoiceModule:
     type: framework
@@ -142,6 +150,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.voicemodule
+        PRODUCT_NAME: VoiceModule
+        GENERATE_INFOPLIST_FILE: true
 
   FilterModule:
     type: framework
@@ -155,6 +165,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.filtermodule
+        PRODUCT_NAME: FilterModule
+        GENERATE_INFOPLIST_FILE: true
 
   FXModule:
     type: framework
@@ -168,6 +180,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.fxmodule
+        PRODUCT_NAME: FXModule
+        GENERATE_INFOPLIST_FILE: true
 
   MIDIModule:
     type: framework
@@ -180,6 +194,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.midimodule
+        PRODUCT_NAME: MIDIModule
+        GENERATE_INFOPLIST_FILE: true
 
   UIComponents:
     type: framework
@@ -192,6 +208,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.uicomponents
+        PRODUCT_NAME: UIComponents
+        GENERATE_INFOPLIST_FILE: true
 
   AppShell:
     type: framework
@@ -212,6 +230,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.appshell
+        PRODUCT_NAME: AppShell
+        GENERATE_INFOPLIST_FILE: true
 
   # Test targets
   DigitonePadTests:

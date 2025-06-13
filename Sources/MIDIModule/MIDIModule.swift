@@ -1,18 +1,21 @@
 // MIDIModule.swift
 // DigitonePad - MIDIModule
+//
+// This module handles MIDI I/O and routing.
 
 import Foundation
+import CoreMIDI
 import MachineProtocols
 
-/// MIDI input/output manager
+/// Main interface for MIDI operations
 public class MIDIManager {
     public static let shared = MIDIManager()
     
     private init() {}
     
-    /// Initialize MIDI system
+    /// Initialize the MIDI module
     public func initialize() {
-        // TODO: Initialize Core MIDI
+        // TODO: Initialize CoreMIDI services
     }
     
     /// Send MIDI message

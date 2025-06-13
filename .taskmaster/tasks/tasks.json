@@ -35,7 +35,7 @@
           "title": "Set up Swift Package Manager",
           "description": "Initialize Swift Package Manager and create Package.swift file",
           "details": "1. Run 'swift package init --type library'\n2. Edit Package.swift to include necessary dependencies\n3. Define targets for each module\n4. Add and commit Package.swift",
-          "status": "in-progress",
+          "status": "done",
           "dependencies": [
             "1.2"
           ],
@@ -46,7 +46,7 @@
           "title": "Configure Xcodegen",
           "description": "Set up Xcodegen for project generation",
           "details": "1. Install Xcodegen if not already installed\n2. Create project.yml file in the root directory\n3. Define project settings, targets, and schemes in project.yml\n4. Add and commit project.yml",
-          "status": "pending",
+          "status": "done",
           "dependencies": [
             "1.3"
           ],
@@ -57,7 +57,7 @@
           "title": "Create module directories",
           "description": "Set up directories for each Swift Package module",
           "details": "1. Create directories for each module under 'Sources'\n2. Create corresponding test directories under 'Tests'\n3. Add placeholder files in each module directory\n4. Add and commit new directories and files",
-          "status": "pending",
+          "status": "done",
           "dependencies": [
             "1.2",
             "1.3"
@@ -69,7 +69,7 @@
           "title": "Set up CI/CD configuration",
           "description": "Create initial CI/CD configuration file",
           "details": "1. Create .github/workflows directory\n2. Add a basic GitHub Actions workflow file for CI\n3. Configure the workflow to run tests and build the project\n4. Add and commit the workflow file",
-          "status": "pending",
+          "status": "done",
           "dependencies": [
             "1.1"
           ],
@@ -80,7 +80,7 @@
           "title": "Create initial documentation",
           "description": "Set up basic project documentation",
           "details": "1. Create README.md in the root directory\n2. Add project description, setup instructions, and contribution guidelines\n3. Create CONTRIBUTING.md with detailed contribution process\n4. Create LICENSE file with appropriate license\n5. Add and commit documentation files",
-          "status": "pending",
+          "status": "done",
           "dependencies": [
             "1.2"
           ],
@@ -91,7 +91,7 @@
           "title": "Generate Xcode project",
           "description": "Use Xcodegen to generate the Xcode project file",
           "details": "1. Run 'xcodegen generate' in the project root\n2. Verify the generated .xcodeproj file\n3. Open the project in Xcode to ensure correct setup\n4. Add and commit the generated project file",
-          "status": "pending",
+          "status": "done",
           "dependencies": [
             "1.4",
             "1.5"
@@ -108,23 +108,23 @@
       "testStrategy": "Write unit tests to verify CRUD operations for all entities. Test relationship integrity and constraints. Verify that saving and loading operations work correctly.",
       "priority": "high",
       "dependencies": [],
-      "status": "pending",
+      "status": "in-progress",
       "subtasks": [
         {
           "id": 1,
           "title": "Design Core Data model diagram",
           "description": "Create a comprehensive diagram of the Core Data model, including all entities, attributes, and relationships.",
           "dependencies": [],
-          "details": "Use a diagramming tool to visually represent the Core Data model. Include entities: Project, Pattern, Kit, Track, Trig, and Preset. Show all attributes and relationships between entities.",
-          "status": "pending"
+          "details": "Use a diagramming tool to visually represent the Core Data model. Include entities: Project, Pattern, Kit, Track, Trig, and Preset. Show all attributes and relationships between entities.\n<info added on 2025-06-13T04:00:32.965Z>\n# Core Data Model Design Plan\n\n## Entity Identification\n- Review DigitonePad requirements and identify main entities: Project, Pattern, Kit, Track, Trig, Preset.\n\n## Entity Attributes and Relationships\n- Project: name, createdAt, updatedAt, [patterns], [kits], [presets]\n- Pattern: name, order, [tracks], parentProject\n- Kit: name, [presets], parentProject\n- Track: type, order, [trigs], parentPattern, parentKit\n- Trig: step, note, velocity, length, parameterLocks, parentTrack\n- Preset: name, type, data, parentKit, parentProject\n\n## Relationship Mapping\n- Project 1:N Pattern, 1:N Kit, 1:N Preset\n- Pattern 1:N Track\n- Kit 1:N Preset\n- Track 1:N Trig\n- Preset N:1 Kit, N:1 Project\n\n## Implementation Steps\n1. Create a diagram using either Mermaid or Xcode Data Model\n2. Document rationale for each entity and relationship\n3. Generate and commit the diagram\n4. Mark subtask as complete when finished\n</info added on 2025-06-13T04:00:32.965Z>",
+          "status": "done"
         },
         {
           "id": 2,
           "title": "Implement Project entity",
           "description": "Create the Project entity with all necessary attributes and relationships.",
           "dependencies": [],
-          "details": "Define attributes such as name, creationDate, and lastModifiedDate. Set up relationships with Pattern, Kit, and Preset entities. Implement any required validation rules.",
-          "status": "pending"
+          "details": "Define attributes such as name, creationDate, and lastModifiedDate. Set up relationships with Pattern, Kit, and Preset entities. Implement any required validation rules.\n<info added on 2025-06-13T04:03:46.132Z>\nDefine the Project entity for Core Data with attributes: name (String), createdAt (Date), updatedAt (Date).\n\nSet up relationships:\n- patterns (to-many relationship with Pattern entity)\n- kits (to-many relationship with Kit entity)\n- presets (to-many relationship with Preset entity)\n\nAdd inverse relationships:\n- From Pattern entity back to Project\n- From Kit entity back to Project\n- From Preset entity back to Project\n\nDocument the entity definition and rationale in code comments.\n\nImplementation steps:\n1. Add Project entity to Core Data model\n2. Define attributes and relationships\n3. Set up validation rules for name (required, non-empty)\n4. Configure delete rules for relationships\n5. Commit changes to version control\n</info added on 2025-06-13T04:03:46.132Z>",
+          "status": "done"
         },
         {
           "id": 3,
@@ -134,7 +134,7 @@
             2
           ],
           "details": "Define attributes such as name, length, and tempo. Set up relationships with Project, Track, and Trig entities. Implement any required validation rules.",
-          "status": "pending"
+          "status": "in-progress"
         },
         {
           "id": 4,

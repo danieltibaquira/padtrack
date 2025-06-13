@@ -74,7 +74,8 @@ let package = Package(
         // Data persistence layer
         .target(
             name: "DataLayer",
-            dependencies: ["MachineProtocols"]),
+            dependencies: ["MachineProtocols"],
+            resources: [.process("Resources")]),
         
         // Core audio processing engine
         .target(

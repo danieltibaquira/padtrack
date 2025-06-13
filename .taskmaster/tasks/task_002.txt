@@ -1,6 +1,6 @@
 # Task ID: 2
 # Title: Define Core Data Models
-# Status: pending
+# Status: in-progress
 # Dependencies: None
 # Priority: high
 # Description: Design and implement the Core Data model entities for the application.
@@ -19,19 +19,68 @@ Implement NSManagedObject subclasses for each entity with appropriate properties
 Write unit tests to verify CRUD operations for all entities. Test relationship integrity and constraints. Verify that saving and loading operations work correctly.
 
 # Subtasks:
-## 1. Design Core Data model diagram [pending]
+## 1. Design Core Data model diagram [done]
 ### Dependencies: None
 ### Description: Create a comprehensive diagram of the Core Data model, including all entities, attributes, and relationships.
 ### Details:
 Use a diagramming tool to visually represent the Core Data model. Include entities: Project, Pattern, Kit, Track, Trig, and Preset. Show all attributes and relationships between entities.
+<info added on 2025-06-13T04:00:32.965Z>
+# Core Data Model Design Plan
 
-## 2. Implement Project entity [pending]
+## Entity Identification
+- Review DigitonePad requirements and identify main entities: Project, Pattern, Kit, Track, Trig, Preset.
+
+## Entity Attributes and Relationships
+- Project: name, createdAt, updatedAt, [patterns], [kits], [presets]
+- Pattern: name, order, [tracks], parentProject
+- Kit: name, [presets], parentProject
+- Track: type, order, [trigs], parentPattern, parentKit
+- Trig: step, note, velocity, length, parameterLocks, parentTrack
+- Preset: name, type, data, parentKit, parentProject
+
+## Relationship Mapping
+- Project 1:N Pattern, 1:N Kit, 1:N Preset
+- Pattern 1:N Track
+- Kit 1:N Preset
+- Track 1:N Trig
+- Preset N:1 Kit, N:1 Project
+
+## Implementation Steps
+1. Create a diagram using either Mermaid or Xcode Data Model
+2. Document rationale for each entity and relationship
+3. Generate and commit the diagram
+4. Mark subtask as complete when finished
+</info added on 2025-06-13T04:00:32.965Z>
+
+## 2. Implement Project entity [done]
 ### Dependencies: None
 ### Description: Create the Project entity with all necessary attributes and relationships.
 ### Details:
 Define attributes such as name, creationDate, and lastModifiedDate. Set up relationships with Pattern, Kit, and Preset entities. Implement any required validation rules.
+<info added on 2025-06-13T04:03:46.132Z>
+Define the Project entity for Core Data with attributes: name (String), createdAt (Date), updatedAt (Date).
 
-## 3. Implement Pattern entity [pending]
+Set up relationships:
+- patterns (to-many relationship with Pattern entity)
+- kits (to-many relationship with Kit entity)
+- presets (to-many relationship with Preset entity)
+
+Add inverse relationships:
+- From Pattern entity back to Project
+- From Kit entity back to Project
+- From Preset entity back to Project
+
+Document the entity definition and rationale in code comments.
+
+Implementation steps:
+1. Add Project entity to Core Data model
+2. Define attributes and relationships
+3. Set up validation rules for name (required, non-empty)
+4. Configure delete rules for relationships
+5. Commit changes to version control
+</info added on 2025-06-13T04:03:46.132Z>
+
+## 3. Implement Pattern entity [in-progress]
 ### Dependencies: 2.2
 ### Description: Create the Pattern entity with all necessary attributes and relationships.
 ### Details:
