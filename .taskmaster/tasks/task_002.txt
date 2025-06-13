@@ -80,13 +80,13 @@ Implementation steps:
 5. Commit changes to version control
 </info added on 2025-06-13T04:03:46.132Z>
 
-## 3. Implement Pattern entity [in-progress]
+## 3. Implement Pattern entity [done]
 ### Dependencies: 2.2
 ### Description: Create the Pattern entity with all necessary attributes and relationships.
 ### Details:
 Define attributes such as name, length, and tempo. Set up relationships with Project, Track, and Trig entities. Implement any required validation rules.
 
-## 4. Implement Kit entity [pending]
+## 4. Implement Kit entity [in-progress]
 ### Dependencies: 2.2
 ### Description: Create the Kit entity with all necessary attributes and relationships.
 ### Details:

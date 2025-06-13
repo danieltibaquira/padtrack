@@ -5,6 +5,7 @@
         <attribute name="name" attributeType="String"/>
         <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="patterns" toMany="YES" destinationEntity="Pattern" inverseName="project" inverseEntity="Pattern"/>
+        <relationship name="kits" toMany="YES" destinationEntity="Kit" inverseName="project" inverseEntity="Kit"/>
     </entity>
     <entity name="Pattern" representedClassName="Pattern">
         <attribute name="name" attributeType="String"/>
@@ -16,9 +17,16 @@
     </entity>
     <entity name="Track" representedClassName="Track">
         <relationship name="pattern" toMany="NO" destinationEntity="Pattern" inverseName="tracks" inverseEntity="Pattern"/>
+        <relationship name="kit" toMany="NO" destinationEntity="Kit" inverseName="tracks" inverseEntity="Kit"/>
     </entity>
     <entity name="Kit" representedClassName="Kit">
+        <attribute name="name" attributeType="String"/>
+        <attribute name="soundFiles" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer" customClassName="[String]"/>
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="pattern" toMany="NO" destinationEntity="Pattern" inverseName="kit" inverseEntity="Pattern"/>
+        <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="kits" inverseEntity="Project"/>
+        <relationship name="tracks" toMany="YES" destinationEntity="Track" inverseName="kit" inverseEntity="Track"/>
     </entity>
     <elements>
         <element name="Project" positionX="-63" positionY="-16" width="128" height="90"/>

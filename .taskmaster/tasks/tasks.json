@@ -134,7 +134,7 @@
             2
           ],
           "details": "Define attributes such as name, length, and tempo. Set up relationships with Project, Track, and Trig entities. Implement any required validation rules.",
-          "status": "in-progress"
+          "status": "done"
         },
         {
           "id": 4,
@@ -144,7 +144,7 @@
             2
           ],
           "details": "Define attributes such as name and soundFiles. Set up relationships with Project and Track entities. Implement any required validation rules.",
-          "status": "pending"
+          "status": "in-progress"
         },
         {
           "id": 5,
