@@ -6,6 +6,7 @@
         <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="patterns" toMany="YES" destinationEntity="Pattern" inverseName="project" inverseEntity="Pattern"/>
         <relationship name="kits" toMany="YES" destinationEntity="Kit" inverseName="project" inverseEntity="Kit"/>
+        <relationship name="presets" toMany="YES" destinationEntity="Preset" inverseName="project" inverseEntity="Preset"/>
     </entity>
     <entity name="Pattern" representedClassName="Pattern">
         <attribute name="name" attributeType="String"/>
@@ -28,10 +29,19 @@
         <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="kits" inverseEntity="Project"/>
         <relationship name="tracks" toMany="YES" destinationEntity="Track" inverseName="kit" inverseEntity="Track"/>
     </entity>
+    <entity name="Preset" representedClassName="Preset">
+        <attribute name="name" attributeType="String"/>
+        <attribute name="category" attributeType="String" optional="YES"/>
+        <attribute name="settings" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer"/>
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="presets" inverseEntity="Project"/>
+    </entity>
     <elements>
         <element name="Project" positionX="-63" positionY="-16" width="128" height="90"/>
         <element name="Pattern" positionX="89" positionY="-29" width="128" height="104"/>
         <element name="Track" positionX="268" positionY="-22" width="128" height="60"/>
         <element name="Kit" positionX="92" positionY="111" width="128" height="60"/>
+        <element name="Preset" positionX="-63" positionY="111" width="128" height="104"/>
     </elements>
 </model> 
