@@ -101,6 +101,10 @@ targets:
     deploymentTarget: "16.0"
     sources:
       - path: Sources/DataLayer
+        excludes:
+          - "Resources/**"
+    resources:
+      - path: Sources/DataLayer/Resources
     dependencies:
       - target: MachineProtocols
     settings:

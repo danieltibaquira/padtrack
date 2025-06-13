@@ -9,13 +9,13 @@ import MachineProtocols
 
 /// Main interface for data persistence operations
 public class DataLayerManager {
-    public static let shared = DataLayerManager()
+    @MainActor public static let shared = DataLayerManager()
     
     private let container: NSPersistentContainer
     
     private init() {
-        // Correctly locate the model in the package
-        guard let modelURL = Bundle.module.url(forResource: "DigitonePad", withExtension: "momd") else {
+        // Correctly locate the model in the DataLayer framework bundle
+        guard let modelURL = Bundle(for: DataLayerManager.self).url(forResource: "DigitonePad", withExtension: "momd") else {
             fatalError("Failed to find data model")
         }
         guard let managedObjectModel = NSManagedObjectModel(contentsOf: modelURL) else {

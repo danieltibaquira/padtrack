@@ -185,11 +185,11 @@ public class CoreDataMigrationManager {
     // MARK: - Model Management
     
     private func currentModel() -> NSManagedObjectModel? {
-        return NSManagedObjectModel.mergedModel(from: [Bundle.module])
+        return NSManagedObjectModel.mergedModel(from: [Bundle(for: CoreDataMigrationManager.self)])
     }
     
     private func compatibleModel(for metadata: [String: Any]) -> NSManagedObjectModel? {
-        return NSManagedObjectModel.mergedModel(from: [Bundle.module], 
+        return NSManagedObjectModel.mergedModel(from: [Bundle(for: CoreDataMigrationManager.self)], 
                                               forStoreMetadata: metadata)
     }
     
