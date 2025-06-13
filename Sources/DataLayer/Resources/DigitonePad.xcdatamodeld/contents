@@ -15,6 +15,7 @@
         <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="patterns" inverseEntity="Project"/>
         <relationship name="tracks" toMany="YES" destinationEntity="Track" inverseName="pattern" inverseEntity="Track"/>
         <relationship name="kit" toMany="NO" destinationEntity="Kit"/>
+        <relationship name="trigs" toMany="YES" destinationEntity="Trig" inverseName="pattern" inverseEntity="Trig"/>
     </entity>
     <entity name="Track" representedClassName="Track">
         <attribute name="name" attributeType="String" defaultValueString="Track"/>
@@ -28,6 +29,7 @@
         <relationship name="pattern" toMany="NO" destinationEntity="Pattern" inverseName="tracks" inverseEntity="Pattern"/>
         <relationship name="kit" toMany="NO" destinationEntity="Kit" inverseName="tracks" inverseEntity="Kit"/>
         <relationship name="preset" toMany="NO" destinationEntity="Preset" inverseName="tracks" inverseEntity="Preset"/>
+        <relationship name="trigs" toMany="YES" destinationEntity="Trig" inverseName="track" inverseEntity="Trig"/>
     </entity>
     <entity name="Kit" representedClassName="Kit">
         <attribute name="name" attributeType="String"/>
@@ -47,11 +49,28 @@
         <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="presets" inverseEntity="Project"/>
         <relationship name="tracks" toMany="YES" destinationEntity="Track" inverseName="preset" inverseEntity="Track"/>
     </entity>
+    <entity name="Trig" representedClassName="Trig">
+        <attribute name="step" attributeType="Integer 16" defaultValueString="0" minValueString="0" maxValueString="127"/>
+        <attribute name="isActive" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="note" attributeType="Integer 16" defaultValueString="60" minValueString="0" maxValueString="127"/>
+        <attribute name="velocity" attributeType="Integer 16" defaultValueString="100" minValueString="1" maxValueString="127"/>
+        <attribute name="duration" attributeType="Float" defaultValueString="1.0" minValueString="0.1" maxValueString="16.0"/>
+        <attribute name="probability" attributeType="Integer 16" defaultValueString="100" minValueString="0" maxValueString="100"/>
+        <attribute name="microTiming" attributeType="Float" defaultValueString="0.0" minValueString="-50.0" maxValueString="50.0"/>
+        <attribute name="retrigCount" attributeType="Integer 16" defaultValueString="0" minValueString="0" maxValueString="8"/>
+        <attribute name="retrigRate" attributeType="Float" defaultValueString="0.25"/>
+        <attribute name="pLocks" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer" optional="YES"/>
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="track" toMany="NO" destinationEntity="Track" inverseName="trigs" inverseEntity="Track"/>
+        <relationship name="pattern" toMany="NO" destinationEntity="Pattern" inverseName="trigs" inverseEntity="Pattern"/>
+    </entity>
     <elements>
         <element name="Project" positionX="-63" positionY="-16" width="128" height="90"/>
-        <element name="Pattern" positionX="89" positionY="-29" width="128" height="104"/>
-        <element name="Track" positionX="268" positionY="-22" width="128" height="194"/>
+        <element name="Pattern" positionX="89" positionY="-29" width="128" height="134"/>
+        <element name="Track" positionX="268" positionY="-22" width="128" height="224"/>
         <element name="Kit" positionX="92" positionY="111" width="128" height="60"/>
         <element name="Preset" positionX="-63" positionY="111" width="128" height="134"/>
+        <element name="Trig" positionX="447" positionY="-22" width="128" height="254"/>
     </elements>
 </model> 
