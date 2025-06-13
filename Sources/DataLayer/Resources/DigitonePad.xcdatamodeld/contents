@@ -13,12 +13,21 @@
         <attribute name="length" attributeType="Integer 16" defaultValueString="64"/>
         <attribute name="tempo" attributeType="Double" defaultValueString="120.0"/>
         <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="patterns" inverseEntity="Project"/>
-        <relationship name="tracks" toMany="YES" destinationEntity="Track"/>
+        <relationship name="tracks" toMany="YES" destinationEntity="Track" inverseName="pattern" inverseEntity="Track"/>
         <relationship name="kit" toMany="NO" destinationEntity="Kit"/>
     </entity>
     <entity name="Track" representedClassName="Track">
+        <attribute name="name" attributeType="String" defaultValueString="Track"/>
+        <attribute name="volume" attributeType="Float" defaultValueString="0.75" minValueString="0.0" maxValueString="1.0"/>
+        <attribute name="pan" attributeType="Float" defaultValueString="0.0" minValueString="-1.0" maxValueString="1.0"/>
+        <attribute name="isMuted" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="isSolo" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="trackIndex" attributeType="Integer 16" defaultValueString="0" minValueString="0" maxValueString="15"/>
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="pattern" toMany="NO" destinationEntity="Pattern" inverseName="tracks" inverseEntity="Pattern"/>
         <relationship name="kit" toMany="NO" destinationEntity="Kit" inverseName="tracks" inverseEntity="Kit"/>
+        <relationship name="preset" toMany="NO" destinationEntity="Preset" inverseName="tracks" inverseEntity="Preset"/>
     </entity>
     <entity name="Kit" representedClassName="Kit">
         <attribute name="name" attributeType="String"/>
@@ -36,12 +45,13 @@
         <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="presets" inverseEntity="Project"/>
+        <relationship name="tracks" toMany="YES" destinationEntity="Track" inverseName="preset" inverseEntity="Track"/>
     </entity>
     <elements>
         <element name="Project" positionX="-63" positionY="-16" width="128" height="90"/>
         <element name="Pattern" positionX="89" positionY="-29" width="128" height="104"/>
-        <element name="Track" positionX="268" positionY="-22" width="128" height="60"/>
+        <element name="Track" positionX="268" positionY="-22" width="128" height="194"/>
         <element name="Kit" positionX="92" positionY="111" width="128" height="60"/>
-        <element name="Preset" positionX="-63" positionY="111" width="128" height="104"/>
+        <element name="Preset" positionX="-63" positionY="111" width="128" height="134"/>
     </elements>
 </model> 
