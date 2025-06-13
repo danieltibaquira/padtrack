@@ -463,12 +463,13 @@ final class MachineProtocolsTests: XCTestCase {
         fxProcessor.triggerAction("tap_tempo", value: 2.0)
         XCTAssertEqual(fxProcessor.rate, 2.0, accuracy: 0.01)
 
-        // Test freeze action
+        // Test freeze action - value 1.0 means freeze is enabled, which should set bypass to false (freeze disabled)
         fxProcessor.triggerAction("freeze", value: 1.0)
-        XCTAssertTrue(fxProcessor.isBypassed)
+        XCTAssertFalse(fxProcessor.isBypassed) // freeze value 1.0 -> 1.0 < 0.5 is false -> isBypassed = false
 
+        // Test freeze action - value 0.0 means freeze is disabled, which should set bypass to true (freeze enabled)  
         fxProcessor.triggerAction("freeze", value: 0.0)
-        XCTAssertFalse(fxProcessor.isBypassed)
+        XCTAssertTrue(fxProcessor.isBypassed) // freeze value 0.0 -> 0.0 < 0.5 is true -> isBypassed = true
     }
 
     // MARK: - Serialization Tests

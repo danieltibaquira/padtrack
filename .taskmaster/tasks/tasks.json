@@ -275,7 +275,7 @@
       "id": 3,
       "title": "Implement DataLayer Swift Package",
       "description": "Create the DataLayer Swift Package with Core Data stack and persistence logic.",
-      "status": "in-progress",
+      "status": "done",
       "dependencies": [
         2
       ],
@@ -511,7 +511,7 @@
             19
           ],
           "details": "Perform final integration testing to ensure:\n- All 99 tests pass consistently\n- No entity conflicts occur during normal operation\n- The DataLayer works correctly with the rest of the application\n- Performance is not negatively impacted by the fixes",
-          "status": "not-started"
+          "status": "done"
         }
       ]
     },
