@@ -7,7 +7,7 @@ import Foundation
 import AudioEngine
 
 /// Main interface for voice operations
-public class VoiceManager {
+public final class VoiceManager: @unchecked Sendable {
     public static let shared = VoiceManager()
     
     public private(set) var isInitialized = false

@@ -7,7 +7,7 @@ import Foundation
 import DataLayer
 
 /// Main interface for sequencer operations
-public class SequencerManager {
+public final class SequencerManager: @unchecked Sendable {
     public static let shared = SequencerManager()
     
     public private(set) var isInitialized = false

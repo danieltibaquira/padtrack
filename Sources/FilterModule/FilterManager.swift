@@ -7,7 +7,7 @@ import Foundation
 import AudioEngine
 
 /// Main interface for filter operations
-public class FilterManager {
+public final class FilterManager: @unchecked Sendable {
     public static let shared = FilterManager()
     
     public private(set) var isInitialized = false

@@ -15,7 +15,7 @@ import MIDIModule
 import UIComponents
 
 /// Main application shell that coordinates all modules
-public class AppShell {
+public final class AppShell: @unchecked Sendable {
     public static let shared = AppShell()
     
     private init() {}

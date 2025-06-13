@@ -7,7 +7,7 @@ import Foundation
 import AudioEngine
 
 /// Main interface for FX operations
-public class FXManager {
+public final class FXManager: @unchecked Sendable {
     public static let shared = FXManager()
     
     public private(set) var isInitialized = false

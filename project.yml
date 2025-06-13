@@ -19,6 +19,10 @@ settings:
     SUPPORTS_MACCATALYST: false
     ENABLE_BITCODE: false
     SWIFT_STRICT_CONCURRENCY: complete
+    # Reduce code signing verbosity for simulator builds
+    CODE_SIGN_IDENTITY[sdk=iphonesimulator*]: ""
+    CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: ""
 
 # External packages can be added here when needed
 # packages:
@@ -32,22 +36,13 @@ targets:
     platform: iOS
     deploymentTarget: "16.0"
     sources:
-      - path: Sources/AppShell
+      - path: Sources/DigitonePad
         excludes:
           - "**/*.md"
     resources:
       - path: Resources
         optional: true
     dependencies:
-      - target: MachineProtocols
-      - target: DataLayer
-      - target: AudioEngine
-      - target: SequencerModule
-      - target: VoiceModule
-      - target: FilterModule
-      - target: FXModule
-      - target: MIDIModule
-      - target: UIComponents
       - target: AppShell
     settings:
       base:
@@ -246,7 +241,6 @@ targets:
         excludes:
           - "**/*.md"
     dependencies:
-      - target: DigitonePad
       - target: MachineProtocols
       - target: DataLayer
       - target: AudioEngine
@@ -260,6 +254,12 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.tests
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_MODULE_NAME: DigitonePadTests
+        TEST_HOST: ""
+        # Reduce code signing verbosity for tests
+        CODE_SIGN_IDENTITY[sdk=iphonesimulator*]: ""
+        CODE_SIGN_STYLE: Automatic
 
 schemes:
   DigitonePad:
@@ -278,4 +278,13 @@ schemes:
     analyze:
       config: Debug
     archive:
-      config: Release 
+      config: Release
+
+  DigitonePadTests:
+    build:
+      targets:
+        DigitonePadTests: all
+    test:
+      config: Debug
+      targets:
+        - DigitonePadTests

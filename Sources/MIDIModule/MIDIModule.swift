@@ -8,7 +8,7 @@ import CoreMIDI
 import MachineProtocols
 
 /// Main interface for MIDI operations
-public class MIDIManager {
+public final class MIDIManager: @unchecked Sendable {
     public static let shared = MIDIManager()
     
     private init() {}

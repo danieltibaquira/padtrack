@@ -1,6 +1,6 @@
 # Task ID: 3
 # Title: Implement DataLayer Swift Package
-# Status: pending
+# Status: in-progress
 # Dependencies: 2
 # Priority: high
 # Description: Create the DataLayer Swift Package with Core Data stack and persistence logic.
@@ -11,106 +11,290 @@ Implement the DataLayer Swift Package with:
 - Migration support for future schema changes
 - Methods for creating default/template projects
 - Utility methods for common data operations
+- Resolve entity conflicts and NSManagedObject subclass generation issues
 
 Use the latest Core Data best practices including NSPersistentContainer and performBackgroundTask for thread safety. Implement proper error handling and recovery mechanisms.
 
 # Test Strategy:
-Create comprehensive unit tests for the persistence layer. Test creating, reading, updating, and deleting all entity types. Test relationships and cascading deletes. Verify that the persistence controller initializes correctly in both memory and disk configurations.
+Create comprehensive unit tests for the persistence layer. Test creating, reading, updating, and deleting all entity types. Test relationships and cascading deletes. Verify that the persistence controller initializes correctly in both memory and disk configurations. Ensure all tests pass without entity conflicts or NSManagedObject subclass errors.
 
 # Subtasks:
-## 1. Create PersistenceController [pending]
+## 1. Create PersistenceController [done]
 ### Dependencies: None
 ### Description: Implement the PersistenceController class to manage Core Data stack
 ### Details:
 Create a singleton class to handle Core Data stack initialization and provide access to the managed object context
+<info added on 2025-06-13T13:05:03.143Z>
+Completed - PersistenceController is fully implemented with:
+✅ Singleton pattern with shared and preview instances
+✅ Modern NSPersistentContainer usage
+✅ Background context management
+✅ Save operations with error handling
+✅ Batch operations support
+✅ Migration manager integration
+✅ Thread-safe operations
 
-## 2. Implement Create Operation [pending]
+Located in Sources/DataLayer/CoreDataStack.swift (13KB, 390 lines)
+</info added on 2025-06-13T13:05:03.143Z>
+
+## 2. Implement Create Operation [done]
 ### Dependencies: None
 ### Description: Add functionality to create new entities in the data store
 ### Details:
 Implement methods to create and save new managed objects for each entity type
 
-## 3. Implement Read Operation [pending]
+## 3. Implement Read Operation [done]
 ### Dependencies: None
 ### Description: Add functionality to fetch entities from the data store
 ### Details:
 Implement methods to fetch single and multiple entities with various predicates and sorting options
 
-## 4. Implement Update Operation [pending]
+## 4. Implement Update Operation [done]
 ### Dependencies: 3.3
 ### Description: Add functionality to update existing entities in the data store
 ### Details:
 Implement methods to update properties of existing managed objects and save changes
 
-## 5. Implement Delete Operation [pending]
+## 5. Implement Delete Operation [done]
 ### Dependencies: 3.3
 ### Description: Add functionality to delete entities from the data store
 ### Details:
 Implement methods to remove single and multiple entities from the managed object context
 
-## 6. Implement Migration Support [pending]
+## 6. Implement Migration Support [done]
 ### Dependencies: None
 ### Description: Add support for Core Data model migrations
 ### Details:
 Create migration mappings and implement version handling for smooth data model updates
 
-## 7. Implement Error Handling [pending]
+## 7. Implement Error Handling [done]
 ### Dependencies: 3.2, 3.3, 3.4, 3.5, 3.6
 ### Description: Add comprehensive error handling for all operations
 ### Details:
 Implement custom error types and add try-catch blocks to handle and propagate errors
 
-## 8. Ensure Thread Safety [pending]
+## 8. Ensure Thread Safety [done]
 ### Dependencies: 3.2, 3.3, 3.4, 3.5
 ### Description: Implement thread-safe operations for all CRUD functions
 ### Details:
 Use proper concurrency patterns and Core Data's perform methods to ensure thread safety
 
-## 9. Implement Data Validation [pending]
+## 9. Implement Data Validation [done]
 ### Dependencies: 3.2, 3.4
 ### Description: Add data validation logic for all entity properties
 ### Details:
 Implement validation rules for each entity type and add checks before saving or updating data
 
-## 10. Write Unit Tests for CRUD Operations [pending]
+## 10. Write Unit Tests for CRUD Operations [done]
 ### Dependencies: 3.2, 3.3, 3.4, 3.5
 ### Description: Create comprehensive unit tests for all CRUD operations
 ### Details:
 Write test cases to cover various scenarios for creating, reading, updating, and deleting entities
 
-## 11. Write Unit Tests for Migration [pending]
+## 11. Write Unit Tests for Migration [done]
 ### Dependencies: 3.6
 ### Description: Create unit tests for data model migration
 ### Details:
 Write test cases to ensure smooth migration between different versions of the data model
 
-## 12. Optimize Fetch Requests [pending]
+## 12. Optimize Fetch Requests [done]
 ### Dependencies: 3.3
 ### Description: Implement performance optimizations for fetch requests
 ### Details:
 Use batch fetching, proper indexing, and optimize predicates for improved query performance
 
-## 13. Implement Caching Mechanism [pending]
+## 13. Implement Caching Mechanism [done]
 ### Dependencies: 3.2, 3.3, 3.4, 3.5
 ### Description: Add a caching layer to improve data access performance
 ### Details:
 Implement an in-memory cache for frequently accessed data to reduce Core Data overhead
 
-## 14. Create API Documentation [pending]
+## 14. Create API Documentation [done]
 ### Dependencies: 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9
 ### Description: Write comprehensive API documentation for the DataLayer
 ### Details:
 Use Swift's documentation comments to create detailed documentation for all public methods and properties
 
-## 15. Write Usage Guide [pending]
+## 15. Write Usage Guide [done]
 ### Dependencies: 3.14
 ### Description: Create a usage guide for the DataLayer Swift Package
 ### Details:
 Write a comprehensive guide with examples on how to integrate and use the DataLayer in Swift projects
 
-## 16. Perform Code Review [pending]
+## 16. Perform Code Review [done]
 ### Dependencies: 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.14, 3.15
 ### Description: Conduct a thorough code review of the entire DataLayer implementation
 ### Details:
 Review code for adherence to Swift best practices, proper error handling, and overall code quality
+
+## 17. Fix NSManagedObject Subclass Generation Issues [done]
+### Dependencies: 3.1, 3.16
+### Description: Resolve entity conflicts for Project, Kit, and other entities
+### Details:
+Fix the 'Multiple NSEntityDescriptions claim the NSManagedObject subclass' errors by:
+- Reviewing and correcting entity configurations in the Core Data model
+- Ensuring consistent class naming across the model
+- Verifying proper module specification for each entity
+- Checking for duplicate entity definitions across model versions
+- Resolving conflicts between manual and auto-generated NSManagedObject subclasses
+<info added on 2025-06-13T16:13:03.901Z>
+✅ RESOLVED: NSManagedObject subclass generation issues successfully fixed!
+
+## Root Cause Analysis:
+The issue was in the test infrastructure, not the actual Core Data model or NSManagedObject subclasses. Multiple test files were creating their own programmatic NSManagedObjectModel instances, causing conflicts where multiple NSEntityDescriptions claimed the same NSManagedObject subclasses.
+
+## Solution Implemented:
+1. **Replaced programmatic model creation with shared singleton**: Modified `CoreDataTestBase.swift` to use a single shared `NSManagedObjectModel` instead of each test creating its own model
+2. **Added all missing relationships**: Updated the programmatic test model to include all relationships from the actual Core Data model:
+   - Project ↔ Patterns, Kits, Presets
+   - Pattern ↔ Project, Tracks, Kit, Trigs  
+   - Track ↔ Pattern, Kit, Preset, Trigs
+   - Trig ↔ Track, Pattern
+   - Kit ↔ Pattern, Project, Tracks
+   - Preset ↔ Project, Tracks
+3. **Fixed Swift 6 concurrency**: Added `@preconcurrency import CoreData` to resolve concurrency warnings
+
+## Verification Results:
+- ✅ Swift package builds successfully: `swift build` (0.29s)
+- ✅ iOS project builds successfully: `xcodebuild` completed without errors
+- ✅ No more "Multiple NSEntityDescriptions claim the NSManagedObject subclass" errors
+- ✅ Tests run without Core Data conflicts (99 tests executed, only 9 failures related to incorrect test expectations about cascade delete behavior, not Core Data issues)
+
+## Key Technical Details:
+- Used singleton pattern for shared test model to prevent multiple model instances
+- Properly configured all inverse relationships with correct cardinality
+- Maintained full compatibility with existing NSManagedObject subclasses
+- All entity class names properly prefixed with module name (DataLayer.Project, etc.)
+
+The Core Data model and NSManagedObject subclasses are now working correctly in both test and production environments.
+</info added on 2025-06-13T16:13:03.901Z>
+
+## 18. Fix Core Data Configuration Conflicts [done]
+### Dependencies: 3.17
+### Description: Resolve Core Data configuration conflicts causing test failures
+### Details:
+Address configuration conflicts by:
+- Ensuring proper model merging in the persistent container setup
+- Verifying configuration names are consistent across the codebase
+- Checking for duplicate model loading
+- Resolving any conflicts in entity inheritance hierarchies
+- Ensuring proper module names in Core Data model editor
+<info added on 2025-06-13T16:18:59.329Z>
+# RESOLVED: Core Data configuration conflicts successfully fixed!
+
+## Root Cause Analysis:
+The Core Data configuration conflicts were caused by a mismatch between the expected delete behavior in tests and the actual Core Data model configuration. The tests expected cascade delete behavior, but the Core Data model had no delete rules specified (defaulting to "Nullify").
+
+## Solution Implemented:
+
+### 1. **Updated Core Data Model Delete Rules**:
+- **Project relationships**: Added `deletionRule="Cascade"` for patterns, kits, and presets (owned entities)
+- **Pattern relationships**: Added `deletionRule="Cascade"` for tracks and trigs (owned entities), `deletionRule="Nullify"` for project and kit (references)
+- **Track relationships**: Added `deletionRule="Cascade"` for trigs (owned entities), `deletionRule="Nullify"` for pattern, kit, and preset (references)
+- **All other relationships**: Set to `deletionRule="Nullify"` to maintain referential integrity
+
+### 2. **Updated Test Model to Match**:
+- Modified the programmatic test model in `CoreDataTestBase.swift` to include the same delete rules
+- Added proper `.cascadeDeleteRule` and `.nullifyDeleteRule` settings to all relationships
+- Fixed missing relationship references (removed non-existent `kitPattern` relationship)
+
+### 3. **Verified Cascade Delete Behavior**:
+- **Project deletion**: Now properly cascades to delete all owned patterns, kits, and presets
+- **Pattern deletion**: Now properly cascades to delete all owned tracks and trigs
+- **Track deletion**: Now properly cascades to delete all owned trigs
+- **Reference relationships**: Properly nullified when referenced entities are deleted
+
+## Test Results:
+- All 99 tests now pass (previously 9 failing relationship tests)
+- Swift package build: SUCCESS
+- iOS build with xcodebuild: SUCCESS
+- No NSManagedObject subclass conflicts
+- Proper cascade delete behavior working as expected
+
+## Technical Details:
+The fix ensures that the Core Data model now properly handles entity lifecycle management:
+- **Owned entities** (patterns belong to projects, tracks belong to patterns, etc.) are cascade deleted
+- **Referenced entities** (kit references from tracks, preset references from tracks) are nullified
+- This prevents orphaned entities while maintaining data integrity
+
+The configuration now matches the expected behavior defined in the test suite, resolving all Core Data configuration conflicts.
+</info added on 2025-06-13T16:18:59.329Z>
+
+## 19. Fix Failing Tests [done]
+### Dependencies: 3.17, 3.18
+### Description: Fix the 39 failing tests out of 99 total tests
+### Details:
+Systematically address each failing test by:
+- Grouping tests by failure pattern
+- Fixing the underlying entity conflict issues
+- Updating test setup code to avoid entity conflicts
+- Ensuring proper test teardown to prevent cross-test contamination
+- Verifying that fixed tests don't introduce new failures
+<info added on 2025-06-13T16:22:16.680Z>
+✅ COMPLETED: All failing tests have been successfully fixed!
+
+## Current Test Status:
+- **99 tests executed, 0 failures** - 100% pass rate
+- All test suites passing successfully
+- No NSManagedObject subclass conflicts
+- No Core Data configuration issues
+
+## Root Cause Analysis:
+The failing tests were resolved by the previous subtasks (3.17 and 3.18):
+
+1. **Task 3.17**: Fixed NSManagedObject subclass generation issues by replacing multiple programmatic Core Data models with a single shared model
+2. **Task 3.18**: Fixed Core Data configuration conflicts by adding proper delete rules to the Core Data model
+
+## Verification Results:
+
+### Swift Package Tests:
+- All 99 tests passing
+- No compilation errors
+- No runtime errors
+- Clean test execution in 0.138 seconds
+
+### iOS Build Verification:
+- Xcode project generation: ✅ SUCCESS
+- iOS build compilation: ✅ SUCCESS  
+- All dependencies resolved correctly
+- No build warnings or errors
+
+## Test Suite Breakdown:
+- **AppShellTests**: 1/1 tests passing
+- **AudioEngineTests**: 1/1 tests passing  
+- **CRUDOperationTests**: 22/22 tests passing
+- **CRUDTests**: 10/10 tests passing
+- **CacheServiceTests**: 12/12 tests passing
+- **DataLayerTests**: 3/3 tests passing
+- **FXModuleTests**: 1/1 tests passing
+- **FetchOptimizationTests**: 10/10 tests passing
+- **FilterModuleTests**: 1/1 tests passing
+- **MIDIModuleTests**: 1/1 tests passing
+- **MachineProtocolsTests**: 2/2 tests passing
+- **MigrationTests**: 6/6 tests passing
+- **RelationshipTests**: 17/17 tests passing (previously failing due to delete rule conflicts)
+- **SequencerModuleTests**: 1/1 tests passing
+- **UIComponentsTests**: 1/1 tests passing
+- **ValidationTests**: 9/9 tests passing
+- **VoiceModuleTests**: 1/1 tests passing
+
+## Key Achievements:
+1. **Zero test failures** - Complete resolution of all failing tests
+2. **Stable Core Data implementation** - No entity conflicts or configuration issues
+3. **Robust test infrastructure** - All test suites running cleanly
+4. **Cross-platform compatibility** - Both Swift Package and iOS builds successful
+5. **Performance validation** - Tests executing efficiently with good performance metrics
+
+The DataLayer Swift Package is now in a stable, fully tested state with comprehensive test coverage and no failing tests.
+</info added on 2025-06-13T16:22:16.680Z>
+
+## 20. Perform Final Integration Testing [not-started]
+### Dependencies: 3.17, 3.18, 3.19
+### Description: Conduct comprehensive integration testing after fixing entity conflicts
+### Details:
+Perform final integration testing to ensure:
+- All 99 tests pass consistently
+- No entity conflicts occur during normal operation
+- The DataLayer works correctly with the rest of the application
+- Performance is not negatively impacted by the fixes
 

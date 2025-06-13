@@ -4,18 +4,20 @@
         <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="patterns" toMany="YES" destinationEntity="Pattern" inverseName="project" inverseEntity="Pattern"/>
-        <relationship name="kits" toMany="YES" destinationEntity="Kit" inverseName="project" inverseEntity="Kit"/>
-        <relationship name="presets" toMany="YES" destinationEntity="Preset" inverseName="project" inverseEntity="Preset"/>
+        <relationship name="patterns" toMany="YES" destinationEntity="Pattern" inverseName="project" inverseEntity="Pattern" deletionRule="Cascade"/>
+        <relationship name="kits" toMany="YES" destinationEntity="Kit" inverseName="project" inverseEntity="Kit" deletionRule="Cascade"/>
+        <relationship name="presets" toMany="YES" destinationEntity="Preset" inverseName="project" inverseEntity="Preset" deletionRule="Cascade"/>
     </entity>
     <entity name="Pattern" representedClassName="Pattern">
         <attribute name="name" attributeType="String"/>
         <attribute name="length" attributeType="Integer 16" defaultValueString="64"/>
         <attribute name="tempo" attributeType="Double" defaultValueString="120.0"/>
-        <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="patterns" inverseEntity="Project"/>
-        <relationship name="tracks" toMany="YES" destinationEntity="Track" inverseName="pattern" inverseEntity="Track"/>
-        <relationship name="kit" toMany="NO" destinationEntity="Kit"/>
-        <relationship name="trigs" toMany="YES" destinationEntity="Trig" inverseName="pattern" inverseEntity="Trig"/>
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="patterns" inverseEntity="Project" deletionRule="Nullify"/>
+        <relationship name="tracks" toMany="YES" destinationEntity="Track" inverseName="pattern" inverseEntity="Track" deletionRule="Cascade"/>
+        <relationship name="kit" toMany="NO" destinationEntity="Kit" deletionRule="Nullify"/>
+        <relationship name="trigs" toMany="YES" destinationEntity="Trig" inverseName="pattern" inverseEntity="Trig" deletionRule="Cascade"/>
     </entity>
     <entity name="Track" representedClassName="Track">
         <attribute name="name" attributeType="String" defaultValueString="Track"/>
@@ -26,19 +28,19 @@
         <attribute name="trackIndex" attributeType="Integer 16" defaultValueString="0" minValueString="0" maxValueString="15"/>
         <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="pattern" toMany="NO" destinationEntity="Pattern" inverseName="tracks" inverseEntity="Pattern"/>
-        <relationship name="kit" toMany="NO" destinationEntity="Kit" inverseName="tracks" inverseEntity="Kit"/>
-        <relationship name="preset" toMany="NO" destinationEntity="Preset" inverseName="tracks" inverseEntity="Preset"/>
-        <relationship name="trigs" toMany="YES" destinationEntity="Trig" inverseName="track" inverseEntity="Trig"/>
+        <relationship name="pattern" toMany="NO" destinationEntity="Pattern" inverseName="tracks" inverseEntity="Pattern" deletionRule="Nullify"/>
+        <relationship name="kit" toMany="NO" destinationEntity="Kit" inverseName="tracks" inverseEntity="Kit" deletionRule="Nullify"/>
+        <relationship name="preset" toMany="NO" destinationEntity="Preset" inverseName="tracks" inverseEntity="Preset" deletionRule="Nullify"/>
+        <relationship name="trigs" toMany="YES" destinationEntity="Trig" inverseName="track" inverseEntity="Trig" deletionRule="Cascade"/>
     </entity>
     <entity name="Kit" representedClassName="Kit">
         <attribute name="name" attributeType="String"/>
         <attribute name="soundFiles" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer" customClassName="[String]"/>
         <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="pattern" toMany="NO" destinationEntity="Pattern" inverseName="kit" inverseEntity="Pattern"/>
-        <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="kits" inverseEntity="Project"/>
-        <relationship name="tracks" toMany="YES" destinationEntity="Track" inverseName="kit" inverseEntity="Track"/>
+        <relationship name="pattern" toMany="NO" destinationEntity="Pattern" inverseName="kit" inverseEntity="Pattern" deletionRule="Nullify"/>
+        <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="kits" inverseEntity="Project" deletionRule="Nullify"/>
+        <relationship name="tracks" toMany="YES" destinationEntity="Track" inverseName="kit" inverseEntity="Track" deletionRule="Nullify"/>
     </entity>
     <entity name="Preset" representedClassName="Preset">
         <attribute name="name" attributeType="String"/>
@@ -46,8 +48,8 @@
         <attribute name="settings" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer"/>
         <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="presets" inverseEntity="Project"/>
-        <relationship name="tracks" toMany="YES" destinationEntity="Track" inverseName="preset" inverseEntity="Track"/>
+        <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="presets" inverseEntity="Project" deletionRule="Nullify"/>
+        <relationship name="tracks" toMany="YES" destinationEntity="Track" inverseName="preset" inverseEntity="Track" deletionRule="Nullify"/>
     </entity>
     <entity name="Trig" representedClassName="Trig">
         <attribute name="step" attributeType="Integer 16" defaultValueString="0" minValueString="0" maxValueString="127"/>
@@ -62,8 +64,8 @@
         <attribute name="pLocks" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer" optional="YES"/>
         <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="track" toMany="NO" destinationEntity="Track" inverseName="trigs" inverseEntity="Track"/>
-        <relationship name="pattern" toMany="NO" destinationEntity="Pattern" inverseName="trigs" inverseEntity="Pattern"/>
+        <relationship name="track" toMany="NO" destinationEntity="Track" inverseName="trigs" inverseEntity="Track" deletionRule="Nullify"/>
+        <relationship name="pattern" toMany="NO" destinationEntity="Pattern" inverseName="trigs" inverseEntity="Pattern" deletionRule="Nullify"/>
     </entity>
     <elements>
         <element name="Project" positionX="-63" positionY="-16" width="128" height="90"/>

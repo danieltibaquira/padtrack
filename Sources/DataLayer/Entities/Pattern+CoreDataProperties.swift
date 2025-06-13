@@ -10,6 +10,8 @@ extension Pattern {
     @NSManaged public var name: String?
     @NSManaged public var length: Int16
     @NSManaged public var tempo: Double
+    @NSManaged public var createdAt: Date?
+    @NSManaged public var updatedAt: Date?
     @NSManaged public var project: Project?
     @NSManaged public var tracks: NSSet?
     @NSManaged public var kit: Kit?

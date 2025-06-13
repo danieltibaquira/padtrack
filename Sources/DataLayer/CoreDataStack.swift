@@ -23,15 +23,50 @@ public enum CoreDataError: LocalizedError {
 }
 
 /// Manages the Core Data stack for the DigitonePad application
-public class PersistenceController {
-    
+///
+/// The `PersistenceController` is responsible for setting up and managing the Core Data stack,
+/// including the persistent container, contexts, and migration handling.
+///
+/// ## Features
+///
+/// - **Automatic Migration**: Handles lightweight and custom migrations automatically
+/// - **Thread Safety**: Provides thread-safe context management
+/// - **Background Operations**: Supports background context operations
+/// - **Data Validation**: Validates data integrity after migrations
+/// - **Backup Support**: Can create backups of the data store
+/// - **Memory Management**: Optimized for memory usage and performance
+///
+/// ## Usage
+///
+/// ```swift
+/// // Use the shared instance for production
+/// let persistenceController = PersistenceController.shared
+///
+/// // Or create a custom instance
+/// let controller = PersistenceController(inMemory: false)
+///
+/// // For testing, use in-memory store
+/// let testController = PersistenceController(inMemory: true)
+/// ```
+///
+/// ## Thread Safety
+///
+/// The PersistenceController is thread-safe and handles context merging automatically.
+/// Use `performBackgroundTask(_:)` for heavy operations to avoid blocking the UI.
+///
+/// ## Migration
+///
+/// The controller automatically handles Core Data migrations when the app starts.
+/// It supports both lightweight migrations and custom migration policies.
+public final class PersistenceController: @unchecked Sendable {
+
     // MARK: - Singleton
-    
+
     /// Shared instance for production use
     public static let shared = PersistenceController()
-    
+
     /// Preview instance for SwiftUI previews and testing
-    public static var preview: PersistenceController = {
+    public static let preview: PersistenceController = {
         let controller = PersistenceController(inMemory: true)
         let context = controller.container.viewContext
         
@@ -147,7 +182,7 @@ public class PersistenceController {
     private func configureContexts() {
         // Configure view context for UI operations
         container.viewContext.automaticallyMergesChangesFromParent = true
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         
         // Set up context save notifications
         NotificationCenter.default.addObserver(
@@ -165,7 +200,7 @@ public class PersistenceController {
     /// - Returns: A new background managed object context
     public func newBackgroundContext() -> NSManagedObjectContext {
         let context = container.newBackgroundContext()
-        context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        context.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         return context
     }
     

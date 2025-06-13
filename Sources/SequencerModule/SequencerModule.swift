@@ -6,7 +6,7 @@ import MachineProtocols
 import DataLayer
 
 /// Main sequencer for pattern playback
-public class Sequencer {
+public final class Sequencer: @unchecked Sendable {
     public static let shared = Sequencer()
     private init() {}
     

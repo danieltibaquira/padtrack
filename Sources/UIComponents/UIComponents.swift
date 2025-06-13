@@ -3,13 +3,6 @@
 
 import Foundation
 import MachineProtocols
-import AudioEngine
-import DataLayer
-import SequencerModule
-import VoiceModule
-import FilterModule
-import FXModule
-import MIDIModule
 
 /// Base protocol for all DigitonePad UI components
 public protocol DigitonePadComponent {

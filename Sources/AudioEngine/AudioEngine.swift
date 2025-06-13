@@ -8,7 +8,7 @@ import AVFoundation
 import MachineProtocols
 
 /// Main interface for audio operations
-@objc public class AudioEngineManager: NSObject {
+@objc public final class AudioEngineManager: NSObject, @unchecked Sendable {
     @objc public static let shared = AudioEngineManager()
     
     private let engine = AVAudioEngine()
