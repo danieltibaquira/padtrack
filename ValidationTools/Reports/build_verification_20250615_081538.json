@@ -1,0 +1,74 @@
+{
+  "timestamp": "2025-06-15T13:15:38Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "passed",
+      "message": "Swift Package compiled successfully",
+      "details": "    /Users/danieltibaquira/padtrack/Sources/AudioEngine/Documentation/API_Reference.md
+[0/1] Planning build
+Building for debugging...
+[0/1] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (1.09s)",
+      "timestamp": "2025-06-15T13:15:39Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": "About to get parameter value
+Got parameter value: 0.5
+About to create preset
+Created preset: Test Preset
+Test completed successfully
+Total time: 0.011980056762695312s, Migration time: 0.005318045616149902s
+Validation performance: 0.0057610273361206055s for 1000 entities
+􀟈  Test run started.
+􀄵  Testing Library Version: 102 (arm64e-apple-macos13.0)
+􁁛  Test run with 0 tests passed after 0.001 seconds.",
+      "timestamp": "2025-06-15T13:15:49Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Pro 11-inch",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-15T13:15:56Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Pro 12.9-inch",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-15T13:15:57Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Air",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-15T13:15:59Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "passed",
+      "message": "iOS build successful for iPad mini",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-15T13:16:00Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-06-15T13:16:01Z"
+    },
+    "build_warnings": {
+      "status": "warning",
+      "message": "4 build warnings detected",
+      "details": "Warnings should be reviewed and addressed",
+      "timestamp": "2025-06-15T13:16:01Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 7,
+    "failed_tests": 1,
+    "warnings": 1
+  }
+}

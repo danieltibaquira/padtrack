@@ -1,0 +1,80 @@
+{
+  "timestamp": "2025-06-15T04:24:44Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": " 321 |     public var outputGain: Float = 1.0
+ 322 |     public var isMuted: Bool = false
+
+/Users/danieltibaquira/padtrack/Sources/AudioEngine/AudioEngine.swift:321:16: error: stored property 'outputGain' of 'Sendable'-conforming class 'AudioOutputNode' is mutable
+ 319 | /// Audio output node (outputs audio)
+ 320 | public class AudioOutputNode: BaseAudioNode {
+ 321 |     public var outputGain: Float = 1.0
+     |                `- error: stored property 'outputGain' of 'Sendable'-conforming class 'AudioOutputNode' is mutable
+ 322 |     public var isMuted: Bool = false
+ 323 | ",
+      "timestamp": "2025-06-15T04:24:45Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": " 322 |     public var isMuted: Bool = false
+
+/Users/danieltibaquira/padtrack/Sources/AudioEngine/AudioEngine.swift:321:16: error: stored property 'outputGain' of 'Sendable'-conforming class 'AudioOutputNode' is mutable
+ 319 | /// Audio output node (outputs audio)
+ 320 | public class AudioOutputNode: BaseAudioNode {
+ 321 |     public var outputGain: Float = 1.0
+     |                `- error: stored property 'outputGain' of 'Sendable'-conforming class 'AudioOutputNode' is mutable
+ 322 |     public var isMuted: Bool = false
+ 323 | 
+error: fatalError",
+      "timestamp": "2025-06-15T04:24:46Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 11-inch",
+      "details": "
+** BUILD FAILED **
+
+
+The following build commands failed:
+	EmitSwiftModule normal arm64 (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ FilterModule (in target 'FilterModule' from project 'DigitonePad')
+	EmitSwiftModule normal arm64 (in target 'FilterModule' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(4 failures)",
+      "timestamp": "2025-06-15T04:24:49Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 12.9-inch",
+      "details": "
+The following build commands failed:
+	EmitSwiftModule normal arm64 (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ VoiceModule (in target 'VoiceModule' from project 'DigitonePad')
+	EmitSwiftModule normal arm64 (in target 'FilterModule' from project 'DigitonePad')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ FilterModule (in target 'FilterModule' from project 'DigitonePad')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ FXModule (in target 'FXModule' from project 'DigitonePad')
+	EmitSwiftModule normal arm64 (in target 'FXModule' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(7 failures)",
+      "timestamp": "2025-06-15T04:24:51Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Air",
+      "details": "
+The following build commands failed:
+	EmitSwiftModule normal arm64 (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ VoiceModule (in target 'VoiceModule' from project 'DigitonePad')
+	EmitSwiftModule normal arm64 (in target 'FXModule' from project 'DigitonePad')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ FXModule (in target 'FXModule' from project 'DigitonePad')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ FilterModule (in target 'FilterModule' from project 'DigitonePad')
+	EmitSwiftModule normal arm64 (in target 'FilterModule' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(7 failures)",
+      "timestamp": "2025-06-15T04:24:53Z"
+    },

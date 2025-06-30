@@ -301,3 +301,22 @@ public final class ValidationService: @unchecked Sendable {
         }
     }
 }
+
+// MARK: - Validation Errors
+
+public enum ValidationError: LocalizedError {
+    case invalidName(String)
+    case invalidValue(String)
+    case relationshipConstraint(String)
+
+    public var errorDescription: String? {
+        switch self {
+        case .invalidName(let message):
+            return "Invalid name: \(message)"
+        case .invalidValue(let message):
+            return "Invalid value: \(message)"
+        case .relationshipConstraint(let message):
+            return "Relationship constraint: \(message)"
+        }
+    }
+}

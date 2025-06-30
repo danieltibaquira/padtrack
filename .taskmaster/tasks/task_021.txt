@@ -17,6 +17,43 @@ Optimize for percussive sounds with short, punchy envelopes. Implement efficient
 # Test Strategy:
 Test various drum sound types (kick, snare, hi-hat, etc.). Verify that the machine can create a wide range of percussion sounds. Test extreme parameter settings for stability.
 
+## Technical Decisions
+
+### Implementation Progress (2025-06-17)
+
+**Completed:**
+1. ✅ Created FMDrumVoiceMachine class extending VoiceMachine
+2. ✅ Implemented FMDrumSynthesisEngine for specialized drum synthesis
+3. ✅ Created FMDrumVoice with 3-operator FM body component
+4. ✅ Implemented DrumFMAlgorithm enum with specialized algorithms for each drum type
+5. ✅ Added NoiseGenerator with white/pink/brown noise types
+6. ✅ Implemented BandpassFilter for noise shaping
+7. ✅ Created PitchEnvelope for drum pitch sweeps
+8. ✅ Added WaveFolder for harmonic distortion
+9. ✅ Implemented DrumADSR envelopes for amplitude, noise, and filter
+10. ✅ Extended FMOperator with pitch modulation capability
+11. ✅ Added drum type presets (kick, snare, hihat, tom, cymbal)
+
+**Technical Decisions:**
+- Used 3 FM operators instead of 4 for drums to optimize CPU usage
+- Implemented specialized DrumFMAlgorithm with inharmonic ratios for realistic drum sounds
+- Created separate envelopes for amplitude, noise, and filter components
+- Added pitch modulation to existing FMOperator for pitch sweep functionality
+- Used exponential curves for pitch envelopes to match natural drum behavior
+- Implemented voice stealing with oldest-voice-first strategy for drums
+
+**Architecture:**
+- FMDrumVoiceMachine: Main interface implementing VoiceMachine protocol
+- FMDrumSynthesisEngine: Core synthesis engine with voice management
+- FMDrumVoice: Individual voice with FM body, noise, pitch sweep, and wavefolding
+- DrumComponents: Supporting components (noise, filters, envelopes, wavefolder)
+- DrumFMAlgorithm: Specialized FM routing for different drum types
+
+**Next Steps:**
+- Complete remaining subtasks (parameter mapping, voice allocation optimization)
+- Add MIDI input handling and audio output stage
+- Implement CPU usage optimization and final testing
+
 # Subtasks:
 ## 1. Implement FM body component [pending]
 ### Dependencies: None

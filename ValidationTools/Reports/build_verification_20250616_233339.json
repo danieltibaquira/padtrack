@@ -1,0 +1,20 @@
+{
+  "timestamp": "2025-06-17T04:33:39Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "343 |                     Button("Cancel") {
+344 |                         presentationMode.wrappedValue.dismiss()
+
+SwiftUI.ToolbarItemPlacement:50:23: note: 'navigationBarTrailing' has been explicitly marked unavailable here
+48 |     @available(watchOS, unavailable)
+49 |     @available(visionOS, introduced: 1.0, deprecated: 100000.0, message: "use topBarTrailing instead")
+50 |     public static let navigationBarTrailing: ToolbarItemPlacement
+   |                       `- note: 'navigationBarTrailing' has been explicitly marked unavailable here
+51 |     @available(tvOS 18.0, watchOS 10.0, *)
+52 |     @available(macOS, unavailable)",
+      "timestamp": "2025-06-17T04:33:41Z"
+    },

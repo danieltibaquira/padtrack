@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-06-17T11:26:23Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "495 |     }
+
+/Users/danieltibaquira/padtrack/Sources/UIComponents/KeyCombo/KeyComboViews.swift:500:18: error: cannot find type 'UIRectCorner' in scope
+498 | struct RoundedCorner: Shape {
+499 |     var radius: CGFloat = .infinity
+500 |     var corners: UIRectCorner = .allCorners
+    |                  `- error: cannot find type 'UIRectCorner' in scope
+501 | 
+502 |     func path(in rect: CGRect) -> Path {",
+      "timestamp": "2025-06-17T11:26:34Z"
+    },

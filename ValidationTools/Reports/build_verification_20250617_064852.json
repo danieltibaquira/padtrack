@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-06-17T11:48:52Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "221 |     public var velocity: Float = 0.8
+
+/Users/danieltibaquira/padtrack/Tests/MockObjects/MockDataLayer.swift:40:34: error: type 'DataLayerError' has no member 'initializationError'
+ 38 |     public func initialize() throws {
+ 39 |         if shouldFailOperations {
+ 40 |             throw DataLayerError.initializationError("Mock initialization failure")
+    |                                  `- error: type 'DataLayerError' has no member 'initializationError'
+ 41 |         }
+ 42 |         ",
+      "timestamp": "2025-06-17T11:49:00Z"
+    },

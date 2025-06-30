@@ -1,0 +1,242 @@
+{
+  "coverage_configuration": {
+    "version": "1.0.0",
+    "project_name": "DigitonePad",
+    "analysis_settings": {
+      "enable_line_coverage": true,
+      "enable_branch_coverage": true,
+      "enable_function_coverage": true,
+      "enable_region_coverage": false,
+      "exclude_test_files": true,
+      "exclude_generated_files": true
+    },
+    "thresholds": {
+      "line_coverage": {
+        "minimum": 85.0,
+        "target": 90.0,
+        "excellent": 95.0
+      },
+      "branch_coverage": {
+        "minimum": 80.0,
+        "target": 85.0,
+        "excellent": 90.0
+      },
+      "function_coverage": {
+        "minimum": 90.0,
+        "target": 95.0,
+        "excellent": 98.0
+      }
+    },
+    "modules": {
+      "DataLayer": {
+        "priority": "high",
+        "line_coverage_target": 95.0,
+        "branch_coverage_target": 90.0,
+        "function_coverage_target": 98.0,
+        "critical_paths": [
+          "Core Data operations",
+          "Data validation",
+          "Migration logic"
+        ]
+      },
+      "AudioEngine": {
+        "priority": "critical",
+        "line_coverage_target": 98.0,
+        "branch_coverage_target": 95.0,
+        "function_coverage_target": 99.0,
+        "critical_paths": [
+          "Real-time audio processing",
+          "Buffer management",
+          "Audio graph operations",
+          "Performance monitoring"
+        ]
+      },
+      "SequencerModule": {
+        "priority": "high",
+        "line_coverage_target": 95.0,
+        "branch_coverage_target": 90.0,
+        "function_coverage_target": 98.0,
+        "critical_paths": [
+          "Timing and synchronization",
+          "Pattern playback",
+          "Recording modes",
+          "MIDI integration"
+        ]
+      },
+      "VoiceModule": {
+        "priority": "high",
+        "line_coverage_target": 92.0,
+        "branch_coverage_target": 88.0,
+        "function_coverage_target": 95.0,
+        "critical_paths": [
+          "FM synthesis algorithms",
+          "Voice management",
+          "Parameter handling"
+        ]
+      },
+      "FilterModule": {
+        "priority": "medium",
+        "line_coverage_target": 90.0,
+        "branch_coverage_target": 85.0,
+        "function_coverage_target": 95.0,
+        "critical_paths": [
+          "Filter algorithms",
+          "Parameter interpolation",
+          "Multi-mode switching"
+        ]
+      },
+      "FXModule": {
+        "priority": "medium",
+        "line_coverage_target": 88.0,
+        "branch_coverage_target": 83.0,
+        "function_coverage_target": 92.0,
+        "critical_paths": [
+          "Effect processing",
+          "Parameter modulation",
+          "Bypass handling"
+        ]
+      },
+      "MIDIModule": {
+        "priority": "high",
+        "line_coverage_target": 93.0,
+        "branch_coverage_target": 88.0,
+        "function_coverage_target": 96.0,
+        "critical_paths": [
+          "MIDI I/O operations",
+          "Message routing",
+          "Device management"
+        ]
+      },
+      "UIComponents": {
+        "priority": "medium",
+        "line_coverage_target": 85.0,
+        "branch_coverage_target": 80.0,
+        "function_coverage_target": 90.0,
+        "critical_paths": [
+          "User interaction handling",
+          "State management",
+          "Accessibility support"
+        ]
+      },
+      "MachineProtocols": {
+        "priority": "critical",
+        "line_coverage_target": 98.0,
+        "branch_coverage_target": 95.0,
+        "function_coverage_target": 99.0,
+        "critical_paths": [
+          "Protocol implementations",
+          "Parameter system",
+          "Serialization"
+        ]
+      },
+      "AppShell": {
+        "priority": "medium",
+        "line_coverage_target": 87.0,
+        "branch_coverage_target": 82.0,
+        "function_coverage_target": 93.0,
+        "critical_paths": [
+          "Application lifecycle",
+          "Module coordination",
+          "Error handling"
+        ]
+      }
+    },
+    "exclusions": {
+      "file_patterns": [
+        "*/Tests/*",
+        "*/MockObjects/*",
+        "*/.build/*",
+        "*/DerivedData/*",
+        "*/Preview Content/*"
+      ],
+      "function_patterns": [
+        "test*",
+        "mock*",
+        "stub*",
+        "*Preview*"
+      ],
+      "line_patterns": [
+        "// MARK:",
+        "import ",
+        "}"
+      ]
+    },
+    "reporting": {
+      "formats": ["json", "html", "lcov"],
+      "output_directory": "Tests/CodeCoverage/Reports",
+      "include_source_code": false,
+      "include_function_details": true,
+      "include_branch_details": true,
+      "generate_trend_analysis": true,
+      "historical_data_retention_days": 90
+    },
+    "integration": {
+      "ci_cd": {
+        "fail_build_on_threshold_miss": true,
+        "generate_pull_request_comments": true,
+        "upload_to_codecov": false,
+        "upload_to_coveralls": false
+      },
+      "notifications": {
+        "slack_webhook": "",
+        "email_recipients": [],
+        "notify_on_threshold_miss": true,
+        "notify_on_coverage_decrease": true
+      }
+    },
+    "advanced_settings": {
+      "parallel_processing": true,
+      "cache_results": true,
+      "incremental_analysis": true,
+      "source_file_encoding": "utf-8",
+      "max_memory_usage_mb": 2048,
+      "timeout_seconds": 1800
+    }
+  },
+  "test_suites": {
+    "unit_tests": {
+      "enabled": true,
+      "coverage_weight": 0.7,
+      "minimum_coverage": 90.0
+    },
+    "integration_tests": {
+      "enabled": true,
+      "coverage_weight": 0.2,
+      "minimum_coverage": 80.0
+    },
+    "ui_tests": {
+      "enabled": true,
+      "coverage_weight": 0.1,
+      "minimum_coverage": 70.0
+    }
+  },
+  "quality_gates": {
+    "overall_coverage": {
+      "minimum": 85.0,
+      "target": 90.0,
+      "block_merge_below": 80.0
+    },
+    "new_code_coverage": {
+      "minimum": 90.0,
+      "target": 95.0,
+      "block_merge_below": 85.0
+    },
+    "coverage_trend": {
+      "allow_decrease_percent": 2.0,
+      "require_improvement_below": 85.0
+    }
+  },
+  "automation": {
+    "schedule": {
+      "daily_analysis": "02:00",
+      "weekly_report": "sunday_08:00",
+      "monthly_trend": "first_monday_09:00"
+    },
+    "triggers": {
+      "on_commit": true,
+      "on_pull_request": true,
+      "on_release": true,
+      "on_schedule": true
+    }
+  }
+}

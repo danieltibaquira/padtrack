@@ -1,0 +1,115 @@
+{
+  "timestamp": "2025-06-29T14:10:06Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "4178 |             parameters[id] = updatedParameter
+4179 |         }
+
+/Users/danieltibaquira/padtrack/Sources/MachineProtocols/MachineProtocols.swift:4193:23: error: cannot assign to property: 'value' is a get-only property
+4191 |         for (id, value) in values {
+4192 |             guard var parameter = parameters[id] else { continue }
+4193 |             parameter.value = max(parameter.minValue, min(parameter.maxValue, value))
+     |                       `- error: cannot assign to property: 'value' is a get-only property
+4194 |             parameters[id] = parameter
+4195 |             ",
+      "timestamp": "2025-06-29T14:10:11Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": " 7 |     @Published public private(set) var parameters: [String: Parameter] = [:]
+
+/Users/danieltibaquira/padtrack/Sources/MachineProtocols/ParameterManager.swift:31:19: error: cannot assign to property: 'value' is a get-only property
+29 |     public func updateParameter(id: String, value: Float, notifyChange: Bool = true) {
+30 |         guard var parameter = parameters[id] else { return }
+31 |         parameter.value = value
+   |                   `- error: cannot assign to property: 'value' is a get-only property
+32 |         parameters[id] = parameter
+33 |         lastUpdatedParameterId = id
+error: fatalError",
+      "timestamp": "2025-06-29T14:10:13Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 11-inch",
+      "details": "** BUILD FAILED **
+
+
+The following build commands failed:
+	EmitSwiftModule normal arm64 (in target 'MachineProtocols' from project 'DigitonePad')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ MachineProtocols (in target 'MachineProtocols' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ ParameterManager.swift /Users/danieltibaquira/padtrack/Sources/MachineProtocols/ParameterManager.swift (in target 'MachineProtocols' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/MachineProtocols/ParameterManager.swift (in target 'MachineProtocols' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(5 failures)",
+      "timestamp": "2025-06-29T14:10:18Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 12.9-inch",
+      "details": "        ~~~~~~~~~~^~~~~
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ ParameterManager.swift /Users/danieltibaquira/padtrack/Sources/MachineProtocols/ParameterManager.swift (in target 'MachineProtocols' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/MachineProtocols/ParameterManager.swift (in target 'MachineProtocols' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-29T14:10:21Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Air",
+      "details": "** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ MachineProtocols (in target 'MachineProtocols' from project 'DigitonePad')
+	EmitSwiftModule normal arm64 (in target 'MachineProtocols' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ ParameterManager.swift /Users/danieltibaquira/padtrack/Sources/MachineProtocols/ParameterManager.swift (in target 'MachineProtocols' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/MachineProtocols/ParameterManager.swift (in target 'MachineProtocols' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(5 failures)",
+      "timestamp": "2025-06-29T14:10:23Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "failed",
+      "message": "iOS build failed for iPad mini",
+      "details": "** BUILD FAILED **
+
+
+The following build commands failed:
+	EmitSwiftModule normal arm64 (in target 'MachineProtocols' from project 'DigitonePad')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ MachineProtocols (in target 'MachineProtocols' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ ParameterManager.swift /Users/danieltibaquira/padtrack/Sources/MachineProtocols/ParameterManager.swift (in target 'MachineProtocols' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/MachineProtocols/ParameterManager.swift (in target 'MachineProtocols' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(5 failures)",
+      "timestamp": "2025-06-29T14:10:26Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-06-29T14:10:26Z"
+    },
+    "build_warnings": {
+      "status": "warning",
+      "message": "4 build warnings detected",
+      "details": "Warnings should be reviewed and addressed",
+      "timestamp": "2025-06-29T14:10:26Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 2,
+    "failed_tests": 6,
+    "warnings": 1
+  }
+}

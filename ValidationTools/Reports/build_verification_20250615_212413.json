@@ -1,0 +1,110 @@
+{
+  "timestamp": "2025-06-16T02:24:13Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "passed",
+      "message": "Swift Package compiled successfully",
+      "details": "    /Users/danieltibaquira/padtrack/Sources/AudioEngine/README.md
+[0/1] Planning build
+Building for debugging...
+[0/1] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.73s)",
+      "timestamp": "2025-06-16T02:24:14Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": "About to get parameter value
+Got parameter value: 0.5
+About to create preset
+Created preset: Test Preset
+Test completed successfully
+Total time: 0.013772964477539062s, Migration time: 0.0053670406341552734s
+Validation performance: 0.00577092170715332s for 1000 entities
+􀟈  Test run started.
+􀄵  Testing Library Version: 102 (arm64e-apple-macos13.0)
+􁁛  Test run with 0 tests passed after 0.001 seconds.",
+      "timestamp": "2025-06-16T02:24:22Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 11-inch",
+      "details": "note: Removed stale file '/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator/DigitonePad.app/_CodeSignature'
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/DigitonePad/ContentView.swift (in target 'DigitonePad' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ ContentView.swift /Users/danieltibaquira/padtrack/Sources/DigitonePad/ContentView.swift (in target 'DigitonePad' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-16T02:24:26Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 12.9-inch",
+      "details": "    builtin-infoPlistUtility /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/empty-AppShell.plist -producttype com.apple.product-type.framework -expandbuildsettings -format binary -platform iphonesimulator -o /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator/AppShell.framework/Info.plist
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/DigitonePad/ContentView.swift (in target 'DigitonePad' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ ContentView.swift /Users/danieltibaquira/padtrack/Sources/DigitonePad/ContentView.swift (in target 'DigitonePad' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-16T02:24:28Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Air",
+      "details": "SwiftDriverJobDiscovery normal arm64 Emitting module for DigitonePad (in target 'DigitonePad' from project 'DigitonePad')
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ ContentView.swift /Users/danieltibaquira/padtrack/Sources/DigitonePad/ContentView.swift (in target 'DigitonePad' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/DigitonePad/ContentView.swift (in target 'DigitonePad' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-16T02:24:31Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "failed",
+      "message": "iOS build failed for iPad mini",
+      "details": "    builtin-RegisterExecutionPolicyException /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator/AppShell.framework
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ ContentView.swift /Users/danieltibaquira/padtrack/Sources/DigitonePad/ContentView.swift (in target 'DigitonePad' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/DigitonePad/ContentView.swift (in target 'DigitonePad' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-16T02:24:33Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-06-16T02:24:33Z"
+    },
+    "build_warnings": {
+      "status": "warning",
+      "message": "2 build warnings detected",
+      "details": "Warnings should be reviewed and addressed",
+      "timestamp": "2025-06-16T02:24:33Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 3,
+    "failed_tests": 5,
+    "warnings": 1
+  }
+}

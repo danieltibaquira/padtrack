@@ -1,0 +1,65 @@
+{
+  "timestamp": "2025-06-15T05:03:04Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": " 832 |     public var outputGain: Float = 1.0
+ 833 |     public var isMuted: Bool = false
+
+/Users/danieltibaquira/padtrack/Sources/AudioEngine/AudioEngine.swift:2068:20: error: type of expression is ambiguous without a type annotation
+2066 |             }
+2067 | 
+2068 |             return matrix
+     |                    `- error: type of expression is ambiguous without a type annotation
+2069 |         }
+2070 |     }",
+      "timestamp": "2025-06-15T05:03:06Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": " 833 |     public var isMuted: Bool = false
+
+/Users/danieltibaquira/padtrack/Sources/AudioEngine/AudioEngine.swift:2068:20: error: type of expression is ambiguous without a type annotation
+2066 |             }
+2067 | 
+2068 |             return matrix
+     |                    `- error: type of expression is ambiguous without a type annotation
+2069 |         }
+2070 |     }
+error: fatalError",
+      "timestamp": "2025-06-15T05:03:08Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 11-inch",
+      "details": "note: Removed stale file '/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator/UIComponents.framework/_CodeSignature'
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/AudioEngine/AudioEngine.swift (in target 'AudioEngine' from project 'DigitonePad')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ AudioEngine (in target 'AudioEngine' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-15T05:03:10Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 12.9-inch",
+      "details": "    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend -c -primary-file /Users/danieltibaquira/padtrack/Sources/AudioEngine/AudioEngine.swift -emit-dependencies-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AudioEngine.build/Objects-normal/arm64/AudioEngine.d -emit-const-values-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AudioEngine.build/Objects-normal/arm64/AudioEngine.swiftconstvalues -emit-reference-dependencies-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AudioEngine.build/Objects-normal/arm64/AudioEngine.swiftdeps -serialize-diagnostics-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AudioEngine.build/Objects-normal/arm64/AudioEngine.dia -target arm64-apple-ios16.0-simulator -Xllvm -aarch64-use-tbi -enable-objc-interop -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.2.sdk -I /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator -F /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator -no-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=4 -module-cache-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -swift-version 5 -enforce-exclusivity\=checked -Onone -D DEBUG -serialize-debugging-options -const-gather-protocols-file /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AudioEngine.build/Objects-normal/arm64/AudioEngine_const_extract_protocols.json -enable-experimental-feature DebugDescriptionMacro -enable-experimental-feature OpaqueTypeErasure -enable-upcoming-feature StrictConcurrency -enable-bare-slash-regex -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/danieltibaquira/padtrack -resource-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift -enable-anonymous-context-mangled-names -file-compilation-dir /Users/danieltibaquira/padtrack -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -ivfsstatcache -Xcc /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator18.2-22C146-07b28473f605e47e75261259d3ef3b5a.sdkstatcache -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AudioEngine.build/swift-overrides.hmap -Xcc -iquote -Xcc /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AudioEngine.build/AudioEngine-generated-files.hmap -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AudioEngine.build/AudioEngine-own-target-headers.hmap -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AudioEngine.build/AudioEngine-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/DigitonePad-fa58f9b9dc693cda2657e914cef342f3-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AudioEngine.build/AudioEngine-project-headers.hmap -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AudioEngine.build/DerivedSources-normal/arm64 -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AudioEngine.build/DerivedSources/arm64 -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AudioEngine.build/DerivedSources -Xcc -DDEBUG\=1 -module-name AudioEngine -frontend-parseable-output -disable-clang-spi -target-sdk-version 18.2 -target-sdk-name iphonesimulator18.2 -external-plugin-path /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server -external-plugin-path /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/local/lib/swift/host/plugins\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/local/lib/swift/host/plugins -parse-as-library -o /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AudioEngine.build/Objects-normal/arm64/AudioEngine.o -index-unit-output-path /DigitonePad.build/Debug-iphonesimulator/AudioEngine.build/Objects-normal/arm64/AudioEngine.o -index-store-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Index.noindex/DataStore -index-system-modules
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/AudioEngine/AudioEngine.swift (in target 'AudioEngine' from project 'DigitonePad')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ AudioEngine (in target 'AudioEngine' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-15T05:03:12Z"
+    },

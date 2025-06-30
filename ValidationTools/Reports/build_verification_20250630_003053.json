@@ -1,0 +1,115 @@
+{
+  "timestamp": "2025-06-30T05:30:53Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "4117 |             defaultValue: 0.0,
+4118 |             minValue: 0.0,
+
+/Users/danieltibaquira/padtrack/Sources/MachineProtocols/MachineProtocols.swift:4120:20: error: type 'String?' has no member 'percentage'
+4118 |             minValue: 0.0,
+4119 |             maxValue: 1.0,
+4120 |             unit: .percentage
+     |                    `- error: type 'String?' has no member 'percentage'
+4121 |         )
+4122 |         ",
+      "timestamp": "2025-06-30T05:30:55Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": "4118 |             minValue: 0.0,
+
+/Users/danieltibaquira/padtrack/Sources/MachineProtocols/MachineProtocols.swift:4120:20: error: type 'String?' has no member 'percentage'
+4118 |             minValue: 0.0,
+4119 |             maxValue: 1.0,
+4120 |             unit: .percentage
+     |                    `- error: type 'String?' has no member 'percentage'
+4121 |         )
+4122 |         
+error: fatalError",
+      "timestamp": "2025-06-30T05:30:57Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 11-inch",
+      "details": "    builtin-infoPlistUtility /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/MachineProtocols.build/empty-MachineProtocols.plist -producttype com.apple.product-type.framework -expandbuildsettings -format binary -platform iphonesimulator -o /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator/MachineProtocols.framework/Info.plist
+error: failed to deserialize Info.plist task context: fopen(/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/XCBuildData/8167c2a5b47c57c7d1ff96587e5e7a7e.xcbuilddata/attachments/8a59052334a8e0292ef4effbb064e4d9, rb): No such file or directory (2) (in target 'MachineProtocols' from project 'DigitonePad')
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	ProcessInfoPlistFile /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator/MachineProtocols.framework/Info.plist /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/MachineProtocols.build/empty-MachineProtocols.plist (in target 'MachineProtocols' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(2 failures)",
+      "timestamp": "2025-06-30T05:31:00Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 12.9-inch",
+      "details": "** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/MachineProtocols/ParameterManager.swift (in target 'MachineProtocols' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ ParameterManager.swift /Users/danieltibaquira/padtrack/Sources/MachineProtocols/ParameterManager.swift (in target 'MachineProtocols' from project 'DigitonePad')
+	EmitSwiftModule normal arm64 (in target 'MachineProtocols' from project 'DigitonePad')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ MachineProtocols (in target 'MachineProtocols' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(5 failures)",
+      "timestamp": "2025-06-30T05:31:02Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Air",
+      "details": "** BUILD FAILED **
+
+
+The following build commands failed:
+	EmitSwiftModule normal arm64 (in target 'MachineProtocols' from project 'DigitonePad')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ MachineProtocols (in target 'MachineProtocols' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ ParameterManager.swift /Users/danieltibaquira/padtrack/Sources/MachineProtocols/ParameterManager.swift (in target 'MachineProtocols' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/MachineProtocols/ParameterManager.swift (in target 'MachineProtocols' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(5 failures)",
+      "timestamp": "2025-06-30T05:31:03Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "failed",
+      "message": "iOS build failed for iPad mini",
+      "details": "
+** BUILD FAILED **
+
+
+The following build commands failed:
+	EmitSwiftModule normal arm64 (in target 'MachineProtocols' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ ParameterManager.swift /Users/danieltibaquira/padtrack/Sources/MachineProtocols/ParameterManager.swift (in target 'MachineProtocols' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/MachineProtocols/ParameterManager.swift (in target 'MachineProtocols' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(4 failures)",
+      "timestamp": "2025-06-30T05:31:05Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-06-30T05:31:05Z"
+    },
+    "build_warnings": {
+      "status": "warning",
+      "message": "4 build warnings detected",
+      "details": "Warnings should be reviewed and addressed",
+      "timestamp": "2025-06-30T05:31:05Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 2,
+    "failed_tests": 6,
+    "warnings": 1
+  }
+}

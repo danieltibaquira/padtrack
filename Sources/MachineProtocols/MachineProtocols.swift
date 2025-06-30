@@ -5,6 +5,7 @@
 // between other modules in the DigitonePad application.
 
 import Foundation
+import Combine
 
 // MARK: - Core Protocol Hierarchy
 
@@ -39,7 +40,7 @@ public protocol MachineProtocol: AnyObject {
     var performanceMetrics: MachinePerformanceMetrics { get }
     
     /// Machine-specific parameters
-    var parameters: ParameterManager { get }
+    var parameters: ObservableParameterManager { get }
     
     // MARK: - Lifecycle Methods
     
@@ -600,46 +601,78 @@ public protocol FXProcessorProtocol: MachineProtocol {
 
 // MARK: - Shared Data Structures
 
-/// Basic audio buffer structure for audio processing
-public struct AudioBuffer {
+/// Protocol for audio buffer to avoid circular dependencies
+public protocol AudioBufferProtocol: Sendable {
+    var data: UnsafeMutablePointer<Float> { get }
+    var frameCount: Int { get }
+    var channelCount: Int { get }
+    var sampleRate: Double { get }
+    var samples: [Float] { get set }
+}
+
+// MARK: - Sequencer Events and Types
+
+/// Events published by the sequencer
+public enum SequencerEvent: Sendable {
+    case stepAdvanced(step: Int, pattern: Int)
+    case noteTriggered(note: UInt8, velocity: UInt8, track: Int)
+    case noteReleased(note: UInt8, track: Int)
+    case patternStarted(pattern: Int)
+    case patternStopped(pattern: Int)
+    case tempoChanged(bpm: Double)
+    case playbackStarted
+    case playbackStopped
+}
+
+/// Sequencer timing information
+public struct SequencerTiming: Sendable {
+    public let currentStep: Int
+    public let currentPattern: Int
+    public let bpm: Double
+    public let timeSignature: (numerator: Int, denominator: Int)
     public let sampleRate: Double
-    public let channelCount: Int
-    public let frameCount: Int
-    public var samples: [Float]
+    public let samplesPerStep: Double
 
-    public init(sampleRate: Double, channelCount: Int, frameCount: Int, samples: [Float]) {
+    public init(currentStep: Int, currentPattern: Int, bpm: Double,
+                timeSignature: (Int, Int), sampleRate: Double) {
+        self.currentStep = currentStep
+        self.currentPattern = currentPattern
+        self.bpm = bpm
+        self.timeSignature = timeSignature
         self.sampleRate = sampleRate
-        self.channelCount = channelCount
-        self.frameCount = frameCount
-        self.samples = samples
-    }
-
-    /// Legacy data property for compatibility
-    public var data: [Float] {
-        get { samples }
-        set { samples = newValue }
-    }
-
-    /// Create an empty buffer with specified properties
-    public static func empty(sampleRate: Double, channelCount: Int, frameCount: Int) -> AudioBuffer {
-        return AudioBuffer(
-            sampleRate: sampleRate,
-            channelCount: channelCount,
-            frameCount: frameCount,
-            samples: Array(repeating: 0.0, count: frameCount * channelCount)
-        )
-    }
-
-    /// Convenience initializer
-    public init(sampleRate: Double, channelCount: Int, frameCount: Int) {
-        self.init(
-            sampleRate: sampleRate,
-            channelCount: channelCount,
-            frameCount: frameCount,
-            samples: Array(repeating: 0.0, count: frameCount * channelCount)
-        )
+        self.samplesPerStep = (60.0 / bpm) * sampleRate / 4.0 // 16th notes
     }
 }
+
+/// Time signature representation
+public struct TimeSignature: Sendable, Codable {
+    public let numerator: Int
+    public let denominator: Int
+
+    public init(numerator: Int, denominator: Int) {
+        self.numerator = numerator
+        self.denominator = denominator
+    }
+
+    public static let fourFour = TimeSignature(numerator: 4, denominator: 4)
+    public static let threeFour = TimeSignature(numerator: 3, denominator: 4)
+    public static let sixEight = TimeSignature(numerator: 6, denominator: 8)
+}
+
+/// Protocol for sequencer event publishing to avoid circular dependencies
+public protocol SequencerEventPublisher: AnyObject, Sendable {
+    /// Publisher for sequencer events
+    var eventPublisher: AnyPublisher<SequencerEvent, Never> { get }
+
+    /// Whether the sequencer is initialized
+    var isInitialized: Bool { get }
+
+    /// Current timing information
+    var timing: SequencerTiming { get }
+}
+
+/// Type alias for AudioBuffer - actual implementation is in AudioEngine
+public typealias AudioBuffer = any AudioBufferProtocol
 
 /// Machine state for serialization/deserialization
 public struct MachineState: Codable {
@@ -1549,7 +1582,7 @@ public class ParameterManager: @unchecked Sendable {
 
     /// Get parameters in a group
     public func getParametersInGroup(groupId: String) -> [Parameter] {
-        return queue.sync {
+        return queue.sync { () -> [Parameter] in
             guard let group = _groups[groupId] else { return [] }
             return group.parameterIds.compactMap { _parameters[$0] }
         }
@@ -2703,13 +2736,15 @@ public class MockVoiceMachine: VoiceMachineProtocol, SerializableMachine, @unche
     public var lastError: MachineError?
     public var errorHandler: ((MachineError) -> Void)?
     public var performanceMetrics: MachinePerformanceMetrics = MachinePerformanceMetrics()
-    public var parameters: ParameterManager = ParameterManager()
+    public var parameters: ObservableParameterManager = ObservableParameterManager()
 
     // Voice-specific properties
     public var polyphony: Int = 8
     public var voiceStealingMode: VoiceStealingMode = .oldest
     private var _activeVoices: Int = 0
     private var _voiceStates: [VoiceState] = []
+    private var activeNotes: Set<UInt8> = []
+    private var _lastActiveTimestamp: Date?
 
     public var activeVoices: Int { _activeVoices }
     public var voiceStates: [VoiceState] { _voiceStates }
@@ -2799,10 +2834,8 @@ public class MockVoiceMachine: VoiceMachineProtocol, SerializableMachine, @unche
     }
 
     public func noteOff(note: UInt8) {
-        noteOff(note: note, velocity: 64, channel: 0, timestamp: nil)
-    }
-
-    public func noteOff(note: UInt8, velocity: UInt8, channel: UInt8, timestamp: UInt64?) {
+        activeNotes.remove(note)
+        _lastActiveTimestamp = Date()
         if let index = _voiceStates.firstIndex(where: { $0.note == note && $0.isActive }) {
             _voiceStates[index] = VoiceState(
                 voiceId: _voiceStates[index].voiceId,
@@ -2815,8 +2848,22 @@ public class MockVoiceMachine: VoiceMachineProtocol, SerializableMachine, @unche
         }
     }
 
+    public func noteOff(note: UInt8, velocity: UInt8, channel: UInt8, timestamp: UInt64?) {
+        noteOff(note: note)
+    }
+
     public func allNotesOff() {
-        _voiceStates.removeAll()
+        activeNotes.removeAll()
+        _lastActiveTimestamp = Date()
+        for i in 0..<_voiceStates.count {
+            _voiceStates[i] = VoiceState(
+                voiceId: _voiceStates[i].voiceId,
+                note: _voiceStates[i].note,
+                velocity: _voiceStates[i].velocity,
+                startTime: _voiceStates[i].startTime,
+                isActive: false
+            )
+        }
         _activeVoices = 0
     }
 
@@ -2865,6 +2912,96 @@ public class MockVoiceMachine: VoiceMachineProtocol, SerializableMachine, @unche
             _activeVoices = max(0, _activeVoices - 1)
         }
     }
+
+    // MARK: - Voice-Specific Parameters
+
+    public var masterVolume: Float {
+        get { parameters.getParameterValue(id: "master_volume") ?? 0.8 }
+        set { try? parameters.updateParameter(id: "master_volume", value: newValue) }
+    }
+
+    public var masterTuning: Float {
+        get { parameters.getParameterValue(id: "master_tuning") ?? 0.0 }
+        set { try? parameters.updateParameter(id: "master_tuning", value: newValue) }
+    }
+
+    public var portamentoTime: Float {
+        get { parameters.getParameterValue(id: "portamento_time") ?? 0.0 }
+        set { try? parameters.updateParameter(id: "portamento_time", value: newValue) }
+    }
+
+    public var portamentoEnabled: Bool {
+        get { (parameters.getParameterValue(id: "portamento_enabled") ?? 0.0) > 0.5 }
+        set { try? parameters.updateParameter(id: "portamento_enabled", value: newValue ? 1.0 : 0.0) }
+    }
+
+    public var velocitySensitivity: Float {
+        get { parameters.getParameterValue(id: "velocity_sensitivity") ?? 1.0 }
+        set { try? parameters.updateParameter(id: "velocity_sensitivity", value: newValue) }
+    }
+
+    public var pitchBendRange: Float {
+        get { parameters.getParameterValue(id: "pitch_bend_range") ?? 2.0 }
+        set { try? parameters.updateParameter(id: "pitch_bend_range", value: newValue) }
+    }
+
+    public var pitchBend: Float {
+        get { parameters.getParameterValue(id: "pitch_bend") ?? 0.0 }
+        set { try? parameters.updateParameter(id: "pitch_bend", value: newValue) }
+    }
+
+    public var modWheel: Float {
+        get { parameters.getParameterValue(id: "mod_wheel") ?? 0.0 }
+        set { try? parameters.updateParameter(id: "mod_wheel", value: newValue) }
+    }
+
+    // MARK: - Voice Synthesis Parameters
+
+    public func setupVoiceParameters() {
+        // Mock implementation
+    }
+
+    public func getVoiceParameterGroups() -> [ParameterGroup] {
+        return []
+    }
+
+    public func applyPitchBend(_ value: Float) {
+        pitchBend = value
+    }
+
+    public func applyModulation(_ value: Float) {
+        modWheel = value
+    }
+
+    public func setVoiceParameter(voiceId: Int, parameterId: String, value: Float) throws {
+        try parameters.updateParameter(id: parameterId, value: value)
+    }
+
+    public func getVoiceParameter(voiceId: Int, parameterId: String) -> Float? {
+        return parameters.getParameterValue(id: parameterId)
+    }
+
+    // MARK: - Voice Events
+
+    public func setSustainPedal(_ enabled: Bool) {
+        try? parameters.updateParameter(id: "sustain_pedal", value: enabled ? 1.0 : 0.0)
+    }
+
+    public func setSostenutoPedal(_ enabled: Bool) {
+        try? parameters.updateParameter(id: "sostenuto_pedal", value: enabled ? 1.0 : 0.0)
+    }
+
+    public func setSoftPedal(_ enabled: Bool) {
+        try? parameters.updateParameter(id: "soft_pedal", value: enabled ? 1.0 : 0.0)
+    }
+
+    public func setAftertouch(_ pressure: Float) {
+        try? parameters.updateParameter(id: "aftertouch", value: pressure)
+    }
+
+    public func setPolyphonicAftertouch(note: UInt8, pressure: Float) {
+        try? parameters.updateParameter(id: "poly_aftertouch_\(note)", value: pressure)
+    }
 }
 
 /// Mock filter machine implementation for testing
@@ -2878,7 +3015,7 @@ public class MockFilterMachine: FilterMachineProtocol, SerializableMachine, @unc
     public var lastError: MachineError?
     public var errorHandler: ((MachineError) -> Void)?
     public var performanceMetrics: MachinePerformanceMetrics = MachinePerformanceMetrics()
-    public var parameters: ParameterManager = ParameterManager()
+    public var parameters: ObservableParameterManager = ObservableParameterManager()
 
     // Filter-specific properties
     public var filterType: FilterType = .lowpass
@@ -3062,7 +3199,7 @@ public class MockFXProcessor: FXProcessorProtocol, SerializableMachine, @uncheck
     public var lastError: MachineError?
     public var errorHandler: ((MachineError) -> Void)?
     public var performanceMetrics: MachinePerformanceMetrics = MachinePerformanceMetrics()
-    public var parameters: ParameterManager = ParameterManager()
+    public var parameters: ObservableParameterManager = ObservableParameterManager()
 
     // FX-specific properties
     public let effectType: EffectType = .reverb
@@ -3516,27 +3653,6 @@ public struct MIDIEvent: Sendable, Codable {
     }
 }
 
-/// Time signature structure
-public struct TimeSignature: Sendable, Codable, Equatable {
-    /// Numerator (beats per bar)
-    public let numerator: Int
-    
-    /// Denominator (note value)
-    public let denominator: Int
-    
-    /// Initialize time signature
-    public init(numerator: Int, denominator: Int) {
-        self.numerator = max(1, numerator)
-        self.denominator = max(1, denominator)
-    }
-    
-    /// Common time signatures
-    public static let fourFour = TimeSignature(numerator: 4, denominator: 4)
-    public static let threeFour = TimeSignature(numerator: 3, denominator: 4)
-    public static let twoFour = TimeSignature(numerator: 2, denominator: 4)
-    public static let sixEight = TimeSignature(numerator: 6, denominator: 8)
-}
-
 /// Musical time position
 public struct MusicalTime: Sendable, Codable, Equatable {
     /// Bar number (0-based)
@@ -3676,6 +3792,15 @@ public struct AudioFormat: Sendable, Codable, Equatable {
     }
 }
 
+/// Automation curve types for parameter interpolation
+public enum AutomationCurve: String, Sendable, Codable, CaseIterable {
+    case linear = "linear"
+    case exponential = "exponential"
+    case logarithmic = "logarithmic"
+    case smooth = "smooth"
+    case stepwise = "stepwise"
+}
+
 /// Parameter automation point
 public struct AutomationPoint: Sendable, Codable, Equatable {
     /// Time position in samples
@@ -3692,87 +3817,5 @@ public struct AutomationPoint: Sendable, Codable, Equatable {
         self.time = time
         self.value = value
         self.curve = curve
-    }
-}
-
-/// Automation curve types
-public enum AutomationCurve: String, CaseIterable, Codable, Sendable {
-    case linear = "linear"
-    case exponential = "exponential"
-    case logarithmic = "logarithmic"
-    case smooth = "smooth"
-    case step = "step"
-}
-
-/// Parameter automation data
-public struct ParameterAutomation: Sendable, Codable {
-    /// Parameter identifier
-    public let parameterId: String
-    
-    /// Automation points
-    public let points: [AutomationPoint]
-    
-    /// Whether automation is enabled
-    public let isEnabled: Bool
-    
-    /// Initialize parameter automation
-    public init(parameterId: String, points: [AutomationPoint], isEnabled: Bool = true) {
-        self.parameterId = parameterId
-        self.points = points.sorted { $0.time < $1.time }
-        self.isEnabled = isEnabled
-    }
-    
-    /// Get interpolated value at specific time
-    public func valueAt(time: UInt64) -> Float? {
-        guard isEnabled && !points.isEmpty else { return nil }
-        
-        // Find surrounding points
-        var beforePoint: AutomationPoint?
-        var afterPoint: AutomationPoint?
-        
-        for point in points {
-            if point.time <= time {
-                beforePoint = point
-            } else {
-                afterPoint = point
-                break
-            }
-        }
-        
-        // Handle edge cases
-        if beforePoint == nil {
-            return points.first?.value
-        }
-        
-        if afterPoint == nil {
-            return beforePoint?.value
-        }
-        
-        guard let before = beforePoint, let after = afterPoint else {
-            return nil
-        }
-        
-        // Calculate interpolation factor
-        let timeDiff = after.time - before.time
-        guard timeDiff > 0 else { return before.value }
-        
-        let factor = Float(time - before.time) / Float(timeDiff)
-        
-        // Interpolate based on curve type
-        switch before.curve {
-        case .linear:
-            return before.value + (after.value - before.value) * factor
-        case .exponential:
-            let expFactor = factor * factor
-            return before.value + (after.value - before.value) * expFactor
-        case .logarithmic:
-            let logFactor = sqrt(factor)
-            return before.value + (after.value - before.value) * logFactor
-        case .smooth:
-            let smoothFactor = factor * factor * (3.0 - 2.0 * factor)
-            return before.value + (after.value - before.value) * smoothFactor
-        case .step:
-            return before.value
-        }
     }
 }

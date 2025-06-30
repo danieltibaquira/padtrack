@@ -1,0 +1,78 @@
+{
+  "timestamp": "2025-06-17T11:26:45Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "495 |     }
+
+/Users/danieltibaquira/padtrack/Sources/UIComponents/KeyCombo/KeyComboViews.swift:500:18: error: cannot find type 'UIRectCorner' in scope
+498 | struct RoundedCorner: Shape {
+499 |     var radius: CGFloat = .infinity
+500 |     var corners: UIRectCorner = .allCorners
+    |                  `- error: cannot find type 'UIRectCorner' in scope
+501 | 
+502 |     func path(in rect: CGRect) -> Path {",
+      "timestamp": "2025-06-17T11:27:04Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": "
+/Users/danieltibaquira/padtrack/Sources/UIComponents/KeyCombo/KeyComboViews.swift:500:18: error: cannot find type 'UIRectCorner' in scope
+498 | struct RoundedCorner: Shape {
+499 |     var radius: CGFloat = .infinity
+500 |     var corners: UIRectCorner = .allCorners
+    |                  `- error: cannot find type 'UIRectCorner' in scope
+501 | 
+502 |     func path(in rect: CGRect) -> Path {
+
+error: fatalError",
+      "timestamp": "2025-06-17T11:27:23Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Pro 11-inch",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-17T11:27:29Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Pro 12.9-inch",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-17T11:27:32Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Air",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-17T11:27:36Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "passed",
+      "message": "iOS build successful for iPad mini",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-17T11:27:40Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-06-17T11:27:40Z"
+    },
+    "build_warnings": {
+      "status": "failed",
+      "message": "90 build warnings detected",
+      "details": "Excessive warnings indicate potential issues",
+      "timestamp": "2025-06-17T11:27:40Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 5,
+    "failed_tests": 3,
+    "warnings": 0
+  }
+}

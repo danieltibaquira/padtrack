@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-06-16T04:30:38Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "254 |         preset.parameters["filter_cutoff_ratio"] = filterCutoffRatio
+255 |         
+
+/Users/danieltibaquira/padtrack/Sources/FXModule/SampleRateReductionEffect.swift:254:26: error: cannot assign through subscript: 'parameters' is a 'let' constant
+252 |         preset.parameters["target_sample_rate"] = targetSampleRate
+253 |         preset.parameters["anti_aliasing"] = antiAliasingEnabled ? 1.0 : 0.0
+254 |         preset.parameters["filter_cutoff_ratio"] = filterCutoffRatio
+    |                          `- error: cannot assign through subscript: 'parameters' is a 'let' constant
+255 |         
+256 |         return preset",
+      "timestamp": "2025-06-16T04:30:43Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": " 85 |                 range: ParameterRange(min: 0.1, max: 0.5),
+ 86 |                 unit: "",
+ 87 |                 type: .continuous
+    |                        `- error: cannot infer contextual base in reference to member 'continuous'
+ 88 |             )
+ 89 |             try parameters.addParameter(cutoffParam)
+
+[8/135] Emitting module AudioEngineTests
+[9/135] Emitting module MachineProtocolsTests
+error: fatalError",
+      "timestamp": "2025-06-16T04:30:46Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 11-inch",
+      "details": "** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ AudioEngine (in target 'AudioEngine' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/AudioEngine/AudioEngine.swift (in target 'AudioEngine' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ MIDIRouter.swift /Users/danieltibaquira/padtrack/Sources/MIDIModule/MIDIRouter.swift (in target 'MIDIModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ MIDIModuleProtocols.swift /Users/danieltibaquira/padtrack/Sources/MIDIModule/MIDIModuleProtocols.swift (in target 'MIDIModule' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(5 failures)",
+      "timestamp": "2025-06-16T04:30:49Z"
+    },

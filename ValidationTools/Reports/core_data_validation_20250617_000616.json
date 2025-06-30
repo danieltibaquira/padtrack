@@ -1,0 +1,78 @@
+{
+  "timestamp": "2025-06-17T05:06:16Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "core_data_validation",
+  "core_data_tests": {
+    "module_compilation": {
+      "status": "passed",
+      "message": "DataLayer module compiled without errors",
+      "details": "Build completed successfully",
+      "metrics": {},
+      "timestamp": "2025-06-17T05:06:17Z"
+    },
+    "test_execution": {
+      "status": "failed",
+      "message": "DataLayer tests failed",
+      "details": "115 |             steps: Array(repeating: false, count: 64)
+
+/Users/danieltibaquira/padtrack/Tests/MockObjects/MockDataLayer.swift:115:37: error: cannot convert value of type 'Bool' to expected argument type 'MockStep'
+113 |             projectId: projectId,
+114 |             length: 16,
+115 |             steps: Array(repeating: false, count: 64)
+    |                                     `- error: cannot convert value of type 'Bool' to expected argument type 'MockStep'
+116 |         )
+117 |         
+error: fatalError",
+      "metrics": {},
+      "timestamp": "2025-06-17T05:06:19Z"
+    },
+    "model_validation": {
+      "status": "passed",
+      "message": "Core Data model validated successfully",
+      "details": "Entities: 6, Relationships: 18",
+      "metrics": {"entity_count": 6, "relationship_count": 18},
+      "timestamp": "2025-06-17T05:06:19Z"
+    },
+    "entity_classes": {
+      "status": "passed",
+      "message": "All entity classes generated correctly",
+      "details": "Found all 6 entity classes",
+      "metrics": {"found_classes": 6, "total_classes": 6},
+      "timestamp": "2025-06-17T05:06:19Z"
+    },
+    "stack_services": {
+      "status": "passed",
+      "message": "All Core Data services present",
+      "details": "Found all 4 services",
+      "metrics": {"found_services": 4, "total_services": 4},
+      "timestamp": "2025-06-17T05:06:19Z"
+    },
+    "migration_system": {
+      "status": "passed",
+      "message": "Migration system complete",
+      "details": "Found all 2 migration files",
+      "metrics": {"found_migration": 2, "total_migration": 2},
+      "timestamp": "2025-06-17T05:06:19Z"
+    },
+    "performance_baseline": {
+      "status": "passed",
+      "message": "Performance baseline established",
+      "details": "All operations within acceptable thresholds",
+      "metrics": {"init_time_ms": 148.90, "entity_creation_ms": 2.37, "fetch_time_ms": 14.63, "save_time_ms": 45.50},
+      "timestamp": "2025-06-17T05:06:19Z"
+    }
+  },
+  "summary": {
+    "total_tests": 7,
+    "passed_tests": 6,
+    "failed_tests": 1,
+    "success_rate": 85.00,
+    "overall_status": "failed"
+  },
+  "recommendations": [
+    "Core Data stack is properly configured",
+    "All entity classes are generated correctly",
+    "Migration system is in place for future schema changes",
+    "Performance metrics are within acceptable ranges"
+  ]
+}

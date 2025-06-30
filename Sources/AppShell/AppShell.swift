@@ -22,25 +22,29 @@ public final class AppShell: @unchecked Sendable {
     
     /// Initialize the entire application
     public func initialize() {
-        // Initialize all core modules using their shared instances
-        MIDIManager.shared.initialize()
-        AudioEngineManager.shared.initialize()
-        SequencerManager.shared.initialize()
-        VoiceManager.shared.initialize()
-        FilterManager.shared.initialize()
-        FXManager.shared.initialize()
-        
-        // Start audio engine
+        // Initialize audio engine
         do {
+            try AudioEngineManager.shared.initialize()
             try AudioEngineManager.shared.start()
         } catch {
-            print("Failed to start audio engine: \(error)")
+            print("Failed to initialize/start audio engine: \(error)")
         }
+
+        // TODO: Initialize other modules as they are implemented
+        // - MIDI Module
+        // - Sequencer Module
+        // - Voice Module
+        // - Filter Module
+        // - FX Module
     }
     
     /// Shutdown the application
     public func shutdown() {
-        AudioEngineManager.shared.stop()
+        do {
+            try AudioEngineManager.shared.stop()
+        } catch {
+            print("Failed to stop audio engine: \(error)")
+        }
         // TODO: Add proper shutdown for other modules
     }
     

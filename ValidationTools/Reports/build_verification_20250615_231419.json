@@ -1,0 +1,20 @@
+{
+  "timestamp": "2025-06-16T04:14:19Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "107 |         }
+
+/Users/danieltibaquira/padtrack/Sources/DigitonePad/ProjectManagement/ProjectManagementPresenter.swift:112:13: error: sending 'self' risks causing data races
+110 |     func projectLoadFailed(_ error: Error) {
+111 |         DispatchQueue.main.async { [weak self] in
+112 |             self?.isLoading = false
+    |             |- error: sending 'self' risks causing data races
+    |             `- note: task-isolated 'self' is captured by a main actor-isolated closure. main actor-isolated uses in closure may race against later nonisolated uses
+113 |             self?.errorMessage = error.localizedDescription
+114 |             self?.view?.showError(error)",
+      "timestamp": "2025-06-16T04:14:24Z"
+    },

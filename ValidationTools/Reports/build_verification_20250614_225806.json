@@ -1,0 +1,115 @@
+{
+  "timestamp": "2025-06-15T03:58:06Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": " 29 |         enablePerformanceMonitoring: Bool = true,
+ 30 |         enableErrorRecovery: Bool = true
+
+AVFAudio.AVAudioSession:72:27: note: 'allowBluetooth' has been explicitly marked unavailable here
+ 70 |         public static var DuckOthers: AVAudioSession.CategoryOptions { get }
+ 71 |         @available(macOS, unavailable)
+ 72 |         public static var allowBluetooth: AVAudioSession.CategoryOptions { get }
+    |                           `- note: 'allowBluetooth' has been explicitly marked unavailable here
+ 73 |         @available(macOS, unavailable)
+ 74 |         @available(swift, obsoleted: 3, renamed: "allowBluetooth")",
+      "timestamp": "2025-06-15T03:58:08Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": " 30 |         enableErrorRecovery: Bool = true
+
+AVFAudio.AVAudioSession:72:27: note: 'allowBluetooth' has been explicitly marked unavailable here
+ 70 |         public static var DuckOthers: AVAudioSession.CategoryOptions { get }
+ 71 |         @available(macOS, unavailable)
+ 72 |         public static var allowBluetooth: AVAudioSession.CategoryOptions { get }
+    |                           `- note: 'allowBluetooth' has been explicitly marked unavailable here
+ 73 |         @available(macOS, unavailable)
+ 74 |         @available(swift, obsoleted: 3, renamed: "allowBluetooth")
+error: fatalError",
+      "timestamp": "2025-06-15T03:58:09Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 11-inch",
+      "details": "    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name AppShell -Onone -enforce-exclusivity\=checked @/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/Objects-normal/arm64/AppShell.SwiftFileList -DDEBUG -enable-upcoming-feature StrictConcurrency -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.2.sdk -target arm64-apple-ios16.0-simulator -g -module-cache-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Index.noindex/DataStore -enable-experimental-feature OpaqueTypeErasure -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator -F /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator -parse-as-library -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator18.2-22C146-07b28473f605e47e75261259d3ef3b5a.sdkstatcache -output-file-map /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/Objects-normal/arm64/AppShell-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/Objects-normal/arm64/AppShell.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/Objects-normal/arm64/AppShell_const_extract_protocols.json -Xcc -iquote -Xcc /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/AppShell-generated-files.hmap -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/AppShell-own-target-headers.hmap -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/AppShell-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/DigitonePad-fa58f9b9dc693cda2657e914cef342f3-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/AppShell-project-headers.hmap -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/DerivedSources-normal/arm64 -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/DerivedSources/arm64 -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/Objects-normal/arm64/AppShell-Swift.h -working-directory /Users/danieltibaquira/padtrack -experimental-emit-module-separately -disable-cmo
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/AppShell/AppShell.swift (in target 'AppShell' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ AppShell.swift /Users/danieltibaquira/padtrack/Sources/AppShell/AppShell.swift (in target 'AppShell' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-15T03:58:11Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 12.9-inch",
+      "details": "        ^
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ AppShell.swift /Users/danieltibaquira/padtrack/Sources/AppShell/AppShell.swift (in target 'AppShell' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/AppShell/AppShell.swift (in target 'AppShell' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-15T03:58:12Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Air",
+      "details": "    builtin-infoPlistUtility /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/VoiceModule.build/empty-VoiceModule.plist -producttype com.apple.product-type.framework -expandbuildsettings -format binary -platform iphonesimulator -o /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator/VoiceModule.framework/Info.plist
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ AppShell.swift /Users/danieltibaquira/padtrack/Sources/AppShell/AppShell.swift (in target 'AppShell' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/AppShell/AppShell.swift (in target 'AppShell' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-15T03:58:14Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "failed",
+      "message": "iOS build failed for iPad mini",
+      "details": "    builtin-RegisterExecutionPolicyException /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator/MIDIModule.framework
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/AppShell/AppShell.swift (in target 'AppShell' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ AppShell.swift /Users/danieltibaquira/padtrack/Sources/AppShell/AppShell.swift (in target 'AppShell' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-15T03:58:15Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-06-15T03:58:16Z"
+    },
+    "build_warnings": {
+      "status": "passed",
+      "message": "No build warnings found",
+      "details": "Clean build with no warnings",
+      "timestamp": "2025-06-15T03:58:16Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 2,
+    "failed_tests": 6,
+    "warnings": 0
+  }
+}

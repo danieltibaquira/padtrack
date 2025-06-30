@@ -1,0 +1,42 @@
+{
+  "timestamp": "2025-06-15T10:43:33Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "passed",
+      "message": "Swift Package compiled successfully",
+      "details": "    /Users/danieltibaquira/padtrack/Tests/DataLayerTests/EntityValidationTests.swift.disabled
+[0/1] Planning build
+Building for debugging...
+[0/1] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.72s)",
+      "timestamp": "2025-06-15T10:43:35Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": "[12/15] Emitting module AudioEngineTests
+/Users/danieltibaquira/padtrack/Tests/AudioEngineTests/AudioEngineTests.swift:587:13: warning: immutable value 'i' was never used; consider replacing with '_' or removing it
+ 585 | 
+ 586 |         // Test concurrent access
+ 587 |         for i in 0..<4 {
+     |             `- warning: immutable value 'i' was never used; consider replacing with '_' or removing it
+ 588 |             DispatchQueue.global(qos: .userInitiated).async {
+ 589 |                 let buffer = pool.getBuffer()
+
+error: fatalError",
+      "timestamp": "2025-06-15T10:43:36Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Pro 11-inch",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-15T10:43:42Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Pro 12.9-inch",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-15T10:43:44Z"
+    },

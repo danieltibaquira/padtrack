@@ -1,613 +1,813 @@
 {
-  "meta": {
-    "generatedAt": "2025-06-11T21:29:21.096Z",
-    "tasksAnalyzed": 74,
-    "totalTasks": 75,
-    "analysisCount": 75,
-    "thresholdScore": 4,
-    "projectName": "Taskmaster",
-    "usedResearch": false
-  },
-  "complexityAnalysis": [
-    {
-      "taskId": 1,
-      "taskTitle": "Setup Project Repository and Structure",
-      "complexityScore": 6,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the process of setting up the project repository and structure into detailed subtasks, including Git initialization, Swift Package Manager configuration, Xcodegen setup, module directory creation, and CI/CD configuration. Include specific steps for each subtask with clear dependencies.",
-      "reasoning": "This task involves setting up multiple Swift Packages with proper dependencies, configuring Xcodegen, and establishing the project structure. While not algorithmically complex, it requires careful planning and understanding of Swift Package Manager and Xcodegen. The existing 8 subtasks are good but could be expanded to include more detailed steps for Swift Package configuration and module interdependencies."
-    },
-    {
-      "taskId": 2,
-      "taskTitle": "Define Core Data Models",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the Core Data model implementation task into detailed subtasks covering each entity (Project, Pattern, Kit, Track, Trig, Preset), their relationships, constraints, validation rules, and code generation. Include tasks for designing the data model diagram, implementing each entity with attributes and relationships, setting up validation rules, creating NSManagedObject subclasses, and writing comprehensive unit tests.",
-      "reasoning": "This task involves designing and implementing multiple complex entities with relationships in Core Data. It requires deep understanding of data modeling, Core Data specifics, and proper relationship management. The existing 8 subtasks are good but could be expanded to include more detailed steps for each entity, validation logic, and testing."
-    },
-    {
-      "taskId": 3,
-      "taskTitle": "Implement DataLayer Swift Package",
-      "complexityScore": 8,
-      "recommendedSubtasks": 16,
-      "expansionPrompt": "Break down the DataLayer Swift Package implementation into detailed subtasks covering the complete Core Data stack setup, CRUD operations for all entities, migration support, error handling, thread safety, caching mechanisms, and comprehensive testing. Include tasks for designing the architecture, implementing the persistence controller, creating entity-specific repositories, handling migrations, optimizing performance, and writing unit and integration tests.",
-      "reasoning": "This task involves creating a comprehensive data layer with Core Data integration, requiring expertise in persistence, thread safety, error handling, and migration support. The current 16 subtasks cover the essential aspects but could be refined to ensure all critical components are addressed with appropriate testing."
-    },
-    {
-      "taskId": 4,
-      "taskTitle": "Define MachineProtocols Swift Package",
-      "complexityScore": 6,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the MachineProtocols Swift Package implementation into detailed subtasks covering protocol design for different machine types (VoiceMachine, FilterMachine, FXProcessor), common data structures, parameter definitions, serialization mechanisms, and testing. Include tasks for designing the protocol hierarchy, implementing core protocols, creating shared data types, defining parameter systems, implementing serialization, and writing comprehensive tests with mock implementations.",
-      "reasoning": "This task requires designing a protocol-based architecture to prevent circular dependencies, which demands careful planning of interfaces and data structures. The current 7 subtasks cover the basics, but more detailed tasks would help ensure comprehensive protocol design, proper parameter handling, and thorough testing with mock implementations."
-    },
-    {
-      "taskId": 5,
-      "taskTitle": "Setup AudioEngine Swift Package Foundation",
-      "complexityScore": 9,
-      "recommendedSubtasks": 18,
-      "expansionPrompt": "Break down the AudioEngine Swift Package implementation into detailed subtasks covering the complete audio processing architecture, buffer management, graph routing, error handling, and performance optimization. Include tasks for setting up AVAudioEngine, designing the node connection system, implementing buffer utilities, handling audio session interruptions, optimizing for low latency, and writing comprehensive tests for various audio scenarios.",
-      "reasoning": "This task involves creating a complex audio processing foundation with real-time constraints, requiring deep knowledge of audio programming, buffer management, and performance optimization. The existing 18 subtasks are comprehensive but could be refined to ensure all critical audio engine components are properly addressed with appropriate testing."
-    },
-    {
-      "taskId": 6,
-      "taskTitle": "Implement SequencerModule Swift Package Foundation",
-      "complexityScore": 8,
-      "recommendedSubtasks": 16,
-      "expansionPrompt": "Break down the SequencerModule Swift Package implementation into detailed subtasks covering clock design, event publishing, step sequencing, pattern data structures, synchronization mechanisms, and integration with the data layer. Include tasks for implementing high-precision timing, designing the event system, creating the step sequencer logic, developing pattern playback, implementing synchronization options, and writing comprehensive tests for timing accuracy and stability.",
-      "reasoning": "This task requires building a sequencer with precise timing requirements and complex event handling, demanding expertise in real-time systems and event-based architectures. The current 16 subtasks cover the essential components but could be refined to ensure proper timing accuracy, synchronization capabilities, and thorough testing."
-    },
-    {
-      "taskId": 7,
-      "taskTitle": "Design UIComponents Swift Package",
-      "complexityScore": 7,
-      "recommendedSubtasks": 12,
-      "expansionPrompt": "Break down the UIComponents Swift Package implementation into detailed subtasks covering the design and development of each custom UI component (buttons, encoders, displays, keyboard, grid), styling system, gesture handling, haptic feedback, and comprehensive testing. Include tasks for creating component prototypes, implementing SwiftUI views, adding custom drawing where needed, implementing gesture recognizers, adding haptic feedback, and writing preview providers and UI tests.",
-      "reasoning": "This task involves creating custom UI components that mimic hardware interfaces, requiring expertise in SwiftUI, custom drawing, gesture handling, and haptic feedback. The current 8 subtasks provide a good foundation but could be expanded to include more detailed steps for each component type, accessibility considerations, and thorough testing."
-    },
-    {
-      "taskId": 8,
-      "taskTitle": "Implement Basic FM Synthesis Engine",
-      "complexityScore": 9,
-      "recommendedSubtasks": 20,
-      "expansionPrompt": "Break down the FM synthesis engine implementation into detailed subtasks covering operator design, algorithm implementation, frequency calculation, phase accumulation, anti-aliasing, optimization, and comprehensive testing. Include tasks for designing the operator structure, implementing each algorithm configuration, developing modulation systems, optimizing with SIMD instructions, implementing polyphony support, and writing tests for audio output quality and performance.",
-      "reasoning": "This task involves implementing complex digital signal processing algorithms for FM synthesis, requiring deep knowledge of DSP, audio programming, and optimization techniques. The current 20 subtasks are comprehensive but could be refined to ensure all aspects of FM synthesis are properly addressed with appropriate testing for audio quality and performance."
-    },
-    {
-      "taskId": 9,
-      "taskTitle": "Implement FM TONE Voice Machine",
-      "complexityScore": 8,
-      "recommendedSubtasks": 18,
-      "expansionPrompt": "Break down the FM TONE Voice Machine implementation into detailed subtasks covering parameter mapping, envelope generation, voice allocation, modulation routing, preset management, and comprehensive testing. Include tasks for implementing each parameter page, designing the voice architecture, creating envelope generators, developing the modulation matrix, implementing voice allocation, optimizing performance, and writing tests for sound quality and stability.",
-      "reasoning": "This task builds upon the FM synthesis engine to create a complete voice machine with parameter organization, envelope control, and voice management. The current 18 subtasks cover the essential components but could be refined to ensure proper parameter organization, modulation capabilities, and thorough testing of sound quality."
-    },
-    {
-      "taskId": 10,
-      "taskTitle": "Implement Multi-Mode Filter",
-      "complexityScore": 7,
-      "recommendedSubtasks": 12,
-      "expansionPrompt": "Break down the Multi-Mode Filter implementation into detailed subtasks covering filter topology design, coefficient calculation, morphing mechanism, resonance control, saturation stage, and comprehensive testing. Include tasks for implementing each filter type (LP, BP, HP), developing the morphing algorithm, creating the resonance and self-oscillation system, implementing the saturation stage, optimizing performance, and writing tests for frequency response and stability.",
-      "reasoning": "This task requires implementing a complex state-variable filter with morphing capabilities, demanding expertise in DSP, filter design, and coefficient calculation. The current 8 subtasks provide a good foundation but could be expanded to include more detailed steps for each filter type, morphing algorithm, and thorough testing of frequency response."
-    },
-    {
-      "taskId": 11,
-      "taskTitle": "Connect Sequencer to Audio Engine",
-      "complexityScore": 8,
-      "recommendedSubtasks": 16,
-      "expansionPrompt": "Break down the sequencer-to-audio engine connection task into detailed subtasks covering event bridge design, timing synchronization, thread-safe communication, parameter automation, and comprehensive testing. Include tasks for designing the event queue, implementing note handling, developing parameter automation, ensuring sample-accurate timing, creating thread-safe communication mechanisms, and writing tests for timing accuracy and stability under load.",
-      "reasoning": "This task involves connecting two complex systems (sequencer and audio engine) with strict timing and thread-safety requirements, demanding expertise in real-time systems and concurrent programming. The current 16 subtasks are comprehensive but could be refined to ensure proper timing accuracy, thread safety, and thorough testing under various conditions."
-    },
-    {
-      "taskId": 12,
-      "taskTitle": "Implement Basic Track Effects",
-      "complexityScore": 6,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the track effects implementation into detailed subtasks covering bit reduction, sample rate reduction, overdrive, effect chaining, bypass functionality, and comprehensive testing. Include tasks for designing each effect algorithm, implementing parameter controls, creating the effect chain architecture, adding bypass options, optimizing performance, and writing tests for audio quality and CPU usage.",
-      "reasoning": "This task involves implementing multiple audio effects with different DSP requirements, demanding knowledge of digital audio processing and effect design. The current 7 subtasks provide a good foundation but could be expanded to include more detailed steps for each effect type, parameter control, and thorough testing of audio quality and performance."
-    },
-    {
-      "taskId": 13,
-      "taskTitle": "Implement Global Send Effects",
-      "complexityScore": 7,
-      "recommendedSubtasks": 12,
-      "expansionPrompt": "Break down the global send effects implementation into detailed subtasks covering delay, reverb, chorus, send routing architecture, and comprehensive testing. Include tasks for designing each effect algorithm, implementing parameter controls, creating the send routing system, developing per-track send levels, optimizing performance, and writing tests for audio quality and CPU usage under various conditions.",
-      "reasoning": "This task requires implementing complex time-based effects and a send routing architecture, demanding expertise in DSP, effect design, and audio routing. The current 8 subtasks provide a good foundation but could be expanded to include more detailed steps for each effect algorithm, send routing implementation, and thorough testing of audio quality and performance."
-    },
-    {
-      "taskId": 14,
-      "taskTitle": "Implement Master Effects",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the master effects implementation into detailed subtasks covering compressor design, overdrive implementation, limiter development, parameter control, and comprehensive testing. Include tasks for designing each effect algorithm, implementing parameter controls, creating the master chain architecture, optimizing performance, and writing tests for audio quality and CPU usage under various signal conditions.",
-      "reasoning": "This task involves implementing dynamics processing and distortion effects for the master chain, requiring knowledge of compression, limiting, and distortion algorithms. The current 7 subtasks provide a good foundation but could be expanded to include more detailed steps for each effect algorithm, parameter control, and thorough testing of audio quality and performance."
-    },
-    {
-      "taskId": 15,
-      "taskTitle": "Design Main Application Layout",
-      "complexityScore": 6,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the main application layout design into detailed subtasks covering top section (LCD display), middle section (function buttons and encoders), bottom section (step buttons and transport), navigation elements, and comprehensive testing. Include tasks for designing each section layout, implementing responsive behavior, creating the visual styling to match hardware aesthetic, ensuring accessibility, and writing tests for layout behavior across different iPad models and orientations.",
-      "reasoning": "This task involves creating a complex UI layout that mimics hardware interfaces and works across different device sizes and orientations. The current 7 subtasks provide a good foundation but could be expanded to include more detailed steps for each section, responsive behavior, accessibility considerations, and thorough testing across different devices."
-    },
-    {
-      "taskId": 16,
-      "taskTitle": "Implement Parameter Page Navigation",
-      "complexityScore": 5,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the parameter page navigation implementation into detailed subtasks covering page selection, visual indicators, parameter display, context-sensitive behavior, and comprehensive testing. Include tasks for designing the navigation state machine, implementing page transitions, creating parameter display components, handling context-sensitive content, ensuring state preservation, and writing tests for navigation behavior and parameter persistence.",
-      "reasoning": "This task requires implementing a navigation system for parameter pages with state preservation and context-sensitivity. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for the navigation state machine, transitions, parameter display, and thorough testing of navigation behavior."
-    },
-    {
-      "taskId": 17,
-      "taskTitle": "Implement FM TONE Parameter Pages",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the FM TONE parameter pages implementation into detailed subtasks covering each of the four parameter pages, parameter binding, value formatting, and comprehensive testing. Include tasks for designing each page layout, implementing parameter controls, creating value formatting and display, binding to the FM TONE machine, ensuring proper VIPER architecture, and writing tests for parameter updates and audio output changes.",
-      "reasoning": "This task involves creating multiple parameter pages with complex parameter binding and formatting requirements. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for each parameter page, binding mechanisms, value formatting, and thorough testing of parameter control and audio output."
-    },
-    {
-      "taskId": 18,
-      "taskTitle": "Implement Multi-Mode Filter Parameter Page",
-      "complexityScore": 5,
-      "recommendedSubtasks": 6,
-      "expansionPrompt": "Break down the Multi-Mode Filter parameter page implementation into detailed subtasks covering parameter controls, value formatting, filter type visualization, parameter binding, and comprehensive testing. Include tasks for designing the page layout, implementing each parameter control, creating filter type visualization, binding to the filter machine, ensuring proper VIPER architecture, and writing tests for parameter updates and audio output changes.",
-      "reasoning": "This task requires implementing a parameter page for the filter with appropriate controls and visualizations. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for each parameter control, filter visualization, binding mechanisms, and thorough testing of parameter control and audio output."
-    },
-    {
-      "taskId": 19,
-      "taskTitle": "Implement Basic Sequencer UI",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the basic sequencer UI implementation into detailed subtasks covering step buttons, transport controls, mode selection, track selection, pattern selection, and comprehensive testing. Include tasks for designing each UI component, implementing step visualization, creating transport controls, developing mode switching, implementing track and pattern selection, ensuring proper VIPER architecture, and writing tests for user interactions and sequencer state updates.",
-      "reasoning": "This task involves creating a complex UI for sequencer control with multiple interactive elements and state visualization. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for each UI component, interaction handling, state visualization, and thorough testing of user interactions and sequencer behavior."
-    },
-    {
-      "taskId": 20,
-      "taskTitle": "Implement Parameter Lock (P-Lock) Functionality",
-      "complexityScore": 7,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the Parameter Lock functionality implementation into detailed subtasks covering UI interaction, data model integration, visual indication, playback implementation, and comprehensive testing. Include tasks for designing the P-Lock interaction model, implementing hold-and-turn detection, creating visual indicators for P-Locked parameters, storing P-Locks in the data model, implementing playback behavior, ensuring proper VIPER architecture, and writing tests for P-Lock creation, editing, and playback.",
-      "reasoning": "This task requires implementing a complex parameter automation system with specific interaction patterns and visual feedback. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for interaction handling, data storage, visual feedback, playback implementation, and thorough testing of P-Lock behavior."
-    },
-    {
-      "taskId": 21,
-      "taskTitle": "Implement FM DRUM Voice Machine",
-      "complexityScore": 8,
-      "recommendedSubtasks": 16,
-      "expansionPrompt": "Break down the FM DRUM voice machine implementation into detailed subtasks covering body component, noise/transient component, pitch sweep, wavefolding, envelope design, parameter mapping, and comprehensive testing. Include tasks for implementing each synthesis component, designing percussion-specific envelopes, creating parameter mappings for drum sounds, optimizing performance, and writing tests for various drum sound types and parameter ranges.",
-      "reasoning": "This task involves implementing a specialized FM synthesis engine for percussion sounds with multiple components and specific envelope requirements. The current 16 subtasks are comprehensive but could be refined to ensure all aspects of percussion synthesis are properly addressed with appropriate testing for different drum sound types."
-    },
-    {
-      "taskId": 22,
-      "taskTitle": "Implement FM DRUM Parameter Pages",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the FM DRUM parameter pages implementation into detailed subtasks covering each of the four parameter pages, parameter binding, value formatting, and comprehensive testing. Include tasks for designing each page layout, implementing parameter controls, creating value formatting and display, binding to the FM DRUM machine, ensuring proper VIPER architecture, and writing tests for parameter updates and audio output changes.",
-      "reasoning": "This task requires creating multiple parameter pages for the FM DRUM machine with appropriate controls and visualizations. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for each parameter page, binding mechanisms, value formatting, and thorough testing of parameter control and audio output."
-    },
-    {
-      "taskId": 23,
-      "taskTitle": "Implement WAVETONE Voice Machine",
-      "complexityScore": 9,
-      "recommendedSubtasks": 18,
-      "expansionPrompt": "Break down the WAVETONE voice machine implementation into detailed subtasks covering dual oscillator engine, wavetable synthesis, phase distortion, oscillator modulation, noise generator, and comprehensive testing. Include tasks for designing the oscillator architecture, implementing wavetable interpolation, creating phase distortion algorithms, developing modulation options, optimizing performance, and writing tests for various sound types and parameter ranges.",
-      "reasoning": "This task involves implementing a complex synthesis engine combining wavetable and phase distortion techniques, requiring deep knowledge of multiple synthesis methods and efficient implementation. The current 18 subtasks are comprehensive but could be refined to ensure all aspects of wavetable and phase distortion synthesis are properly addressed with appropriate testing."
-    },
-    {
-      "taskId": 24,
-      "taskTitle": "Implement WAVETONE Parameter Pages",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the WAVETONE parameter pages implementation into detailed subtasks covering each of the four parameter pages, parameter binding, value formatting, and comprehensive testing. Include tasks for designing each page layout, implementing parameter controls, creating value formatting and display, binding to the WAVETONE machine, ensuring proper VIPER architecture, and writing tests for parameter updates and audio output changes.",
-      "reasoning": "This task requires creating multiple parameter pages for the WAVETONE machine with appropriate controls and visualizations. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for each parameter page, binding mechanisms, value formatting, and thorough testing of parameter control and audio output."
-    },
-    {
-      "taskId": 25,
-      "taskTitle": "Implement SWARMER Voice Machine",
-      "complexityScore": 8,
-      "recommendedSubtasks": 16,
-      "expansionPrompt": "Break down the SWARMER voice machine implementation into detailed subtasks covering main oscillator, swarm oscillators, animation parameter, detune and spread controls, modulation options, and comprehensive testing. Include tasks for designing the oscillator architecture, implementing the unison algorithm, creating animation and modulation systems, optimizing performance, and writing tests for various texture types and parameter ranges.",
-      "reasoning": "This task involves implementing a specialized synthesis engine based on multiple detuned oscillators, requiring expertise in unison techniques and efficient implementation. The current 16 subtasks are comprehensive but could be refined to ensure all aspects of swarm synthesis are properly addressed with appropriate testing for different texture types."
-    },
-    {
-      "taskId": 26,
-      "taskTitle": "Implement SWARMER Parameter Pages",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the SWARMER parameter pages implementation into detailed subtasks covering each of the four parameter pages, parameter binding, value formatting, and comprehensive testing. Include tasks for designing each page layout, implementing parameter controls, creating value formatting and display, binding to the SWARMER machine, ensuring proper VIPER architecture, and writing tests for parameter updates and audio output changes.",
-      "reasoning": "This task requires creating multiple parameter pages for the SWARMER machine with appropriate controls and visualizations. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for each parameter page, binding mechanisms, value formatting, and thorough testing of parameter control and audio output."
-    },
-    {
-      "taskId": 27,
-      "taskTitle": "Implement Lowpass 4 Filter Machine",
-      "complexityScore": 7,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the Lowpass 4 filter implementation into detailed subtasks covering filter topology design, coefficient calculation, resonance control, saturation stage, and comprehensive testing. Include tasks for implementing the ladder filter algorithm, developing the resonance and self-oscillation system, creating the saturation stage, optimizing performance, and writing tests for frequency response and stability at different settings.",
-      "reasoning": "This task requires implementing a complex ladder filter with resonance and saturation, demanding expertise in DSP and filter design. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for the filter algorithm, coefficient calculation, resonance control, saturation stage, and thorough testing of frequency response and stability."
-    },
-    {
-      "taskId": 28,
-      "taskTitle": "Implement Additional Filter Machines",
-      "complexityScore": 7,
-      "recommendedSubtasks": 9,
-      "expansionPrompt": "Break down the additional filter machines implementation into detailed subtasks covering comb filter, EQ, and other filter types, with comprehensive testing for each. Include tasks for designing each filter topology, implementing the filter algorithms, creating parameter controls, optimizing performance, and writing tests for frequency response and stability at different settings for each filter type.",
-      "reasoning": "This task involves implementing multiple filter types with different algorithms and requirements, demanding expertise in various filter designs. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for each filter type, parameter control, and thorough testing of frequency response and stability."
-    },
-    {
-      "taskId": 29,
-      "taskTitle": "Implement Micro Timing for Sequencer",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the micro timing implementation into detailed subtasks covering UI controls, data model integration, visual indication, playback implementation, and comprehensive testing. Include tasks for designing the timing offset UI, implementing timing adjustment controls, creating visual indicators for timing offsets, storing timing data in the model, implementing precise playback timing, and writing tests for timing accuracy and stability.",
-      "reasoning": "This task requires implementing precise timing adjustments for sequencer steps with appropriate UI controls and playback behavior. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for UI controls, data storage, visual feedback, playback implementation, and thorough testing of timing accuracy."
-    },
-    {
-      "taskId": 30,
-      "taskTitle": "Implement Retrig Functionality",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the retrig functionality implementation into detailed subtasks covering UI controls, data model integration, visual indication, playback implementation, and comprehensive testing. Include tasks for designing the retrig UI, implementing count and rate controls, creating visual indicators for retrigs, storing retrig data in the model, implementing precise retrig timing during playback, and writing tests for retrig behavior and timing accuracy.",
-      "reasoning": "This task involves implementing note retriggering with count and rate parameters, requiring precise timing control and appropriate UI. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for UI controls, data storage, visual feedback, playback implementation, and thorough testing of retrig behavior."
-    },
-    {
-      "taskId": 31,
-      "taskTitle": "Implement Trig Conditions",
-      "complexityScore": 7,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the trig conditions implementation into detailed subtasks covering condition types, UI controls, data model integration, visual indication, evaluation logic, and comprehensive testing. Include tasks for designing the condition UI, implementing each condition type, creating visual indicators for conditions, storing condition data in the model, implementing condition evaluation during playback, and writing tests for each condition type and combination.",
-      "reasoning": "This task requires implementing conditional triggering with multiple condition types and appropriate UI controls. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for each condition type, UI controls, data storage, evaluation logic, and thorough testing of condition behavior."
-    },
-    {
-      "taskId": 32,
-      "taskTitle": "Implement GRID Recording Mode",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the GRID recording mode implementation into detailed subtasks covering step button interaction, visual feedback, P-Lock integration, note property editing, and comprehensive testing. Include tasks for designing the GRID mode UI, implementing step creation and deletion, creating visual feedback for active steps, integrating with the P-Lock system, implementing note property editing, and writing tests for step creation, deletion, and property editing.",
-      "reasoning": "This task involves implementing a step-based recording interface with specific interaction patterns and visual feedback. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for step interaction, visual feedback, P-Lock integration, property editing, and thorough testing of GRID mode behavior."
-    },
-    {
-      "taskId": 33,
-      "taskTitle": "Implement LIVE Recording Mode",
-      "complexityScore": 7,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the LIVE recording mode implementation into detailed subtasks covering real-time note recording, quantization, record enable/disable, metronome, and comprehensive testing. Include tasks for designing the LIVE mode UI, implementing real-time note capture, creating quantization options, developing record enable/disable functionality, implementing metronome and count-in, and writing tests for recording behavior with various quantization settings.",
-      "reasoning": "This task requires implementing real-time note recording with quantization and metronome functionality. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for real-time recording, quantization options, metronome implementation, and thorough testing of recording behavior."
-    },
-    {
-      "taskId": 34,
-      "taskTitle": "Implement STEP Recording Mode",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the STEP recording mode implementation into detailed subtasks covering step-by-step note entry, automatic advancement, note property editing, P-Lock integration, and comprehensive testing. Include tasks for designing the STEP mode UI, implementing step-by-step entry, creating automatic advancement logic, developing note property editing, integrating with the P-Lock system, and writing tests for step entry and advancement behavior.",
-      "reasoning": "This task involves implementing a step-by-step recording interface with automatic advancement and property editing. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for step entry, advancement logic, property editing, P-Lock integration, and thorough testing of STEP mode behavior."
-    },
-    {
-      "taskId": 35,
-      "taskTitle": "Implement Variable Pattern Length",
-      "complexityScore": 5,
-      "recommendedSubtasks": 7,
-      "expansionPrompt": "Break down the variable pattern length implementation into detailed subtasks covering UI controls, data model integration, visual indication, playback handling, and comprehensive testing. Include tasks for designing the pattern length UI, implementing length adjustment controls, creating visual indicators for pattern length, storing length data in the model, implementing proper playback looping, and writing tests for patterns with various lengths and during playback.",
-      "reasoning": "This task requires implementing variable pattern lengths with appropriate UI controls and playback behavior. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for UI controls, data storage, visual feedback, playback implementation, and thorough testing of patterns with different lengths."
-    },
-    {
-      "taskId": 36,
-      "taskTitle": "Implement Variable Track Length and Speed",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the variable track length and speed implementation into detailed subtasks covering UI controls, data model integration, visual indication, playback handling, and comprehensive testing. Include tasks for designing the track length and speed UI, implementing adjustment controls, creating visual indicators for track settings, storing track data in the model, implementing proper polyrhythmic playback, and writing tests for tracks with various lengths and speeds.",
-      "reasoning": "This task involves implementing per-track length and speed settings with polyrhythmic playback capabilities. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for UI controls, data storage, visual feedback, polyrhythmic playback implementation, and thorough testing of tracks with different settings."
-    },
-    {
-      "taskId": 37,
-      "taskTitle": "Implement Song Mode",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the Song Mode implementation into detailed subtasks covering UI for arrangement, pattern sequencing, repetition control, track muting, playback implementation, and comprehensive testing. Include tasks for designing the Song Mode UI, implementing pattern arrangement, creating repetition controls, developing track mute/unmute functionality, implementing song playback, and writing tests for song arrangement creation and playback.",
-      "reasoning": "This task requires implementing a pattern arrangement system with repetition and mute controls. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for arrangement UI, pattern sequencing, repetition control, track muting, playback implementation, and thorough testing of song arrangement behavior."
-    },
-    {
-      "taskId": 38,
-      "taskTitle": "Implement Preset Management",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the preset management implementation into detailed subtasks covering UI for browsing and selection, saving functionality, categorization system, data model integration, and comprehensive testing. Include tasks for designing the preset browser UI, implementing preset saving and loading, creating categorization and tagging, integrating with the data model, ensuring smooth preset switching, and writing tests for preset operations and transitions.",
-      "reasoning": "This task involves implementing a preset management system with browsing, saving, and categorization capabilities. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for browser UI, saving functionality, categorization system, data integration, and thorough testing of preset operations."
-    },
-    {
-      "taskId": 39,
-      "taskTitle": "Implement Preset Pool",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the Preset Pool implementation into detailed subtasks covering UI for browsing and selection, adding presets to pool, organization within pool, data model integration, and comprehensive testing. Include tasks for designing the pool browser UI, implementing preset addition and removal, creating organization tools, integrating with the data model, implementing preset assignment to tracks, and writing tests for pool operations and preset assignment.",
-      "reasoning": "This task requires implementing a project-specific preset collection with organization and assignment capabilities. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for pool UI, preset management, organization tools, track assignment, and thorough testing of pool operations."
-    },
-    {
-      "taskId": 40,
-      "taskTitle": "Implement Emulated +Drive",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the emulated +Drive implementation into detailed subtasks covering virtual file system design, UI for browsing and management, import/export functionality, organization features, data model integration, and comprehensive testing. Include tasks for designing the file system architecture, implementing the browser UI, creating import/export tools, developing organization features, integrating with the data model, and writing tests for file operations and organization.",
-      "reasoning": "This task involves implementing a virtual file system for project and preset storage with browsing and organization capabilities. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for file system design, browser UI, import/export functionality, organization features, and thorough testing of file operations."
-    },
-    {
-      "taskId": 41,
-      "taskTitle": "Implement MIDIModule Swift Package",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the MIDIModule Swift Package implementation into detailed subtasks covering CoreMIDI integration, device discovery, message parsing, clock synchronization, and comprehensive testing. Include tasks for setting up CoreMIDI, implementing device management, creating message parsers and generators, developing clock synchronization, ensuring thread safety, and writing tests for MIDI I/O and synchronization.",
-      "reasoning": "This task requires implementing a comprehensive MIDI system with device management, message handling, and clock synchronization. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for CoreMIDI integration, device management, message handling, clock synchronization, and thorough testing of MIDI functionality."
-    },
-    {
-      "taskId": 42,
-      "taskTitle": "Implement MIDI Input for Live Recording",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the MIDI input for live recording implementation into detailed subtasks covering MIDI note mapping, velocity handling, aftertouch support, channel routing, integration with live recording mode, and comprehensive testing. Include tasks for implementing MIDI input capture, creating note mapping, handling velocity and aftertouch, developing channel routing, integrating with the sequencer, and writing tests for MIDI recording with various controllers.",
-      "reasoning": "This task involves integrating MIDI input with the sequencer's live recording functionality. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for MIDI capture, note mapping, controller data handling, channel routing, sequencer integration, and thorough testing with different MIDI controllers."
-    },
-    {
-      "taskId": 43,
-      "taskTitle": "Implement MIDI CC Mapping",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the MIDI CC mapping implementation into detailed subtasks covering UI for assignment, MIDI learn functionality, storage in data model, real-time parameter control, and comprehensive testing. Include tasks for designing the mapping UI, implementing MIDI learn, creating storage for mappings, developing real-time parameter control, ensuring proper value scaling, and writing tests for CC mapping with various controllers and parameters.",
-      "reasoning": "This task requires implementing a system for mapping MIDI CC messages to parameters with learn functionality. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for mapping UI, MIDI learn implementation, data storage, parameter control, value scaling, and thorough testing with different controllers and parameters."
-    },
-    {
-      "taskId": 44,
-      "taskTitle": "Implement MIDI Tracks",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the MIDI tracks implementation into detailed subtasks covering track type selection, channel assignment, note and CC sequencing, output routing, and comprehensive testing. Include tasks for designing the MIDI track UI, implementing track type switching, creating channel assignment, developing note and CC sequencing, implementing output routing, and writing tests for MIDI track sequencing and output to various devices.",
-      "reasoning": "This task involves implementing tracks that sequence external MIDI hardware with appropriate routing and configuration. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for track type selection, channel assignment, note and CC sequencing, output routing, and thorough testing with different MIDI devices."
-    },
-    {
-      "taskId": 45,
-      "taskTitle": "Implement Track Mixer",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the track mixer implementation into detailed subtasks covering volume control, pan control, send levels, mute/solo functionality, audio routing, and comprehensive testing. Include tasks for designing the mixer UI, implementing volume and pan controls, creating send level adjustments, developing mute and solo functionality, implementing audio routing, and writing tests for mixer operations and audio output.",
-      "reasoning": "This task requires implementing a mixing system with volume, pan, sends, and routing capabilities. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for mixer UI, control implementation, send routing, mute/solo functionality, audio routing, and thorough testing of mixing operations."
-    },
-    {
-      "taskId": 46,
-      "taskTitle": "Implement Track Mute/Solo Functionality",
-      "complexityScore": 5,
-      "recommendedSubtasks": 6,
-      "expansionPrompt": "Break down the track mute/solo functionality implementation into detailed subtasks covering UI for mute and solo buttons, visual indication, mute/solo logic, mixer integration, and comprehensive testing. Include tasks for designing the mute/solo UI, implementing button behavior, creating visual indicators, developing mute/solo logic for multiple tracks, integrating with the mixer, and writing tests for mute/solo operations during playback.",
-      "reasoning": "This task involves implementing mute and solo functionality with appropriate UI and mixer integration. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for mute/solo UI, button behavior, visual indication, logic implementation, mixer integration, and thorough testing of mute/solo operations."
-    },
-    {
-      "taskId": 47,
-      "taskTitle": "Implement Project Management",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the project management implementation into detailed subtasks covering UI for project creation, saving and loading functionality, metadata handling, auto-save implementation, data model integration, and comprehensive testing. Include tasks for designing the project management UI, implementing creation and saving, developing metadata editing, creating auto-save functionality, integrating with the data model, and writing tests for project operations and data integrity.",
-      "reasoning": "This task requires implementing a comprehensive project management system with creation, saving, loading, and auto-save capabilities. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for project UI, saving/loading functionality, metadata handling, auto-save implementation, data integration, and thorough testing of project operations."
-    },
-    {
-      "taskId": 48,
-      "taskTitle": "Implement Pattern Management",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the pattern management implementation into detailed subtasks covering UI for pattern creation, copying and pasting functionality, metadata handling, pattern bank organization, data model integration, and comprehensive testing. Include tasks for designing the pattern management UI, implementing creation and copying, developing metadata editing, creating pattern bank organization, integrating with the data model, and writing tests for pattern operations and organization.",
-      "reasoning": "This task involves implementing a pattern management system with creation, copying, and organization capabilities. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for pattern UI, copying/pasting functionality, metadata handling, bank organization, data integration, and thorough testing of pattern operations."
-    },
-    {
-      "taskId": 49,
-      "taskTitle": "Implement Kit Management",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the kit management implementation into detailed subtasks covering UI for kit creation, copying and pasting functionality, metadata handling, kit organization, data model integration, and comprehensive testing. Include tasks for designing the kit management UI, implementing creation and copying, developing metadata editing, creating kit organization, integrating with the data model, and writing tests for kit operations and organization.",
-      "reasoning": "This task requires implementing a kit management system with creation, copying, and organization capabilities. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for kit UI, copying/pasting functionality, metadata handling, organization features, data integration, and thorough testing of kit operations."
-    },
-    {
-      "taskId": 50,
-      "taskTitle": "Implement On-Screen Keyboard",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the on-screen keyboard implementation into detailed subtasks covering piano-style layout, velocity sensitivity, octave shifting, scale highlighting, touch handling, and comprehensive testing. Include tasks for designing the keyboard UI, implementing key touch detection, creating velocity calculation based on touch position, developing octave shift controls, implementing scale and chord highlighting, and writing tests for note input and velocity sensitivity.",
-      "reasoning": "This task involves implementing a touch-sensitive musical keyboard with velocity, octave shifting, and scale highlighting. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for keyboard layout, touch handling, velocity calculation, octave shifting, scale highlighting, and thorough testing of keyboard input."
-    },
-    {
-      "taskId": 51,
-      "taskTitle": "Implement Scale and Chord Modes",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the scale and chord modes implementation into detailed subtasks covering scale selection, chord selection and voicing, keyboard highlighting, scale-constrained sequencing, data model integration, and comprehensive testing. Include tasks for designing the scale/chord UI, implementing scale selection, creating chord voicing options, developing keyboard highlighting, implementing scale-constrained sequencing, and writing tests for scale/chord functionality and sequencing behavior.",
-      "reasoning": "This task requires implementing musical scale and chord functionality with keyboard highlighting and sequencing constraints. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for scale/chord UI, selection implementation, keyboard visualization, sequencing constraints, and thorough testing of musical behavior."
-    },
-    {
-      "taskId": 52,
-      "taskTitle": "Implement Performance Controls",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the performance controls implementation into detailed subtasks covering macro controls, performance pads, scene storage, MIDI mapping, UI design, and comprehensive testing. Include tasks for designing the performance control UI, implementing macro parameter mapping, creating performance pad functionality, developing scene storage and recall, implementing MIDI mapping for external control, and writing tests for performance control behavior and responsiveness.",
-      "reasoning": "This task involves implementing real-time performance controls with macro mapping, pads, and scene storage. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for control UI, macro implementation, pad functionality, scene storage, MIDI mapping, and thorough testing of performance control behavior."
-    },
-    {
-      "taskId": 53,
-      "taskTitle": "Implement Arpeggiator",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the arpeggiator implementation into detailed subtasks covering mode selection, rate and range controls, hold functionality, sequencer integration, UI design, and comprehensive testing. Include tasks for designing the arpeggiator UI, implementing various arpeggio modes, creating rate and range controls, developing hold functionality, integrating with the sequencer, and writing tests for arpeggiator behavior with various settings.",
-      "reasoning": "This task requires implementing an arpeggiator with multiple modes, controls, and sequencer integration. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for arpeggiator UI, mode implementation, control development, hold functionality, sequencer integration, and thorough testing of arpeggiator behavior."
-    },
-    {
-      "taskId": 54,
-      "taskTitle": "Implement LFOs",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the LFO implementation into detailed subtasks covering waveform generation, rate and depth controls, sync options, destination routing, UI design, and comprehensive testing. Include tasks for designing the LFO UI, implementing various waveforms, creating rate and depth controls, developing sync options, implementing destination routing, and writing tests for LFO modulation with various settings and destinations.",
-      "reasoning": "This task involves implementing low-frequency oscillators for parameter modulation with multiple waveforms and routing options. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for LFO UI, waveform implementation, control development, sync options, destination routing, and thorough testing of modulation behavior."
-    },
-    {
-      "taskId": 55,
-      "taskTitle": "Implement Envelopes",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the envelope implementation into detailed subtasks covering envelope shapes, trigger modes, destination routing, velocity sensitivity, UI design, and comprehensive testing. Include tasks for designing the envelope UI, implementing various envelope shapes, creating trigger mode options, developing velocity sensitivity, implementing destination routing, and writing tests for envelope modulation with various settings and destinations.",
-      "reasoning": "This task requires implementing envelope generators for parameter modulation with multiple shapes, trigger modes, and routing options. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for envelope UI, shape implementation, trigger modes, velocity sensitivity, destination routing, and thorough testing of modulation behavior."
-    },
-    {
-      "taskId": 56,
-      "taskTitle": "Implement Key Combo System",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the key combo system implementation into detailed subtasks covering combo detection, visual feedback, context-sensitivity, documentation, UI integration, and comprehensive testing. Include tasks for designing the combo system architecture, implementing combo detection, creating visual feedback, developing context-sensitive behavior, implementing help documentation, and writing tests for combo detection and execution in various contexts.",
-      "reasoning": "This task involves implementing a system for detecting and handling key combinations with visual feedback and context-sensitivity. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for combo detection, visual feedback, context-sensitivity, documentation, UI integration, and thorough testing of combo behavior."
-    },
-    {
-      "taskId": 57,
-      "taskTitle": "Implement Context Menu System",
-      "complexityScore": 5,
-      "recommendedSubtasks": 7,
-      "expansionPrompt": "Break down the context menu system implementation into detailed subtasks covering long-press detection, menu generation, nested menu support, visual styling, UI integration, and comprehensive testing. Include tasks for designing the context menu architecture, implementing long-press detection, creating menu generation, developing nested menu support, implementing visual styling, and writing tests for menu display and selection in various contexts.",
-      "reasoning": "This task requires implementing a context menu system with long-press activation, nested menus, and context-sensitivity. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for long-press detection, menu generation, nested menu support, visual styling, UI integration, and thorough testing of menu behavior."
-    },
-    {
-      "taskId": 58,
-      "taskTitle": "Implement Undo/Redo System",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the undo/redo system implementation into detailed subtasks covering command pattern design, undo/redo stacks, UI controls, data model integration, state management, and comprehensive testing. Include tasks for designing the command pattern architecture, implementing command execution and reversal, creating undo/redo stacks, developing UI controls, integrating with the data model, and writing tests for undo/redo operations with various action types.",
-      "reasoning": "This task involves implementing a command pattern-based undo/redo system with state tracking and UI integration. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for command pattern design, stack implementation, UI controls, data integration, state management, and thorough testing of undo/redo behavior."
-    },
-    {
-      "taskId": 59,
-      "taskTitle": "Implement Copy/Paste System",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the copy/paste system implementation into detailed subtasks covering element type handling, clipboard storage, UI controls, cross-pattern/project support, data model integration, and comprehensive testing. Include tasks for designing the copy/paste architecture, implementing element copying, creating clipboard storage, developing UI controls, supporting cross-pattern/project operations, and writing tests for copy/paste operations with various element types.",
-      "reasoning": "This task requires implementing a copy/paste system supporting multiple element types and cross-pattern/project operations. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for element type handling, clipboard storage, UI controls, cross-context support, data integration, and thorough testing of copy/paste behavior."
-    },
-    {
-      "taskId": 60,
-      "taskTitle": "Implement Audio Recording",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the audio recording implementation into detailed subtasks covering recording engine, format selection, recording controls, file system integration, UI design, and comprehensive testing. Include tasks for designing the recording UI, implementing the recording engine, creating format selection, developing recording controls, integrating with the file system, and writing tests for recording operations with various settings and durations.",
-      "reasoning": "This task involves implementing audio recording functionality with format selection and file system integration. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for recording UI, engine implementation, format selection, control development, file system integration, and thorough testing of recording behavior."
-    },
-    {
-      "taskId": 61,
-      "taskTitle": "Implement Audio Export",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the audio export implementation into detailed subtasks covering offline rendering, format selection, export options, progress indication, file system integration, and comprehensive testing. Include tasks for designing the export UI, implementing offline rendering, creating format and quality selection, developing export options, implementing progress indication, integrating with the file system, and writing tests for export operations with various settings and content.",
-      "reasoning": "This task requires implementing offline audio rendering with format selection, options, and progress indication. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for export UI, rendering implementation, format selection, option development, progress indication, file system integration, and thorough testing of export behavior."
-    },
-    {
-      "taskId": 62,
-      "taskTitle": "Implement Project Import/Export",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the project import/export implementation into detailed subtasks covering serialization, format selection, UI controls, file system integration, sharing functionality, and comprehensive testing. Include tasks for designing the import/export UI, implementing project serialization, creating format selection, developing UI controls, integrating with the file system, implementing sharing functionality, and writing tests for import/export operations with various project types and sizes.",
-      "reasoning": "This task involves implementing project serialization with format selection and file system/sharing integration. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for import/export UI, serialization implementation, format selection, UI controls, file system integration, sharing functionality, and thorough testing of import/export behavior."
-    },
-    {
-      "taskId": 63,
-      "taskTitle": "Implement MIDI File Import/Export",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the MIDI file import/export implementation into detailed subtasks covering SMF parsing/generation, format selection, track mapping, UI controls, file system integration, and comprehensive testing. Include tasks for designing the MIDI import/export UI, implementing SMF parsing and generation, creating format selection, developing track mapping, integrating with the file system, and writing tests for MIDI import/export operations with various file types and content.",
-      "reasoning": "This task requires implementing Standard MIDI File reading and writing with track mapping and format selection. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for MIDI import/export UI, SMF implementation, format selection, track mapping, file system integration, and thorough testing of MIDI import/export behavior."
-    },
-    {
-      "taskId": 64,
-      "taskTitle": "Implement Settings and Preferences",
-      "complexityScore": 5,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the settings and preferences implementation into detailed subtasks covering UI design, storage mechanism, setting categories, default values, reset functionality, and comprehensive testing. Include tasks for designing the settings UI, implementing storage using UserDefaults, creating setting categories, developing default values and reset functionality, and writing tests for setting persistence and reset behavior.",
-      "reasoning": "This task involves implementing a settings system with categories, storage, and reset functionality. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for settings UI, storage implementation, category organization, default values, reset functionality, and thorough testing of settings behavior."
-    },
-    {
-      "taskId": 65,
-      "taskTitle": "Implement Help and Documentation",
-      "complexityScore": 6,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the help and documentation implementation into detailed subtasks covering context-sensitive help, tutorial system, reference documentation, search functionality, UI design, and comprehensive testing. Include tasks for designing the help UI, implementing context-sensitivity, creating the tutorial system, developing reference documentation, implementing search functionality, and writing tests for help access and relevance in various contexts.",
-      "reasoning": "This task requires implementing a comprehensive help system with context-sensitivity, tutorials, and search functionality. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for help UI, context-sensitivity implementation, tutorial system, reference documentation, search functionality, and thorough testing of help behavior."
-    },
-    {
-      "taskId": 66,
-      "taskTitle": "Implement Accessibility Features",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the accessibility features implementation into detailed subtasks covering VoiceOver support, Dynamic Type, color contrast, alternative input methods, UI adaptation, and comprehensive testing. Include tasks for implementing VoiceOver labels and hints, creating Dynamic Type support, ensuring sufficient color contrast, developing alternative input methods, adapting UI for accessibility, and writing tests for accessibility compliance and usability.",
-      "reasoning": "This task involves implementing comprehensive accessibility features across the application, requiring expertise in VoiceOver, Dynamic Type, and alternative input methods. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for each accessibility feature, UI adaptation, and thorough testing with accessibility tools."
-    },
-    {
-      "taskId": 67,
-      "taskTitle": "Implement Performance Optimization",
-      "complexityScore": 9,
-      "recommendedSubtasks": 18,
-      "expansionPrompt": "Break down the performance optimization task into detailed subtasks covering profiling, DSP algorithm optimization, memory usage reduction, battery optimization, and comprehensive testing. Include tasks for profiling CPU, memory, and energy usage, optimizing critical DSP algorithms, implementing memory pooling and reuse strategies, reducing background processing, and writing tests to verify performance improvements across different device configurations.",
-      "reasoning": "This task involves comprehensive performance optimization across CPU, memory, and battery usage, requiring deep expertise in profiling, algorithm optimization, and resource management. The current 18 subtasks are comprehensive but could be refined to ensure all performance aspects are properly addressed with appropriate testing methodologies."
-    },
-    {
-      "taskId": 68,
-      "taskTitle": "Implement Voice Stealing Algorithm",
-      "complexityScore": 7,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the voice stealing algorithm implementation into detailed subtasks covering priority-based allocation, stealing strategies, release phase handling, CPU load monitoring, and comprehensive testing. Include tasks for designing the priority system, implementing different stealing strategies, handling release phases properly, developing CPU load monitoring, implementing dynamic polyphony adjustment, and writing tests for voice allocation under various load conditions.",
-      "reasoning": "This task requires implementing a sophisticated voice allocation system with multiple strategies and CPU awareness. The current 8 subtasks provide a good foundation but could be expanded to include more detailed steps for priority calculation, strategy implementation, release handling, CPU monitoring, dynamic adjustment, and thorough testing under various load conditions."
-    },
-    {
-      "taskId": 69,
-      "taskTitle": "Implement Unit Tests for Core Modules",
-      "complexityScore": 8,
-      "recommendedSubtasks": 16,
-      "expansionPrompt": "Break down the unit testing implementation into detailed subtasks covering test environment setup, test plan creation, test implementation for each core module, mocking, performance testing, and continuous integration. Include tasks for setting up the test environment, creating comprehensive test plans, implementing tests for each VIPER component, developing mock objects, writing performance tests, and integrating with CI/CD pipelines.",
-      "reasoning": "This task involves creating comprehensive unit tests for all core modules, requiring expertise in testing methodologies, mocking, and test automation. The current 16 subtasks are comprehensive but could be refined to ensure thorough test coverage for all critical components with appropriate mocking and performance testing."
-    },
-    {
-      "taskId": 70,
-      "taskTitle": "Implement UI Tests",
-      "complexityScore": 7,
-      "recommendedSubtasks": 14,
-      "expansionPrompt": "Break down the UI testing implementation into detailed subtasks covering test framework selection, environment setup, test scenario definition, page object implementation, visual testing, cross-device testing, and continuous integration. Include tasks for selecting and configuring the UI testing framework, defining critical user flows, implementing automated tests, setting up visual regression testing, testing across different device configurations, and integrating with CI/CD pipelines.",
-      "reasoning": "This task requires creating comprehensive UI tests for critical user flows, demanding expertise in UI testing frameworks, automation, and visual testing. The current 14 subtasks are comprehensive but could be refined to ensure thorough test coverage for all critical user interactions with appropriate visual verification and cross-device testing."
-    },
-    {
-      "taskId": 71,
-      "taskTitle": "Implement Integration Tests",
-      "complexityScore": 8,
-      "recommendedSubtasks": 16,
-      "expansionPrompt": "Break down the integration testing implementation into detailed subtasks covering test environment setup, data preparation, module integration testing, end-to-end testing, performance testing, error handling testing, and continuous integration. Include tasks for setting up the integration test environment, creating test data, implementing tests for module interactions, developing end-to-end tests, writing performance tests, testing error handling and recovery, and integrating with CI/CD pipelines.",
-      "reasoning": "This task involves creating comprehensive integration tests for module interactions and end-to-end functionality, requiring expertise in integration testing methodologies, data preparation, and test automation. The current 16 subtasks are comprehensive but could be refined to ensure thorough test coverage for all critical integration points with appropriate performance and error handling testing."
-    },
-    {
-      "taskId": 72,
-      "taskTitle": "Implement CI/CD Pipeline",
-      "complexityScore": 7,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the CI/CD pipeline implementation into detailed subtasks covering GitHub Actions configuration, automated testing setup, build verification, TestFlight deployment, environment configuration, and pipeline optimization. Include tasks for creating workflow configuration files, setting up test automation, implementing build verification, configuring TestFlight deployment, managing environment variables and secrets, and optimizing pipeline performance.",
-      "reasoning": "This task requires setting up a comprehensive CI/CD pipeline with automated testing and deployment capabilities. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for workflow configuration, test automation, build verification, deployment configuration, environment management, and pipeline optimization."
-    },
-    {
-      "taskId": 73,
-      "taskTitle": "Prepare for TestFlight Beta",
-      "complexityScore": 5,
-      "recommendedSubtasks": 8,
-      "expansionPrompt": "Break down the TestFlight beta preparation into detailed subtasks covering App Store Connect configuration, beta testing groups setup, release notes creation, feedback collection mechanism, beta build preparation, and testing process. Include tasks for configuring App Store Connect, setting up testing groups, creating release notes and instructions, implementing feedback collection, preparing beta builds, and testing the beta distribution process.",
-      "reasoning": "This task involves preparing the application for beta testing through TestFlight with appropriate configuration and feedback mechanisms. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for App Store Connect configuration, testing group setup, release notes creation, feedback collection, build preparation, and beta testing process verification."
-    },
-    {
-      "taskId": 74,
-      "taskTitle": "Prepare for App Store Submission",
-      "complexityScore": 6,
-      "recommendedSubtasks": 10,
-      "expansionPrompt": "Break down the App Store submission preparation into detailed subtasks covering App Store listing creation, screenshot generation, promotional material preparation, privacy policy creation, App Review Guidelines compliance, metadata preparation, and submission process. Include tasks for creating the App Store listing, generating screenshots for all device sizes, preparing promotional materials, creating privacy policy and documentation, ensuring compliance with guidelines, preparing app metadata, and testing the submission process.",
-      "reasoning": "This task requires preparing all necessary materials and configurations for App Store submission. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for listing creation, screenshot generation, promotional material preparation, privacy policy creation, compliance verification, metadata preparation, and submission process testing."
-    },
-    {
-      "taskId": 75,
-      "taskTitle": "Final Performance and Stability Testing",
-      "complexityScore": 8,
-      "recommendedSubtasks": 16,
-      "expansionPrompt": "Break down the final performance and stability testing into detailed subtasks covering profiling methodology, stress test scenarios, long-duration tests, device compatibility testing, result analysis, bug identification, and final reporting. Include tasks for defining profiling methodology, designing stress tests, planning long-duration tests, compiling device compatibility list, executing tests, analyzing results, identifying and prioritizing bugs, and preparing the final test report.",
-      "reasoning": "This task involves comprehensive performance and stability testing across multiple dimensions and device configurations. The current 16 subtasks are comprehensive but could be refined to ensure thorough testing of all critical performance aspects with appropriate analysis and reporting methodologies."
-    }
-  ]
+	"meta": {
+		"generatedAt": "2025-06-28T17:17:07.415Z",
+		"tasksAnalyzed": 25,
+		"totalTasks": 25,
+		"analysisCount": 100,
+		"thresholdScore": 5,
+		"projectName": "Taskmaster",
+		"usedResearch": false
+	},
+	"complexityAnalysis": [
+		{
+			"taskId": 1,
+			"taskTitle": "Setup Project Repository and Structure",
+			"complexityScore": 6,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the process of setting up the project repository and structure into detailed subtasks, including Git initialization, Swift Package Manager configuration, Xcodegen setup, module directory creation, and CI/CD configuration. Include specific steps for each subtask with clear dependencies.",
+			"reasoning": "This task involves setting up multiple Swift Packages with proper dependencies, configuring Xcodegen, and establishing the project structure. While not algorithmically complex, it requires careful planning and understanding of Swift Package Manager and Xcodegen. The existing 8 subtasks are good but could be expanded to include more detailed steps for Swift Package configuration and module interdependencies."
+		},
+		{
+			"taskId": 2,
+			"taskTitle": "Define Core Data Models",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the Core Data model implementation task into detailed subtasks covering each entity (Project, Pattern, Kit, Track, Trig, Preset), their relationships, constraints, validation rules, and code generation. Include tasks for designing the data model diagram, implementing each entity with attributes and relationships, setting up validation rules, creating NSManagedObject subclasses, and writing comprehensive unit tests.",
+			"reasoning": "This task involves designing and implementing multiple complex entities with relationships in Core Data. It requires deep understanding of data modeling, Core Data specifics, and proper relationship management. The existing 8 subtasks are good but could be expanded to include more detailed steps for each entity, validation logic, and testing."
+		},
+		{
+			"taskId": 3,
+			"taskTitle": "Implement DataLayer Swift Package",
+			"complexityScore": 8,
+			"recommendedSubtasks": 16,
+			"expansionPrompt": "Break down the DataLayer Swift Package implementation into detailed subtasks covering the complete Core Data stack setup, CRUD operations for all entities, migration support, error handling, thread safety, caching mechanisms, and comprehensive testing. Include tasks for designing the architecture, implementing the persistence controller, creating entity-specific repositories, handling migrations, optimizing performance, and writing unit and integration tests.",
+			"reasoning": "This task involves creating a comprehensive data layer with Core Data integration, requiring expertise in persistence, thread safety, error handling, and migration support. The current 16 subtasks cover the essential aspects but could be refined to ensure all critical components are addressed with appropriate testing."
+		},
+		{
+			"taskId": 4,
+			"taskTitle": "Define MachineProtocols Swift Package",
+			"complexityScore": 6,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the MachineProtocols Swift Package implementation into detailed subtasks covering protocol design for different machine types (VoiceMachine, FilterMachine, FXProcessor), common data structures, parameter definitions, serialization mechanisms, and testing. Include tasks for designing the protocol hierarchy, implementing core protocols, creating shared data types, defining parameter systems, implementing serialization, and writing comprehensive tests with mock implementations.",
+			"reasoning": "This task requires designing a protocol-based architecture to prevent circular dependencies, which demands careful planning of interfaces and data structures. The current 7 subtasks cover the basics, but more detailed tasks would help ensure comprehensive protocol design, proper parameter handling, and thorough testing with mock implementations."
+		},
+		{
+			"taskId": 5,
+			"taskTitle": "Setup AudioEngine Swift Package Foundation",
+			"complexityScore": 9,
+			"recommendedSubtasks": 18,
+			"expansionPrompt": "Break down the AudioEngine Swift Package implementation into detailed subtasks covering the complete audio processing architecture, buffer management, graph routing, error handling, and performance optimization. Include tasks for setting up AVAudioEngine, designing the node connection system, implementing buffer utilities, handling audio session interruptions, optimizing for low latency, and writing comprehensive tests for various audio scenarios.",
+			"reasoning": "This task involves creating a complex audio processing foundation with real-time constraints, requiring deep knowledge of audio programming, buffer management, and performance optimization. The existing 18 subtasks are comprehensive but could be refined to ensure all critical audio engine components are properly addressed with appropriate testing."
+		},
+		{
+			"taskId": 6,
+			"taskTitle": "Implement SequencerModule Swift Package Foundation",
+			"complexityScore": 8,
+			"recommendedSubtasks": 16,
+			"expansionPrompt": "Break down the SequencerModule Swift Package implementation into detailed subtasks covering clock design, event publishing, step sequencing, pattern data structures, synchronization mechanisms, and integration with the data layer. Include tasks for implementing high-precision timing, designing the event system, creating the step sequencer logic, developing pattern playback, implementing synchronization options, and writing comprehensive tests for timing accuracy and stability.",
+			"reasoning": "This task requires building a sequencer with precise timing requirements and complex event handling, demanding expertise in real-time systems and event-based architectures. The current 16 subtasks cover the essential components but could be refined to ensure proper timing accuracy, synchronization capabilities, and thorough testing."
+		},
+		{
+			"taskId": 7,
+			"taskTitle": "Design UIComponents Swift Package",
+			"complexityScore": 7,
+			"recommendedSubtasks": 12,
+			"expansionPrompt": "Break down the UIComponents Swift Package implementation into detailed subtasks covering the design and development of each custom UI component (buttons, encoders, displays, keyboard, grid), styling system, gesture handling, haptic feedback, and comprehensive testing. Include tasks for creating component prototypes, implementing SwiftUI views, adding custom drawing where needed, implementing gesture recognizers, adding haptic feedback, and writing preview providers and UI tests.",
+			"reasoning": "This task involves creating custom UI components that mimic hardware interfaces, requiring expertise in SwiftUI, custom drawing, gesture handling, and haptic feedback. The current 8 subtasks provide a good foundation but could be expanded to include more detailed steps for each component type, accessibility considerations, and thorough testing."
+		},
+		{
+			"taskId": 8,
+			"taskTitle": "Implement Basic FM Synthesis Engine",
+			"complexityScore": 9,
+			"recommendedSubtasks": 20,
+			"expansionPrompt": "Break down the FM synthesis engine implementation into detailed subtasks covering operator design, algorithm implementation, frequency calculation, phase accumulation, anti-aliasing, optimization, and comprehensive testing. Include tasks for designing the operator structure, implementing each algorithm configuration, developing modulation systems, optimizing with SIMD instructions, implementing polyphony support, and writing tests for audio output quality and performance.",
+			"reasoning": "This task involves implementing complex digital signal processing algorithms for FM synthesis, requiring deep knowledge of DSP, audio programming, and optimization techniques. The current 20 subtasks are comprehensive but could be refined to ensure all aspects of FM synthesis are properly addressed with appropriate testing for audio quality and performance."
+		},
+		{
+			"taskId": 9,
+			"taskTitle": "Implement FM TONE Voice Machine",
+			"complexityScore": 8,
+			"recommendedSubtasks": 18,
+			"expansionPrompt": "Break down the FM TONE Voice Machine implementation into detailed subtasks covering parameter mapping, envelope generation, voice allocation, modulation routing, preset management, and comprehensive testing. Include tasks for implementing each parameter page, designing the voice architecture, creating envelope generators, developing the modulation matrix, implementing voice allocation, optimizing performance, and writing tests for sound quality and stability.",
+			"reasoning": "This task builds upon the FM synthesis engine to create a complete voice machine with parameter organization, envelope control, and voice management. The current 18 subtasks cover the essential components but could be refined to ensure proper parameter organization, modulation capabilities, and thorough testing of sound quality."
+		},
+		{
+			"taskId": 10,
+			"taskTitle": "Implement Multi-Mode Filter",
+			"complexityScore": 7,
+			"recommendedSubtasks": 12,
+			"expansionPrompt": "Break down the Multi-Mode Filter implementation into detailed subtasks covering filter topology design, coefficient calculation, morphing mechanism, resonance control, saturation stage, and comprehensive testing. Include tasks for implementing each filter type (LP, BP, HP), developing the morphing algorithm, creating the resonance and self-oscillation system, implementing the saturation stage, optimizing performance, and writing tests for frequency response and stability.",
+			"reasoning": "This task requires implementing a complex state-variable filter with morphing capabilities, demanding expertise in DSP, filter design, and coefficient calculation. The current 8 subtasks provide a good foundation but could be expanded to include more detailed steps for each filter type, morphing algorithm, and thorough testing of frequency response."
+		},
+		{
+			"taskId": 11,
+			"taskTitle": "Connect Sequencer to Audio Engine",
+			"complexityScore": 8,
+			"recommendedSubtasks": 16,
+			"expansionPrompt": "Break down the sequencer-to-audio engine connection task into detailed subtasks covering event bridge design, timing synchronization, thread-safe communication, parameter automation, and comprehensive testing. Include tasks for designing the event queue, implementing note handling, developing parameter automation, ensuring sample-accurate timing, creating thread-safe communication mechanisms, and writing tests for timing accuracy and stability under load.",
+			"reasoning": "This task involves connecting two complex systems (sequencer and audio engine) with strict timing and thread-safety requirements, demanding expertise in real-time systems and concurrent programming. The current 16 subtasks are comprehensive but could be refined to ensure proper timing accuracy, thread safety, and thorough testing under various conditions."
+		},
+		{
+			"taskId": 12,
+			"taskTitle": "Implement Basic Track Effects",
+			"complexityScore": 6,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the track effects implementation into detailed subtasks covering bit reduction, sample rate reduction, overdrive, effect chaining, bypass functionality, and comprehensive testing. Include tasks for designing each effect algorithm, implementing parameter controls, creating the effect chain architecture, adding bypass options, optimizing performance, and writing tests for audio quality and CPU usage.",
+			"reasoning": "This task involves implementing multiple audio effects with different DSP requirements, demanding knowledge of digital audio processing and effect design. The current 7 subtasks provide a good foundation but could be expanded to include more detailed steps for each effect type, parameter control, and thorough testing of audio quality and performance."
+		},
+		{
+			"taskId": 13,
+			"taskTitle": "Implement Global Send Effects",
+			"complexityScore": 7,
+			"recommendedSubtasks": 12,
+			"expansionPrompt": "Break down the global send effects implementation into detailed subtasks covering delay, reverb, chorus, send routing architecture, and comprehensive testing. Include tasks for designing each effect algorithm, implementing parameter controls, creating the send routing system, developing per-track send levels, optimizing performance, and writing tests for audio quality and CPU usage under various conditions.",
+			"reasoning": "This task requires implementing complex time-based effects and a send routing architecture, demanding expertise in DSP, effect design, and audio routing. The current 8 subtasks provide a good foundation but could be expanded to include more detailed steps for each effect algorithm, send routing implementation, and thorough testing of audio quality and performance."
+		},
+		{
+			"taskId": 14,
+			"taskTitle": "Implement Master Effects",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the master effects implementation into detailed subtasks covering compressor design, overdrive implementation, limiter development, parameter control, and comprehensive testing. Include tasks for designing each effect algorithm, implementing parameter controls, creating the master chain architecture, optimizing performance, and writing tests for audio quality and CPU usage under various signal conditions.",
+			"reasoning": "This task involves implementing dynamics processing and distortion effects for the master chain, requiring knowledge of compression, limiting, and distortion algorithms. The current 7 subtasks provide a good foundation but could be expanded to include more detailed steps for each effect algorithm, parameter control, and thorough testing of audio quality and performance."
+		},
+		{
+			"taskId": 15,
+			"taskTitle": "Design Main Application Layout",
+			"complexityScore": 6,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the main application layout design into detailed subtasks covering top section (LCD display), middle section (function buttons and encoders), bottom section (step buttons and transport), navigation elements, and comprehensive testing. Include tasks for designing each section layout, implementing responsive behavior, creating the visual styling to match hardware aesthetic, ensuring accessibility, and writing tests for layout behavior across different iPad models and orientations.",
+			"reasoning": "This task involves creating a complex UI layout that mimics hardware interfaces and works across different device sizes and orientations. The current 7 subtasks provide a good foundation but could be expanded to include more detailed steps for each section, responsive behavior, accessibility considerations, and thorough testing across different devices."
+		},
+		{
+			"taskId": 16,
+			"taskTitle": "Implement Parameter Page Navigation",
+			"complexityScore": 5,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the parameter page navigation implementation into detailed subtasks covering page selection, visual indicators, parameter display, context-sensitive behavior, and comprehensive testing. Include tasks for designing the navigation state machine, implementing page transitions, creating parameter display components, handling context-sensitive content, ensuring state preservation, and writing tests for navigation behavior and parameter persistence.",
+			"reasoning": "This task requires implementing a navigation system for parameter pages with state preservation and context-sensitivity. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for the navigation state machine, transitions, parameter display, and thorough testing of navigation behavior."
+		},
+		{
+			"taskId": 17,
+			"taskTitle": "Implement FM TONE Parameter Pages",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the FM TONE parameter pages implementation into detailed subtasks covering each of the four parameter pages, parameter binding, value formatting, and comprehensive testing. Include tasks for designing each page layout, implementing parameter controls, creating value formatting and display, binding to the FM TONE machine, ensuring proper VIPER architecture, and writing tests for parameter updates and audio output changes.",
+			"reasoning": "This task involves creating multiple parameter pages with complex parameter binding and formatting requirements. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for each parameter page, binding mechanisms, value formatting, and thorough testing of parameter control and audio output."
+		},
+		{
+			"taskId": 18,
+			"taskTitle": "Implement Multi-Mode Filter Parameter Page",
+			"complexityScore": 5,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down the Multi-Mode Filter parameter page implementation into detailed subtasks covering parameter controls, value formatting, filter type visualization, parameter binding, and comprehensive testing. Include tasks for designing the page layout, implementing each parameter control, creating filter type visualization, binding to the filter machine, ensuring proper VIPER architecture, and writing tests for parameter updates and audio output changes.",
+			"reasoning": "This task requires implementing a parameter page for the filter with appropriate controls and visualizations. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for each parameter control, filter visualization, binding mechanisms, and thorough testing of parameter control and audio output."
+		},
+		{
+			"taskId": 19,
+			"taskTitle": "Implement Basic Sequencer UI",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the basic sequencer UI implementation into detailed subtasks covering step buttons, transport controls, mode selection, track selection, pattern selection, and comprehensive testing. Include tasks for designing each UI component, implementing step visualization, creating transport controls, developing mode switching, implementing track and pattern selection, ensuring proper VIPER architecture, and writing tests for user interactions and sequencer state updates.",
+			"reasoning": "This task involves creating a complex UI for sequencer control with multiple interactive elements and state visualization. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for each UI component, interaction handling, state visualization, and thorough testing of user interactions and sequencer behavior."
+		},
+		{
+			"taskId": 20,
+			"taskTitle": "Implement Parameter Lock (P-Lock) Functionality",
+			"complexityScore": 7,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the Parameter Lock functionality implementation into detailed subtasks covering UI interaction, data model integration, visual indication, playback implementation, and comprehensive testing. Include tasks for designing the P-Lock interaction model, implementing hold-and-turn detection, creating visual indicators for P-Locked parameters, storing P-Locks in the data model, implementing playback behavior, ensuring proper VIPER architecture, and writing tests for P-Lock creation, editing, and playback.",
+			"reasoning": "This task requires implementing a complex parameter automation system with specific interaction patterns and visual feedback. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for interaction handling, data storage, visual feedback, playback implementation, and thorough testing of P-Lock behavior."
+		},
+		{
+			"taskId": 21,
+			"taskTitle": "Implement FM DRUM Voice Machine",
+			"complexityScore": 8,
+			"recommendedSubtasks": 16,
+			"expansionPrompt": "Break down the FM DRUM voice machine implementation into detailed subtasks covering body component, noise/transient component, pitch sweep, wavefolding, envelope design, parameter mapping, and comprehensive testing. Include tasks for implementing each synthesis component, designing percussion-specific envelopes, creating parameter mappings for drum sounds, optimizing performance, and writing tests for various drum sound types and parameter ranges.",
+			"reasoning": "This task involves implementing a specialized FM synthesis engine for percussion sounds with multiple components and specific envelope requirements. The current 16 subtasks are comprehensive but could be refined to ensure all aspects of percussion synthesis are properly addressed with appropriate testing for different drum sound types."
+		},
+		{
+			"taskId": 22,
+			"taskTitle": "Implement FM DRUM Parameter Pages",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the FM DRUM parameter pages implementation into detailed subtasks covering each of the four parameter pages, parameter binding, value formatting, and comprehensive testing. Include tasks for designing each page layout, implementing parameter controls, creating value formatting and display, binding to the FM DRUM machine, ensuring proper VIPER architecture, and writing tests for parameter updates and audio output changes.",
+			"reasoning": "This task requires creating multiple parameter pages for the FM DRUM machine with appropriate controls and visualizations. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for each parameter page, binding mechanisms, value formatting, and thorough testing of parameter control and audio output."
+		},
+		{
+			"taskId": 23,
+			"taskTitle": "Implement WAVETONE Voice Machine",
+			"complexityScore": 9,
+			"recommendedSubtasks": 18,
+			"expansionPrompt": "Break down the WAVETONE voice machine implementation into detailed subtasks covering dual oscillator engine, wavetable synthesis, phase distortion, oscillator modulation, noise generator, and comprehensive testing. Include tasks for designing the oscillator architecture, implementing wavetable interpolation, creating phase distortion algorithms, developing modulation options, optimizing performance, and writing tests for various sound types and parameter ranges.",
+			"reasoning": "This task involves implementing a complex synthesis engine combining wavetable and phase distortion techniques, requiring deep knowledge of multiple synthesis methods and efficient implementation. The current 18 subtasks are comprehensive but could be refined to ensure all aspects of wavetable and phase distortion synthesis are properly addressed with appropriate testing."
+		},
+		{
+			"taskId": 24,
+			"taskTitle": "Implement WAVETONE Parameter Pages",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the WAVETONE parameter pages implementation into detailed subtasks covering each of the four parameter pages, parameter binding, value formatting, and comprehensive testing. Include tasks for designing each page layout, implementing parameter controls, creating value formatting and display, binding to the WAVETONE machine, ensuring proper VIPER architecture, and writing tests for parameter updates and audio output changes.",
+			"reasoning": "This task requires creating multiple parameter pages for the WAVETONE machine with appropriate controls and visualizations. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for each parameter page, binding mechanisms, value formatting, and thorough testing of parameter control and audio output."
+		},
+		{
+			"taskId": 25,
+			"taskTitle": "Implement SWARMER Voice Machine",
+			"complexityScore": 8,
+			"recommendedSubtasks": 16,
+			"expansionPrompt": "Break down the SWARMER voice machine implementation into detailed subtasks covering main oscillator, swarm oscillators, animation parameter, detune and spread controls, modulation options, and comprehensive testing. Include tasks for designing the oscillator architecture, implementing the unison algorithm, creating animation and modulation systems, optimizing performance, and writing tests for various texture types and parameter ranges.",
+			"reasoning": "This task involves implementing a specialized synthesis engine based on multiple detuned oscillators, requiring expertise in unison techniques and efficient implementation. The current 16 subtasks are comprehensive but could be refined to ensure all aspects of swarm synthesis are properly addressed with appropriate testing for different texture types."
+		},
+		{
+			"taskId": 26,
+			"taskTitle": "Implement SWARMER Parameter Pages",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the SWARMER parameter pages implementation into detailed subtasks covering each of the four parameter pages, parameter binding, value formatting, and comprehensive testing. Include tasks for designing each page layout, implementing parameter controls, creating value formatting and display, binding to the SWARMER machine, ensuring proper VIPER architecture, and writing tests for parameter updates and audio output changes.",
+			"reasoning": "This task requires creating multiple parameter pages for the SWARMER machine with appropriate controls and visualizations. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for each parameter page, binding mechanisms, value formatting, and thorough testing of parameter control and audio output."
+		},
+		{
+			"taskId": 27,
+			"taskTitle": "Implement Lowpass 4 Filter Machine",
+			"complexityScore": 7,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the Lowpass 4 filter implementation into detailed subtasks covering filter topology design, coefficient calculation, resonance control, saturation stage, and comprehensive testing. Include tasks for implementing the ladder filter algorithm, developing the resonance and self-oscillation system, creating the saturation stage, optimizing performance, and writing tests for frequency response and stability at different settings.",
+			"reasoning": "This task requires implementing a complex ladder filter with resonance and saturation, demanding expertise in DSP and filter design. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for the filter algorithm, coefficient calculation, resonance control, saturation stage, and thorough testing of frequency response and stability."
+		},
+		{
+			"taskId": 28,
+			"taskTitle": "Implement Additional Filter Machines",
+			"complexityScore": 7,
+			"recommendedSubtasks": 9,
+			"expansionPrompt": "Break down the additional filter machines implementation into detailed subtasks covering comb filter, EQ, and other filter types, with comprehensive testing for each. Include tasks for designing each filter topology, implementing the filter algorithms, creating parameter controls, optimizing performance, and writing tests for frequency response and stability at different settings for each filter type.",
+			"reasoning": "This task involves implementing multiple filter types with different algorithms and requirements, demanding expertise in various filter designs. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for each filter type, parameter control, and thorough testing of frequency response and stability."
+		},
+		{
+			"taskId": 29,
+			"taskTitle": "Implement Micro Timing for Sequencer",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the micro timing implementation into detailed subtasks covering UI controls, data model integration, visual indication, playback implementation, and comprehensive testing. Include tasks for designing the timing offset UI, implementing timing adjustment controls, creating visual indicators for timing offsets, storing timing data in the model, implementing precise playback timing, and writing tests for timing accuracy and stability.",
+			"reasoning": "This task requires implementing precise timing adjustments for sequencer steps with appropriate UI controls and playback behavior. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for UI controls, data storage, visual feedback, playback implementation, and thorough testing of timing accuracy."
+		},
+		{
+			"taskId": 30,
+			"taskTitle": "Implement Retrig Functionality",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the retrig functionality implementation into detailed subtasks covering UI controls, data model integration, visual indication, playback implementation, and comprehensive testing. Include tasks for designing the retrig UI, implementing count and rate controls, creating visual indicators for retrigs, storing retrig data in the model, implementing precise retrig timing during playback, and writing tests for retrig behavior and timing accuracy.",
+			"reasoning": "This task involves implementing note retriggering with count and rate parameters, requiring precise timing control and appropriate UI. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for UI controls, data storage, visual feedback, playback implementation, and thorough testing of retrig behavior."
+		},
+		{
+			"taskId": 31,
+			"taskTitle": "Implement Trig Conditions",
+			"complexityScore": 7,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the trig conditions implementation into detailed subtasks covering condition types, UI controls, data model integration, visual indication, evaluation logic, and comprehensive testing. Include tasks for designing the condition UI, implementing each condition type, creating visual indicators for conditions, storing condition data in the model, implementing condition evaluation during playback, and writing tests for each condition type and combination.",
+			"reasoning": "This task requires implementing conditional triggering with multiple condition types and appropriate UI controls. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for each condition type, UI controls, data storage, evaluation logic, and thorough testing of condition behavior."
+		},
+		{
+			"taskId": 32,
+			"taskTitle": "Implement GRID Recording Mode",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the GRID recording mode implementation into detailed subtasks covering step button interaction, visual feedback, P-Lock integration, note property editing, and comprehensive testing. Include tasks for designing the GRID mode UI, implementing step creation and deletion, creating visual feedback for active steps, integrating with the P-Lock system, implementing note property editing, and writing tests for step creation, deletion, and property editing.",
+			"reasoning": "This task involves implementing a step-based recording interface with specific interaction patterns and visual feedback. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for step interaction, visual feedback, P-Lock integration, property editing, and thorough testing of GRID mode behavior."
+		},
+		{
+			"taskId": 33,
+			"taskTitle": "Implement LIVE Recording Mode",
+			"complexityScore": 7,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the LIVE recording mode implementation into detailed subtasks covering real-time note recording, quantization, record enable/disable, metronome, and comprehensive testing. Include tasks for designing the LIVE mode UI, implementing real-time note capture, creating quantization options, developing record enable/disable functionality, implementing metronome and count-in, and writing tests for recording behavior with various quantization settings.",
+			"reasoning": "This task requires implementing real-time note recording with quantization and metronome functionality. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for real-time recording, quantization options, metronome implementation, and thorough testing of recording behavior."
+		},
+		{
+			"taskId": 34,
+			"taskTitle": "Implement STEP Recording Mode",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the STEP recording mode implementation into detailed subtasks covering step-by-step note entry, automatic advancement, note property editing, P-Lock integration, and comprehensive testing. Include tasks for designing the STEP mode UI, implementing step-by-step entry, creating automatic advancement logic, developing note property editing, integrating with the P-Lock system, and writing tests for step entry and advancement behavior.",
+			"reasoning": "This task involves implementing a step-by-step recording interface with automatic advancement and property editing. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for step entry, advancement logic, property editing, P-Lock integration, and thorough testing of STEP mode behavior."
+		},
+		{
+			"taskId": 35,
+			"taskTitle": "Implement Variable Pattern Length",
+			"complexityScore": 5,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "Break down the variable pattern length implementation into detailed subtasks covering UI controls, data model integration, visual indication, playback handling, and comprehensive testing. Include tasks for designing the pattern length UI, implementing length adjustment controls, creating visual indicators for pattern length, storing length data in the model, implementing proper playback looping, and writing tests for patterns with various lengths and during playback.",
+			"reasoning": "This task requires implementing variable pattern lengths with appropriate UI controls and playback behavior. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for UI controls, data storage, visual feedback, playback implementation, and thorough testing of patterns with different lengths."
+		},
+		{
+			"taskId": 36,
+			"taskTitle": "Implement Variable Track Length and Speed",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the variable track length and speed implementation into detailed subtasks covering UI controls, data model integration, visual indication, playback handling, and comprehensive testing. Include tasks for designing the track length and speed UI, implementing adjustment controls, creating visual indicators for track settings, storing track data in the model, implementing proper polyrhythmic playback, and writing tests for tracks with various lengths and speeds.",
+			"reasoning": "This task involves implementing per-track length and speed settings with polyrhythmic playback capabilities. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for UI controls, data storage, visual feedback, polyrhythmic playback implementation, and thorough testing of tracks with different settings."
+		},
+		{
+			"taskId": 37,
+			"taskTitle": "Implement Song Mode",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the Song Mode implementation into detailed subtasks covering UI for arrangement, pattern sequencing, repetition control, track muting, playback implementation, and comprehensive testing. Include tasks for designing the Song Mode UI, implementing pattern arrangement, creating repetition controls, developing track mute/unmute functionality, implementing song playback, and writing tests for song arrangement creation and playback.",
+			"reasoning": "This task requires implementing a pattern arrangement system with repetition and mute controls. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for arrangement UI, pattern sequencing, repetition control, track muting, playback implementation, and thorough testing of song arrangement behavior."
+		},
+		{
+			"taskId": 38,
+			"taskTitle": "Implement Preset Management",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the preset management implementation into detailed subtasks covering UI for browsing and selection, saving functionality, categorization system, data model integration, and comprehensive testing. Include tasks for designing the preset browser UI, implementing preset saving and loading, creating categorization and tagging, integrating with the data model, ensuring smooth preset switching, and writing tests for preset operations and transitions.",
+			"reasoning": "This task involves implementing a preset management system with browsing, saving, and categorization capabilities. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for browser UI, saving functionality, categorization system, data integration, and thorough testing of preset operations."
+		},
+		{
+			"taskId": 39,
+			"taskTitle": "Implement Preset Pool",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the Preset Pool implementation into detailed subtasks covering UI for browsing and selection, adding presets to pool, organization within pool, data model integration, and comprehensive testing. Include tasks for designing the pool browser UI, implementing preset addition and removal, creating organization tools, integrating with the data model, implementing preset assignment to tracks, and writing tests for pool operations and preset assignment.",
+			"reasoning": "This task requires implementing a project-specific preset collection with organization and assignment capabilities. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for pool UI, preset management, organization tools, track assignment, and thorough testing of pool operations."
+		},
+		{
+			"taskId": 40,
+			"taskTitle": "Implement Emulated +Drive",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the emulated +Drive implementation into detailed subtasks covering virtual file system design, UI for browsing and management, import/export functionality, organization features, data model integration, and comprehensive testing. Include tasks for designing the file system architecture, implementing the browser UI, creating import/export tools, developing organization features, integrating with the data model, and writing tests for file operations and organization.",
+			"reasoning": "This task involves implementing a virtual file system for project and preset storage with browsing and organization capabilities. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for file system design, browser UI, import/export functionality, organization features, and thorough testing of file operations."
+		},
+		{
+			"taskId": 41,
+			"taskTitle": "Implement MIDIModule Swift Package",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the MIDIModule Swift Package implementation into detailed subtasks covering CoreMIDI integration, device discovery, message parsing, clock synchronization, and comprehensive testing. Include tasks for setting up CoreMIDI, implementing device management, creating message parsers and generators, developing clock synchronization, ensuring thread safety, and writing tests for MIDI I/O and synchronization.",
+			"reasoning": "This task requires implementing a comprehensive MIDI system with device management, message handling, and clock synchronization. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for CoreMIDI integration, device management, message handling, clock synchronization, and thorough testing of MIDI functionality."
+		},
+		{
+			"taskId": 42,
+			"taskTitle": "Implement MIDI Input for Live Recording",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the MIDI input for live recording implementation into detailed subtasks covering MIDI note mapping, velocity handling, aftertouch support, channel routing, integration with live recording mode, and comprehensive testing. Include tasks for implementing MIDI input capture, creating note mapping, handling velocity and aftertouch, developing channel routing, integrating with the sequencer, and writing tests for MIDI recording with various controllers.",
+			"reasoning": "This task involves integrating MIDI input with the sequencer's live recording functionality. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for MIDI capture, note mapping, controller data handling, channel routing, sequencer integration, and thorough testing with different MIDI controllers."
+		},
+		{
+			"taskId": 43,
+			"taskTitle": "Implement MIDI CC Mapping",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the MIDI CC mapping implementation into detailed subtasks covering UI for assignment, MIDI learn functionality, storage in data model, real-time parameter control, and comprehensive testing. Include tasks for designing the mapping UI, implementing MIDI learn, creating storage for mappings, developing real-time parameter control, ensuring proper value scaling, and writing tests for CC mapping with various controllers and parameters.",
+			"reasoning": "This task requires implementing a system for mapping MIDI CC messages to parameters with learn functionality. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for mapping UI, MIDI learn implementation, data storage, parameter control, value scaling, and thorough testing with different controllers and parameters."
+		},
+		{
+			"taskId": 44,
+			"taskTitle": "Implement MIDI Tracks",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the MIDI tracks implementation into detailed subtasks covering track type selection, channel assignment, note and CC sequencing, output routing, and comprehensive testing. Include tasks for designing the MIDI track UI, implementing track type switching, creating channel assignment, developing note and CC sequencing, implementing output routing, and writing tests for MIDI track sequencing and output to various devices.",
+			"reasoning": "This task involves implementing tracks that sequence external MIDI hardware with appropriate routing and configuration. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for track type selection, channel assignment, note and CC sequencing, output routing, and thorough testing with different MIDI devices."
+		},
+		{
+			"taskId": 45,
+			"taskTitle": "Implement Track Mixer",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the track mixer implementation into detailed subtasks covering volume control, pan control, send levels, mute/solo functionality, audio routing, and comprehensive testing. Include tasks for designing the mixer UI, implementing volume and pan controls, creating send level adjustments, developing mute and solo functionality, implementing audio routing, and writing tests for mixer operations and audio output.",
+			"reasoning": "This task requires implementing a mixing system with volume, pan, sends, and routing capabilities. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for mixer UI, control implementation, send routing, mute/solo functionality, audio routing, and thorough testing of mixing operations."
+		},
+		{
+			"taskId": 46,
+			"taskTitle": "Implement Track Mute/Solo Functionality",
+			"complexityScore": 5,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down the track mute/solo functionality implementation into detailed subtasks covering UI for mute and solo buttons, visual indication, mute/solo logic, mixer integration, and comprehensive testing. Include tasks for designing the mute/solo UI, implementing button behavior, creating visual indicators, developing mute/solo logic for multiple tracks, integrating with the mixer, and writing tests for mute/solo operations during playback.",
+			"reasoning": "This task involves implementing mute and solo functionality with appropriate UI and mixer integration. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for mute/solo UI, button behavior, visual indication, logic implementation, mixer integration, and thorough testing of mute/solo operations."
+		},
+		{
+			"taskId": 47,
+			"taskTitle": "Implement Project Management",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the project management implementation into detailed subtasks covering UI for project creation, saving and loading functionality, metadata handling, auto-save implementation, data model integration, and comprehensive testing. Include tasks for designing the project management UI, implementing creation and saving, developing metadata editing, creating auto-save functionality, integrating with the data model, and writing tests for project operations and data integrity.",
+			"reasoning": "This task requires implementing a comprehensive project management system with creation, saving, loading, and auto-save capabilities. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for project UI, saving/loading functionality, metadata handling, auto-save implementation, data integration, and thorough testing of project operations."
+		},
+		{
+			"taskId": 48,
+			"taskTitle": "Implement Pattern Management",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the pattern management implementation into detailed subtasks covering UI for pattern creation, copying and pasting functionality, metadata handling, pattern bank organization, data model integration, and comprehensive testing. Include tasks for designing the pattern management UI, implementing creation and copying, developing metadata editing, creating pattern bank organization, integrating with the data model, and writing tests for pattern operations and organization.",
+			"reasoning": "This task involves implementing a pattern management system with creation, copying, and organization capabilities. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for pattern UI, copying/pasting functionality, metadata handling, bank organization, data integration, and thorough testing of pattern operations."
+		},
+		{
+			"taskId": 49,
+			"taskTitle": "Implement Kit Management",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the kit management implementation into detailed subtasks covering UI for kit creation, copying and pasting functionality, metadata handling, kit organization, data model integration, and comprehensive testing. Include tasks for designing the kit management UI, implementing creation and copying, developing metadata editing, creating kit organization, integrating with the data model, and writing tests for kit operations and organization.",
+			"reasoning": "This task requires implementing a kit management system with creation, copying, and organization capabilities. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for kit UI, copying/pasting functionality, metadata handling, organization features, data integration, and thorough testing of kit operations."
+		},
+		{
+			"taskId": 50,
+			"taskTitle": "Implement On-Screen Keyboard",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the on-screen keyboard implementation into detailed subtasks covering piano-style layout, velocity sensitivity, octave shifting, scale highlighting, touch handling, and comprehensive testing. Include tasks for designing the keyboard UI, implementing key touch detection, creating velocity calculation based on touch position, developing octave shift controls, implementing scale and chord highlighting, and writing tests for note input and velocity sensitivity.",
+			"reasoning": "This task involves implementing a touch-sensitive musical keyboard with velocity, octave shifting, and scale highlighting. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for keyboard layout, touch handling, velocity calculation, octave shifting, scale highlighting, and thorough testing of keyboard input."
+		},
+		{
+			"taskId": 51,
+			"taskTitle": "Implement Scale and Chord Modes",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the scale and chord modes implementation into detailed subtasks covering scale selection, chord selection and voicing, keyboard highlighting, scale-constrained sequencing, data model integration, and comprehensive testing. Include tasks for designing the scale/chord UI, implementing scale selection, creating chord voicing options, developing keyboard highlighting, implementing scale-constrained sequencing, and writing tests for scale/chord functionality and sequencing behavior.",
+			"reasoning": "This task requires implementing musical scale and chord functionality with keyboard highlighting and sequencing constraints. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for scale/chord UI, selection implementation, keyboard visualization, sequencing constraints, and thorough testing of musical behavior."
+		},
+		{
+			"taskId": 52,
+			"taskTitle": "Implement Performance Controls",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the performance controls implementation into detailed subtasks covering macro controls, performance pads, scene storage, MIDI mapping, UI design, and comprehensive testing. Include tasks for designing the performance control UI, implementing macro parameter mapping, creating performance pad functionality, developing scene storage and recall, implementing MIDI mapping for external control, and writing tests for performance control behavior and responsiveness.",
+			"reasoning": "This task involves implementing real-time performance controls with macro mapping, pads, and scene storage. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for control UI, macro implementation, pad functionality, scene storage, MIDI mapping, and thorough testing of performance control behavior."
+		},
+		{
+			"taskId": 53,
+			"taskTitle": "Implement Arpeggiator",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the arpeggiator implementation into detailed subtasks covering mode selection, rate and range controls, hold functionality, sequencer integration, UI design, and comprehensive testing. Include tasks for designing the arpeggiator UI, implementing various arpeggio modes, creating rate and range controls, developing hold functionality, integrating with the sequencer, and writing tests for arpeggiator behavior with various settings.",
+			"reasoning": "This task requires implementing an arpeggiator with multiple modes, controls, and sequencer integration. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for arpeggiator UI, mode implementation, control development, hold functionality, sequencer integration, and thorough testing of arpeggiator behavior."
+		},
+		{
+			"taskId": 54,
+			"taskTitle": "Implement LFOs",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the LFO implementation into detailed subtasks covering waveform generation, rate and depth controls, sync options, destination routing, UI design, and comprehensive testing. Include tasks for designing the LFO UI, implementing various waveforms, creating rate and depth controls, developing sync options, implementing destination routing, and writing tests for LFO modulation with various settings and destinations.",
+			"reasoning": "This task involves implementing low-frequency oscillators for parameter modulation with multiple waveforms and routing options. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for LFO UI, waveform implementation, control development, sync options, destination routing, and thorough testing of modulation behavior."
+		},
+		{
+			"taskId": 55,
+			"taskTitle": "Implement Envelopes",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the envelope implementation into detailed subtasks covering envelope shapes, trigger modes, destination routing, velocity sensitivity, UI design, and comprehensive testing. Include tasks for designing the envelope UI, implementing various envelope shapes, creating trigger mode options, developing velocity sensitivity, implementing destination routing, and writing tests for envelope modulation with various settings and destinations.",
+			"reasoning": "This task requires implementing envelope generators for parameter modulation with multiple shapes, trigger modes, and routing options. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for envelope UI, shape implementation, trigger modes, velocity sensitivity, destination routing, and thorough testing of modulation behavior."
+		},
+		{
+			"taskId": 56,
+			"taskTitle": "Implement Key Combo System",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the key combo system implementation into detailed subtasks covering combo detection, visual feedback, context-sensitivity, documentation, UI integration, and comprehensive testing. Include tasks for designing the combo system architecture, implementing combo detection, creating visual feedback, developing context-sensitive behavior, implementing help documentation, and writing tests for combo detection and execution in various contexts.",
+			"reasoning": "This task involves implementing a system for detecting and handling key combinations with visual feedback and context-sensitivity. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for combo detection, visual feedback, context-sensitivity, documentation, UI integration, and thorough testing of combo behavior."
+		},
+		{
+			"taskId": 57,
+			"taskTitle": "Implement Context Menu System",
+			"complexityScore": 5,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "Break down the context menu system implementation into detailed subtasks covering long-press detection, menu generation, nested menu support, visual styling, UI integration, and comprehensive testing. Include tasks for designing the context menu architecture, implementing long-press detection, creating menu generation, developing nested menu support, implementing visual styling, and writing tests for menu display and selection in various contexts.",
+			"reasoning": "This task requires implementing a context menu system with long-press activation, nested menus, and context-sensitivity. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for long-press detection, menu generation, nested menu support, visual styling, UI integration, and thorough testing of menu behavior."
+		},
+		{
+			"taskId": 58,
+			"taskTitle": "Implement Undo/Redo System",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the undo/redo system implementation into detailed subtasks covering command pattern design, undo/redo stacks, UI controls, data model integration, state management, and comprehensive testing. Include tasks for designing the command pattern architecture, implementing command execution and reversal, creating undo/redo stacks, developing UI controls, integrating with the data model, and writing tests for undo/redo operations with various action types.",
+			"reasoning": "This task involves implementing a command pattern-based undo/redo system with state tracking and UI integration. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for command pattern design, stack implementation, UI controls, data integration, state management, and thorough testing of undo/redo behavior."
+		},
+		{
+			"taskId": 59,
+			"taskTitle": "Implement Copy/Paste System",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the copy/paste system implementation into detailed subtasks covering element type handling, clipboard storage, UI controls, cross-pattern/project support, data model integration, and comprehensive testing. Include tasks for designing the copy/paste architecture, implementing element copying, creating clipboard storage, developing UI controls, supporting cross-pattern/project operations, and writing tests for copy/paste operations with various element types.",
+			"reasoning": "This task requires implementing a copy/paste system supporting multiple element types and cross-pattern/project operations. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for element type handling, clipboard storage, UI controls, cross-context support, data integration, and thorough testing of copy/paste behavior."
+		},
+		{
+			"taskId": 60,
+			"taskTitle": "Implement Audio Recording",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the audio recording implementation into detailed subtasks covering recording engine, format selection, recording controls, file system integration, UI design, and comprehensive testing. Include tasks for designing the recording UI, implementing the recording engine, creating format selection, developing recording controls, integrating with the file system, and writing tests for recording operations with various settings and durations.",
+			"reasoning": "This task involves implementing audio recording functionality with format selection and file system integration. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for recording UI, engine implementation, format selection, control development, file system integration, and thorough testing of recording behavior."
+		},
+		{
+			"taskId": 61,
+			"taskTitle": "Implement Audio Export",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the audio export implementation into detailed subtasks covering offline rendering, format selection, export options, progress indication, file system integration, and comprehensive testing. Include tasks for designing the export UI, implementing offline rendering, creating format and quality selection, developing export options, implementing progress indication, integrating with the file system, and writing tests for export operations with various settings and content.",
+			"reasoning": "This task requires implementing offline audio rendering with format selection, options, and progress indication. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for export UI, rendering implementation, format selection, option development, progress indication, file system integration, and thorough testing of export behavior."
+		},
+		{
+			"taskId": 62,
+			"taskTitle": "Implement Project Import/Export",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the project import/export implementation into detailed subtasks covering serialization, format selection, UI controls, file system integration, sharing functionality, and comprehensive testing. Include tasks for designing the import/export UI, implementing project serialization, creating format selection, developing UI controls, integrating with the file system, implementing sharing functionality, and writing tests for import/export operations with various project types and sizes.",
+			"reasoning": "This task involves implementing project serialization with format selection and file system/sharing integration. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for import/export UI, serialization implementation, format selection, UI controls, file system integration, sharing functionality, and thorough testing of import/export behavior."
+		},
+		{
+			"taskId": 63,
+			"taskTitle": "Implement MIDI File Import/Export",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the MIDI file import/export implementation into detailed subtasks covering SMF parsing/generation, format selection, track mapping, UI controls, file system integration, and comprehensive testing. Include tasks for designing the MIDI import/export UI, implementing SMF parsing and generation, creating format selection, developing track mapping, integrating with the file system, and writing tests for MIDI import/export operations with various file types and content.",
+			"reasoning": "This task requires implementing Standard MIDI File reading and writing with track mapping and format selection. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for MIDI import/export UI, SMF implementation, format selection, track mapping, file system integration, and thorough testing of MIDI import/export behavior."
+		},
+		{
+			"taskId": 64,
+			"taskTitle": "Implement Settings and Preferences",
+			"complexityScore": 5,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the settings and preferences implementation into detailed subtasks covering UI design, storage mechanism, setting categories, default values, reset functionality, and comprehensive testing. Include tasks for designing the settings UI, implementing storage using UserDefaults, creating setting categories, developing default values and reset functionality, and writing tests for setting persistence and reset behavior.",
+			"reasoning": "This task involves implementing a settings system with categories, storage, and reset functionality. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for settings UI, storage implementation, category organization, default values, reset functionality, and thorough testing of settings behavior."
+		},
+		{
+			"taskId": 65,
+			"taskTitle": "Implement Help and Documentation",
+			"complexityScore": 6,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the help and documentation implementation into detailed subtasks covering context-sensitive help, tutorial system, reference documentation, search functionality, UI design, and comprehensive testing. Include tasks for designing the help UI, implementing context-sensitivity, creating the tutorial system, developing reference documentation, implementing search functionality, and writing tests for help access and relevance in various contexts.",
+			"reasoning": "This task requires implementing a comprehensive help system with context-sensitivity, tutorials, and search functionality. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for help UI, context-sensitivity implementation, tutorial system, reference documentation, search functionality, and thorough testing of help behavior."
+		},
+		{
+			"taskId": 66,
+			"taskTitle": "Implement Accessibility Features",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the accessibility features implementation into detailed subtasks covering VoiceOver support, Dynamic Type, color contrast, alternative input methods, UI adaptation, and comprehensive testing. Include tasks for implementing VoiceOver labels and hints, creating Dynamic Type support, ensuring sufficient color contrast, developing alternative input methods, adapting UI for accessibility, and writing tests for accessibility compliance and usability.",
+			"reasoning": "This task involves implementing comprehensive accessibility features across the application, requiring expertise in VoiceOver, Dynamic Type, and alternative input methods. The current 3 subtasks provide a good foundation but could be expanded to include more detailed steps for each accessibility feature, UI adaptation, and thorough testing with accessibility tools."
+		},
+		{
+			"taskId": 67,
+			"taskTitle": "Implement Performance Optimization",
+			"complexityScore": 9,
+			"recommendedSubtasks": 18,
+			"expansionPrompt": "Break down the performance optimization task into detailed subtasks covering profiling, DSP algorithm optimization, memory usage reduction, battery optimization, and comprehensive testing. Include tasks for profiling CPU, memory, and energy usage, optimizing critical DSP algorithms, implementing memory pooling and reuse strategies, reducing background processing, and writing tests to verify performance improvements across different device configurations.",
+			"reasoning": "This task involves comprehensive performance optimization across CPU, memory, and battery usage, requiring deep expertise in profiling, algorithm optimization, and resource management. The current 18 subtasks are comprehensive but could be refined to ensure all performance aspects are properly addressed with appropriate testing methodologies."
+		},
+		{
+			"taskId": 68,
+			"taskTitle": "Implement Voice Stealing Algorithm",
+			"complexityScore": 7,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the voice stealing algorithm implementation into detailed subtasks covering priority-based allocation, stealing strategies, release phase handling, CPU load monitoring, and comprehensive testing. Include tasks for designing the priority system, implementing different stealing strategies, handling release phases properly, developing CPU load monitoring, implementing dynamic polyphony adjustment, and writing tests for voice allocation under various load conditions.",
+			"reasoning": "This task requires implementing a sophisticated voice allocation system with multiple strategies and CPU awareness. The current 8 subtasks provide a good foundation but could be expanded to include more detailed steps for priority calculation, strategy implementation, release handling, CPU monitoring, dynamic adjustment, and thorough testing under various load conditions."
+		},
+		{
+			"taskId": 69,
+			"taskTitle": "Implement Unit Tests for Core Modules",
+			"complexityScore": 8,
+			"recommendedSubtasks": 16,
+			"expansionPrompt": "Break down the unit testing implementation into detailed subtasks covering test environment setup, test plan creation, test implementation for each core module, mocking, performance testing, and continuous integration. Include tasks for setting up the test environment, creating comprehensive test plans, implementing tests for each VIPER component, developing mock objects, writing performance tests, and integrating with CI/CD pipelines.",
+			"reasoning": "This task involves creating comprehensive unit tests for all core modules, requiring expertise in testing methodologies, mocking, and test automation. The current 16 subtasks are comprehensive but could be refined to ensure thorough test coverage for all critical components with appropriate mocking and performance testing."
+		},
+		{
+			"taskId": 70,
+			"taskTitle": "Implement UI Tests",
+			"complexityScore": 7,
+			"recommendedSubtasks": 14,
+			"expansionPrompt": "Break down the UI testing implementation into detailed subtasks covering test framework selection, environment setup, test scenario definition, page object implementation, visual testing, cross-device testing, and continuous integration. Include tasks for selecting and configuring the UI testing framework, defining critical user flows, implementing automated tests, setting up visual regression testing, testing across different device configurations, and integrating with CI/CD pipelines.",
+			"reasoning": "This task requires creating comprehensive UI tests for critical user flows, demanding expertise in UI testing frameworks, automation, and visual testing. The current 14 subtasks are comprehensive but could be refined to ensure thorough test coverage for all critical user interactions with appropriate visual verification and cross-device testing."
+		},
+		{
+			"taskId": 71,
+			"taskTitle": "Implement Integration Tests",
+			"complexityScore": 8,
+			"recommendedSubtasks": 16,
+			"expansionPrompt": "Break down the integration testing implementation into detailed subtasks covering test environment setup, data preparation, module integration testing, end-to-end testing, performance testing, error handling testing, and continuous integration. Include tasks for setting up the integration test environment, creating test data, implementing tests for module interactions, developing end-to-end tests, writing performance tests, testing error handling and recovery, and integrating with CI/CD pipelines.",
+			"reasoning": "This task involves creating comprehensive integration tests for module interactions and end-to-end functionality, requiring expertise in integration testing methodologies, data preparation, and test automation. The current 16 subtasks are comprehensive but could be refined to ensure thorough test coverage for all critical integration points with appropriate performance and error handling testing."
+		},
+		{
+			"taskId": 72,
+			"taskTitle": "Implement CI/CD Pipeline",
+			"complexityScore": 7,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the CI/CD pipeline implementation into detailed subtasks covering GitHub Actions configuration, automated testing setup, build verification, TestFlight deployment, environment configuration, and pipeline optimization. Include tasks for creating workflow configuration files, setting up test automation, implementing build verification, configuring TestFlight deployment, managing environment variables and secrets, and optimizing pipeline performance.",
+			"reasoning": "This task requires setting up a comprehensive CI/CD pipeline with automated testing and deployment capabilities. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for workflow configuration, test automation, build verification, deployment configuration, environment management, and pipeline optimization."
+		},
+		{
+			"taskId": 73,
+			"taskTitle": "Prepare for TestFlight Beta",
+			"complexityScore": 5,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the TestFlight beta preparation into detailed subtasks covering App Store Connect configuration, beta testing groups setup, release notes creation, feedback collection mechanism, beta build preparation, and testing process. Include tasks for configuring App Store Connect, setting up testing groups, creating release notes and instructions, implementing feedback collection, preparing beta builds, and testing the beta distribution process.",
+			"reasoning": "This task involves preparing the application for beta testing through TestFlight with appropriate configuration and feedback mechanisms. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for App Store Connect configuration, testing group setup, release notes creation, feedback collection, build preparation, and beta testing process verification."
+		},
+		{
+			"taskId": 74,
+			"taskTitle": "Prepare for App Store Submission",
+			"complexityScore": 6,
+			"recommendedSubtasks": 10,
+			"expansionPrompt": "Break down the App Store submission preparation into detailed subtasks covering App Store listing creation, screenshot generation, promotional material preparation, privacy policy creation, App Review Guidelines compliance, metadata preparation, and submission process. Include tasks for creating the App Store listing, generating screenshots for all device sizes, preparing promotional materials, creating privacy policy and documentation, ensuring compliance with guidelines, preparing app metadata, and testing the submission process.",
+			"reasoning": "This task requires preparing all necessary materials and configurations for App Store submission. The current 3 subtasks are too high-level and should be expanded to include more detailed steps for listing creation, screenshot generation, promotional material preparation, privacy policy creation, compliance verification, metadata preparation, and submission process testing."
+		},
+		{
+			"taskId": 75,
+			"taskTitle": "Final Performance and Stability Testing",
+			"complexityScore": 8,
+			"recommendedSubtasks": 16,
+			"expansionPrompt": "Break down the final performance and stability testing into detailed subtasks covering profiling methodology, stress test scenarios, long-duration tests, device compatibility testing, result analysis, bug identification, and final reporting. Include tasks for defining profiling methodology, designing stress tests, planning long-duration tests, compiling device compatibility list, executing tests, analyzing results, identifying and prioritizing bugs, and preparing the final test report.",
+			"reasoning": "This task involves comprehensive performance and stability testing across multiple dimensions and device configurations. The current 16 subtasks are comprehensive but could be refined to ensure thorough testing of all critical performance aspects with appropriate analysis and reporting methodologies."
+		},
+		{
+			"taskId": 92,
+			"taskTitle": "Implement FM TONE Voice Machine",
+			"complexityScore": 9,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the implementation of the FM TONE Voice Machine into detailed subtasks covering operator design, algorithm routing, envelope generation, parameter management, optimization, testing, and integration with the audio engine. Include specific technical requirements and dependencies for each subtask.",
+			"reasoning": "This task involves complex DSP programming for FM synthesis with multiple operators, algorithms, and modulation paths. It requires deep understanding of audio programming, real-time constraints, and efficient implementation of mathematical operations. The existing subtasks are good but could be expanded with more detail on testing, optimization, and UI integration."
+		},
+		{
+			"taskId": 93,
+			"taskTitle": "Implement FM DRUM Voice Machine",
+			"complexityScore": 8,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down the implementation of the FM DRUM Voice Machine into detailed subtasks covering the split architecture (Body and Noise/Transient components), pitch sweep functionality, wavefolding, percussion-specific envelopes, parameter management, optimization, and integration with the existing FM TONE engine.",
+			"reasoning": "This task builds on the FM TONE implementation but adds specialized percussion-focused features. It requires specific knowledge of percussion synthesis techniques, transient design, and optimization for low-latency performance critical for percussion. The task has dependencies on the FM TONE engine but needs its own architecture for percussion-specific features."
+		},
+		{
+			"taskId": 94,
+			"taskTitle": "Implement WAVETONE Voice Machine",
+			"complexityScore": 8,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "Break down the implementation of the WAVETONE Voice Machine into detailed subtasks covering wavetable design and loading, phase distortion algorithms, oscillator modulation (Ring Mod, Hard Sync), noise generator types, envelope implementation, parameter management, and integration with the audio engine.",
+			"reasoning": "This task involves implementing multiple synthesis techniques (wavetable and phase distortion) with complex modulation options. It requires handling wavetable data, implementing interpolation algorithms, creating phase distortion calculations, and designing multiple noise generation algorithms. The complexity comes from combining these different synthesis methods into a cohesive voice machine."
+		},
+		{
+			"taskId": 95,
+			"taskTitle": "Implement SWARMER Voice Machine",
+			"complexityScore": 7,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Break down the implementation of the SWARMER Voice Machine into detailed subtasks covering main oscillator design, satellite oscillator implementation, animation/modulation system, detune spread algorithms, phase relationship management, voice allocation optimization, and integration with the audio engine.",
+			"reasoning": "This task involves creating multiple synchronized oscillators with complex phase and detuning relationships. The main challenge is efficiently managing multiple oscillator instances per voice while maintaining performance. The animation parameter adds another layer of complexity for modulating the swarm characteristics over time."
+		},
+		{
+			"taskId": 96,
+			"taskTitle": "Implement Multi-Mode Filter Machine",
+			"complexityScore": 7,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Break down the implementation of the Multi-Mode Filter Machine into detailed subtasks covering filter coefficient calculation, morphing algorithm between filter types (LP-BP-HP), resonance implementation with self-oscillation, keyboard tracking, parameter smoothing, and integration with the audio engine.",
+			"reasoning": "This task requires implementing digital filter algorithms with continuous morphing between different topologies. The mathematical complexity of filter design, especially with morphing capabilities and self-oscillation, makes this challenging. Parameter smoothing is critical to avoid audio artifacts during parameter changes."
+		},
+		{
+			"taskId": 97,
+			"taskTitle": "Implement Lowpass 4 Filter Machine",
+			"complexityScore": 6,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Break down the implementation of the Lowpass 4 Filter Machine into detailed subtasks covering 4-pole filter design, resonance with self-oscillation, drive/saturation algorithm, keyboard tracking, parameter smoothing, and integration with the existing filter framework.",
+			"reasoning": "This task involves implementing a specific filter topology (4-pole lowpass) with saturation capabilities. While complex, it's more focused than the multi-mode filter. The main challenges are achieving the correct 24dB/octave slope and implementing the drive/saturation stage with proper harmonic generation."
+		},
+		{
+			"taskId": 98,
+			"taskTitle": "Implement Track FX (Bit Reduction, Sample Rate Reduction, Overdrive)",
+			"complexityScore": 6,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Break down the implementation of Track FX into detailed subtasks covering bit reduction algorithm, sample rate reduction implementation, overdrive/saturation curve design, parameter controls, bypass functionality, and integration with the track signal chain as AVAudioUnit processors.",
+			"reasoning": "This task involves implementing three distinct audio effects with their own DSP algorithms. While each effect is relatively straightforward, combining them into an efficient processing chain with parameter automation and bypass capabilities adds complexity. The effects need to maintain audio quality while intentionally degrading the signal in musically useful ways."
+		},
+		{
+			"taskId": 99,
+			"taskTitle": "Implement Send FX (Delay, Reverb, Chorus)",
+			"complexityScore": 8,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down the implementation of Send FX into detailed subtasks covering delay line design with filtering, reverb algorithm implementation, chorus/modulation effect, send routing architecture, parameter management, and integration with the audio engine as auxiliary processors.",
+			"reasoning": "This task involves implementing three complex time-based effects that are computationally intensive. The reverb algorithm alone is quite complex, requiring careful design to achieve natural decay characteristics. The send routing architecture adds another layer of complexity for managing signal flow from multiple tracks to the effects."
+		},
+		{
+			"taskId": 100,
+			"taskTitle": "Implement Master FX (Compressor, Overdrive)",
+			"complexityScore": 7,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Break down the implementation of Master FX into detailed subtasks covering compressor algorithm design, gain reduction calculation, overdrive/saturation curve implementation, metering system, parameter automation, and integration with the master output chain.",
+			"reasoning": "This task involves implementing dynamics processing (compressor) and saturation effects for the master bus. The compressor requires precise attack/release timing and gain reduction calculation. The metering system adds complexity for visualizing the compressor's effect. These effects need to be particularly efficient as they process the entire mixed output."
+		},
+		{
+			"taskId": 101,
+			"taskTitle": "Implement Core Data Models and Relationships",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down the implementation of Core Data Models into detailed subtasks covering entity design for all major components (Project, Pattern, Kit, Track, Trig, Preset), relationship mapping with proper cardinality and deletion rules, NSManagedObject subclass implementation, validation rules, migration strategy, and persistence manager implementation.",
+			"reasoning": "This task involves designing a complex data model with multiple interrelated entities. The relationships between entities (one-to-many, many-to-many) require careful design to ensure data integrity. The task already has 5 good subtasks but could benefit from one more covering the persistence manager implementation."
+		},
+		{
+			"taskId": 102,
+			"taskTitle": "Implement Sequencer Clock and Timing Engine",
+			"complexityScore": 8,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "Break down the implementation of the Sequencer Clock and Timing Engine into detailed subtasks covering high-precision timer implementation, tempo management, time signature handling, swing calculation, transport controls, position reporting, MIDI clock sync, and event dispatching system.",
+			"reasoning": "This task involves creating a high-precision timing system critical for musical applications. The complexity comes from the need for sample-accurate timing, handling of musical time concepts (bars, beats, ticks), and synchronization with external systems via MIDI. The existing 6 subtasks are comprehensive but could benefit from one more covering the event dispatching system."
+		},
+		{
+			"taskId": 103,
+			"taskTitle": "Implement Step Sequencer with P-Lock Support",
+			"complexityScore": 9,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the implementation of the Step Sequencer with P-Lock Support into detailed subtasks covering track and step data structures, parameter lock (P-Lock) implementation, micro timing system, retrig functionality, trig conditions, note/velocity/duration handling, sequencer engine implementation, and integration with the CoreData model.",
+			"reasoning": "This task involves creating a complex sequencing system with advanced features like parameter locks, micro timing, retrigs, and conditional triggers. The sequencer needs to interact with both the data model for persistence and the real-time clock for playback. The combination of data management and real-time processing makes this particularly complex."
+		},
+		{
+			"taskId": 104,
+			"taskTitle": "Implement Grid, Live, and Step Recording Modes",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down the implementation of Grid, Live, and Step Recording Modes into detailed subtasks covering grid recording interface, live recording with quantization, step recording with auto-advance, record enable/disable functionality, count-in implementation, input handling from on-screen keyboard and MIDI, and integration with the sequencer engine.",
+			"reasoning": "This task involves implementing three different recording paradigms, each with its own interaction model and technical requirements. The live recording mode is particularly complex, requiring real-time quantization and handling of MIDI input. The task needs to integrate with both the UI layer for user interaction and the sequencer engine for recording the events."
+		},
+		{
+			"taskId": 105,
+			"taskTitle": "Implement Song Mode for Pattern Arrangement",
+			"complexityScore": 7,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Break down the implementation of Song Mode for Pattern Arrangement into detailed subtasks covering arrangement data structure, pattern transition logic, repetition handling, track mute implementation, position tracking, song transport controls, and integration with the pattern sequencer.",
+			"reasoning": "This task involves creating a higher-level sequencing system that arranges patterns into a complete song. It requires managing pattern transitions, repetitions, and track mutes at the arrangement level. The integration with the existing pattern sequencer adds complexity, as the song engine needs to control the pattern engine."
+		},
+		{
+			"taskId": 106,
+			"taskTitle": "Implement Audio Graph Manager",
+			"complexityScore": 8,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "Break down the implementation of the Audio Graph Manager into detailed subtasks covering AVAudioEngine setup, node management system, routing matrix implementation, send bus configuration, master bus processing, buffer/sample rate management, audio session handling, error recovery, and performance monitoring.",
+			"reasoning": "This task involves creating the core audio processing architecture for the entire application. It requires deep knowledge of AVAudioEngine, audio routing concepts, and iOS audio session management. The system needs to be flexible for dynamic connections while maintaining real-time performance. Error handling and recovery from audio system interruptions add significant complexity."
+		},
+		{
+			"taskId": 107,
+			"taskTitle": "Implement MIDI I/O Module",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down the implementation of the MIDI I/O Module into detailed subtasks covering CoreMIDI integration, device discovery and connection, MIDI message parsing, note and CC handling, MIDI output generation, clock sync implementation, CC mapping system, MIDI learn functionality, and track routing configuration.",
+			"reasoning": "This task involves working with the CoreMIDI framework to handle device connections and MIDI message processing. The complexity comes from managing multiple MIDI devices, parsing and generating MIDI messages according to the specification, and implementing features like MIDI learn and CC mapping. Clock synchronization adds another layer of complexity."
+		},
+		{
+			"taskId": 108,
+			"taskTitle": "Implement Preset Management System",
+			"complexityScore": 6,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Break down the implementation of the Preset Management System into detailed subtasks covering preset data structure, save/load functionality, categorization and tagging system, preset pool implementation, emulated +Drive storage, browser interface with filtering, and import/export capabilities.",
+			"reasoning": "This task involves creating a system for managing sound presets with features for organization, browsing, and sharing. While not as technically complex as audio processing tasks, it requires careful data modeling and user experience design. The integration with CoreData for persistence and the implementation of import/export functionality add complexity."
+		},
+		{
+			"taskId": 109,
+			"taskTitle": "Implement Hardware-Style UI Layout",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down the implementation of the Hardware-Style UI Layout into detailed subtasks covering main display design, step button grid implementation, transport controls, mode buttons, parameter encoder visualization, function button system, on-screen keyboard, responsive layout adaptation, and accessibility features.",
+			"reasoning": "This task involves creating a complex UI that replicates hardware controls while maintaining good touch interaction. It requires custom SwiftUI components for buttons, encoders, and displays. The responsive layout needs to adapt to different iPad screen sizes while maintaining the hardware proportions. Accessibility considerations add another layer of complexity."
+		},
+		{
+			"taskId": 110,
+			"taskTitle": "Implement Parameter Page Navigation",
+			"complexityScore": 6,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Break down the implementation of Parameter Page Navigation into detailed subtasks covering page tab system, parameter display components, value formatting and scaling, visual feedback implementation, quick access functionality, page manager architecture, and integration with the parameter control system.",
+			"reasoning": "This task involves creating a navigation system for accessing different parameter pages with appropriate display and interaction. While less complex than some other tasks, it requires careful UI design for parameter visualization and interaction. The integration with the parameter control system and handling of different parameter types add complexity."
+		},
+		{
+			"taskId": 111,
+			"taskTitle": "Implement Encoder Control System",
+			"complexityScore": 7,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Break down the implementation of the Encoder Control System into detailed subtasks covering rotary encoder visualization, touch and drag gesture recognition, value calculation algorithms, acceleration implementation, fine adjustment mode, visual feedback system, haptic feedback integration, and parameter binding.",
+			"reasoning": "This task involves creating a virtual representation of physical encoders with appropriate touch interaction. The complexity comes from implementing natural-feeling gesture recognition, value acceleration based on drag speed, and visual/haptic feedback. The encoder needs to work with various parameter types and ranges while providing precise control."
+		},
+		{
+			"taskId": 112,
+			"taskTitle": "Implement P-Lock Interface",
+			"complexityScore": 7,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Break down the implementation of the P-Lock Interface into detailed subtasks covering P-Lock creation interaction, visual indication system, editing mode implementation, clearing functionality, copy/paste between steps, P-Lock manager architecture, and integration with the sequencer engine.",
+			"reasoning": "This task involves creating a specialized interface for parameter lock automation. The complexity comes from the unique interaction model (hold step + turn encoder) and the need to visualize locked parameters. The P-Lock manager needs to integrate with both the UI layer for interaction and the sequencer engine for playback."
+		},
+		{
+			"taskId": 113,
+			"taskTitle": "Implement VIPER Architecture for Feature Modules",
+			"complexityScore": 8,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down the implementation of VIPER Architecture for Feature Modules into detailed subtasks covering architecture design document, View implementation with SwiftUI, Interactor business logic, Presenter data formatting, Entity model integration, Router navigation, dependency injection system, and testing strategy with mocks.",
+			"reasoning": "This task involves implementing a complex architectural pattern across multiple feature modules. The VIPER architecture requires careful separation of concerns and well-defined communication between components. Setting up proper dependency injection and testable interfaces adds significant complexity. This architectural work impacts the entire application."
+		},
+		{
+			"taskId": 114,
+			"taskTitle": "Implement Swift Package Architecture",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down the implementation of Swift Package Architecture into detailed subtasks covering module boundary definition, dependency graph design, public API specification for each module, Xcodegen configuration, build script implementation, module integration testing, and documentation of the modular architecture.",
+			"reasoning": "This task involves designing a modular architecture using Swift Packages with clear boundaries and dependencies. The complexity comes from defining appropriate module boundaries, managing dependencies between modules, and setting up the build system with Xcodegen. This architectural work impacts the entire development workflow and application structure."
+		},
+		{
+			"taskId": 115,
+			"taskTitle": "Implement CI/CD Pipeline with GitHub Actions",
+			"complexityScore": 6,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Break down the implementation of CI/CD Pipeline with GitHub Actions into detailed subtasks covering workflow configuration, Xcodegen integration, unit test automation, UI test setup, code coverage reporting, build artifact generation, TestFlight deployment, and pipeline documentation.",
+			"reasoning": "This task involves setting up automated build and deployment processes using GitHub Actions. While not as technically complex as audio programming tasks, it requires knowledge of CI/CD concepts, GitHub Actions syntax, and iOS build/deployment processes. The integration with Xcodegen and configuration of multiple workflow stages add complexity."
+		},
+		{
+			"taskId": 116,
+			"taskTitle": "Implement Performance Profiling and Optimization",
+			"complexityScore": 8,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "Break down the implementation of Performance Profiling and Optimization into detailed subtasks covering instrumentation setup, CPU profiling methodology, memory allocation analysis, audio processing optimization, voice stealing algorithm, CoreData query optimization, UI rendering performance, and documentation of optimization techniques.",
+			"reasoning": "This task involves identifying and resolving performance bottlenecks across the entire application. It requires deep knowledge of profiling tools, audio processing optimization techniques, memory management, and database optimization. The task spans multiple subsystems (audio, data, UI) and requires careful measurement and targeted improvements."
+		}
+	]
 }

@@ -1,0 +1,65 @@
+{
+  "timestamp": "2025-06-13T20:56:35Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "passed",
+      "message": "Swift Package compiled successfully",
+      "details": "    /Users/danieltibaquira/padtrack/Tests/DataLayerTests/EntityValidationTests.swift.disabled
+[0/1] Planning build
+Building for debugging...
+[0/1] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.19s)",
+      "timestamp": "2025-06-13T20:56:36Z"
+    },
+    "swift_package_tests": {
+      "status": "passed",
+      "message": "All Swift Package tests passed",
+      "details": "Executed 149 tests successfully",
+      "timestamp": "2025-06-13T20:56:41Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Pro 11-inch",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-13T20:56:43Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Pro 12.9-inch",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-13T20:56:45Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Air",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-13T20:56:46Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "passed",
+      "message": "iOS build successful for iPad mini",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-13T20:56:48Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-06-13T20:56:48Z"
+    },
+    "build_warnings": {
+      "status": "warning",
+      "message": "1 build warnings detected",
+      "details": "Warnings should be reviewed and addressed",
+      "timestamp": "2025-06-13T20:56:48Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 8,
+    "failed_tests": 0,
+    "warnings": 1
+  }
+}

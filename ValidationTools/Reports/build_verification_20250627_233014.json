@@ -1,0 +1,78 @@
+{
+  "timestamp": "2025-06-28T04:30:14Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "221 |     public var velocity: Float = 0.8
+
+/Users/danieltibaquira/padtrack/Tests/MockObjects/MockDataLayer.swift:40:34: error: type 'DataLayerError' has no member 'initializationError'
+ 38 |     public func initialize() throws {
+ 39 |         if shouldFailOperations {
+ 40 |             throw DataLayerError.initializationError("Mock initialization failure")
+    |                                  `- error: type 'DataLayerError' has no member 'initializationError'
+ 41 |         }
+ 42 |         ",
+      "timestamp": "2025-06-28T04:30:39Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": "
+/Users/danieltibaquira/padtrack/Tests/MockObjects/MockDataLayer.swift:40:34: error: type 'DataLayerError' has no member 'initializationError'
+ 38 |     public func initialize() throws {
+ 39 |         if shouldFailOperations {
+ 40 |             throw DataLayerError.initializationError("Mock initialization failure")
+    |                                  `- error: type 'DataLayerError' has no member 'initializationError'
+ 41 |         }
+ 42 |         
+
+error: fatalError",
+      "timestamp": "2025-06-28T04:30:55Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Pro 11-inch",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-28T04:31:15Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Pro 12.9-inch",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-28T04:31:25Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Air",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-28T04:31:34Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "passed",
+      "message": "iOS build successful for iPad mini",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-28T04:31:43Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-06-28T04:31:44Z"
+    },
+    "build_warnings": {
+      "status": "failed",
+      "message": "42 build warnings detected",
+      "details": "Excessive warnings indicate potential issues",
+      "timestamp": "2025-06-28T04:31:44Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 5,
+    "failed_tests": 3,
+    "warnings": 0
+  }
+}

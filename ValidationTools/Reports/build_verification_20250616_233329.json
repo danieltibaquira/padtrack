@@ -1,0 +1,35 @@
+{
+  "timestamp": "2025-06-17T04:33:29Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "SwiftUI.ToolbarItemPlacement:50:23: note: 'navigationBarTrailing' has been explicitly marked unavailable here
+48 |     @available(watchOS, unavailable)
+49 |     @available(visionOS, introduced: 1.0, deprecated: 100000.0, message: "use topBarTrailing instead")
+50 |     public static let navigationBarTrailing: ToolbarItemPlacement
+   |                       `- note: 'navigationBarTrailing' has been explicitly marked unavailable here
+51 |     @available(tvOS 18.0, watchOS 10.0, *)
+52 |     @available(macOS, unavailable)
+[27/32] Compiling DigitonePad HeaderDisplayView.swift
+[28/32] Compiling DigitonePad ParameterEncoderSection.swift
+[29/32] Compiling DigitonePad StepSequencerGrid.swift",
+      "timestamp": "2025-06-17T04:33:33Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": "126 |             self.sequencer.stop()
+    |             |- error: sending 'self' risks causing data races
+    |             `- note: task-isolated 'self' is captured by a main actor-isolated closure. main actor-isolated uses in closure may race against later nonisolated uses
+127 |         }
+128 | 
+[17/171] Emitting module SequencerModuleTests
+[18/171] Emitting module UIComponentsTests
+[19/171] Emitting module VoiceModuleTests
+[20/171] Emitting module MachineProtocolsTests
+error: fatalError",
+      "timestamp": "2025-06-17T04:33:35Z"
+    },

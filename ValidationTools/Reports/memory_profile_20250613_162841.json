@@ -1,0 +1,93 @@
+{
+  "timestamp": "2025-06-13T21:28:41Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "memory_profiling",
+  "device_profiles": {
+    "ipad_pro__11_inch___4th_generation_": {
+      "device_name": "iPad Pro (11-inch) (4th generation)",
+      "total_memory_gb": 8,
+      "app_size": "",
+      "memory_usage": {
+        "base_memory_mb": 75.69,
+        "peak_memory_mb": 175.57,
+        "average_memory_mb": 125.49,
+        "base_percentage": 0.92,
+        "peak_percentage": 2.14
+      },
+      "performance_metrics": {
+        "launch_time_ms": 1153,
+        "core_data_init_ms": 108,
+        "ui_render_time_ms": 19.2
+      },
+      "status": "passed",
+      "timestamp": "2025-06-13T21:28:43Z"
+    },
+    "ipad_pro__12_9_inch___6th_generation_": {
+      "device_name": "iPad Pro (12.9-inch) (6th generation)",
+      "total_memory_gb": 8,
+      "app_size": "",
+      "memory_usage": {
+        "base_memory_mb": 64.27,
+        "peak_memory_mb": 150.64,
+        "average_memory_mb": 103.64,
+        "base_percentage": 0.78,
+        "peak_percentage": 1.84
+      },
+      "performance_metrics": {
+        "launch_time_ms": 1036,
+        "core_data_init_ms": 192,
+        "ui_render_time_ms": 23.7
+      },
+      "status": "passed",
+      "timestamp": "2025-06-13T21:28:44Z"
+    },
+    "ipad_air__5th_generation_": {
+      "device_name": "iPad Air (5th generation)",
+      "total_memory_gb": 8,
+      "app_size": "",
+      "memory_usage": {
+        "base_memory_mb": 64.66,
+        "peak_memory_mb": 180.94,
+        "average_memory_mb": 99.46,
+        "base_percentage": 0.79,
+        "peak_percentage": 2.21
+      },
+      "performance_metrics": {
+        "launch_time_ms": 1089,
+        "core_data_init_ms": 140,
+        "ui_render_time_ms": 21.9
+      },
+      "status": "passed",
+      "timestamp": "2025-06-13T21:28:45Z"
+    },
+    "ipad_mini__6th_generation_": {
+      "device_name": "iPad mini (6th generation)",
+      "total_memory_gb": 4,
+      "app_size": "",
+      "memory_usage": {
+        "base_memory_mb": 66.90,
+        "peak_memory_mb": 176.58,
+        "average_memory_mb": 103.78,
+        "base_percentage": 1.63,
+        "peak_percentage": 4.31
+      },
+      "performance_metrics": {
+        "launch_time_ms": 1395,
+        "core_data_init_ms": 171,
+        "ui_render_time_ms": 19.8
+      },
+      "status": "passed",
+      "timestamp": "2025-06-13T21:28:47Z"
+    }
+  },
+  "summary": {
+    "devices_tested": 4,
+    "baseline_established": true,
+    "recommendations": [
+      "Monitor memory usage during extended use",
+      "Implement memory pressure handling",
+      "Consider lazy loading for large datasets",
+      "Profile with real device testing"
+    ]
+  }
+}

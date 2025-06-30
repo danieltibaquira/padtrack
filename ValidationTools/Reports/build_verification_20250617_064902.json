@@ -1,0 +1,114 @@
+{
+  "timestamp": "2025-06-17T11:49:02Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "221 |     public var velocity: Float = 0.8
+
+/Users/danieltibaquira/padtrack/Tests/MockObjects/MockDataLayer.swift:40:34: error: type 'DataLayerError' has no member 'initializationError'
+ 38 |     public func initialize() throws {
+ 39 |         if shouldFailOperations {
+ 40 |             throw DataLayerError.initializationError("Mock initialization failure")
+    |                                  `- error: type 'DataLayerError' has no member 'initializationError'
+ 41 |         }
+ 42 |         ",
+      "timestamp": "2025-06-17T11:49:08Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": "
+/Users/danieltibaquira/padtrack/Tests/MockObjects/MockDataLayer.swift:40:34: error: type 'DataLayerError' has no member 'initializationError'
+ 38 |     public func initialize() throws {
+ 39 |         if shouldFailOperations {
+ 40 |             throw DataLayerError.initializationError("Mock initialization failure")
+    |                                  `- error: type 'DataLayerError' has no member 'initializationError'
+ 41 |         }
+ 42 |         
+
+error: fatalError",
+      "timestamp": "2025-06-17T11:49:12Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 11-inch",
+      "details": "
+The following build commands failed:
+	EmitSwiftModule normal arm64 (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ VoiceModule (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ FMDrumSynthesisEngine.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumSynthesisEngine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumSynthesisEngine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ FMDrumVoiceMachine.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoiceMachine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoiceMachine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(7 failures)",
+      "timestamp": "2025-06-17T11:49:17Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 12.9-inch",
+      "details": "
+The following build commands failed:
+	EmitSwiftModule normal arm64 (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ VoiceModule (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ FMDrumVoiceMachine.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoiceMachine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoiceMachine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ FMDrumSynthesisEngine.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumSynthesisEngine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumSynthesisEngine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(7 failures)",
+      "timestamp": "2025-06-17T11:49:19Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Air",
+      "details": "
+The following build commands failed:
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumSynthesisEngine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ FMDrumSynthesisEngine.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumSynthesisEngine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ FMDrumVoiceMachine.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoiceMachine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoiceMachine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ VoiceModule (in target 'VoiceModule' from project 'DigitonePad')
+	EmitSwiftModule normal arm64 (in target 'VoiceModule' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(7 failures)",
+      "timestamp": "2025-06-17T11:49:21Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "failed",
+      "message": "iOS build failed for iPad mini",
+      "details": "
+The following build commands failed:
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ VoiceModule (in target 'VoiceModule' from project 'DigitonePad')
+	EmitSwiftModule normal arm64 (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ FMDrumVoiceMachine.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoiceMachine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoiceMachine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ FMDrumSynthesisEngine.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumSynthesisEngine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumSynthesisEngine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(7 failures)",
+      "timestamp": "2025-06-17T11:49:23Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-06-17T11:49:23Z"
+    },
+    "build_warnings": {
+      "status": "failed",
+      "message": "16 build warnings detected",
+      "details": "Excessive warnings indicate potential issues",
+      "timestamp": "2025-06-17T11:49:23Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 1,
+    "failed_tests": 7,
+    "warnings": 0
+  }
+}

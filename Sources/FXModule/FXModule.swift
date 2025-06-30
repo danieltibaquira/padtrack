@@ -4,6 +4,7 @@
 import Foundation
 import MachineProtocols
 import AudioEngine
+import AudioEngine
 
 /// Base effects processor implementation
 public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked Sendable {
@@ -22,9 +23,19 @@ public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked S
     public var lastError: MachineError?
     public var errorHandler: ((MachineError) -> Void)?
     public var performanceMetrics: MachinePerformanceMetrics = MachinePerformanceMetrics()
-    public var parameters: ParameterManager = ParameterManager()
+    public var parameters: ObservableParameterManager = ObservableParameterManager()
 
     // FXProcessorProtocol properties
+    public var wetLevel: Float = 1.0
+    public var dryLevel: Float = 0.0
+    public var inputGain: Float = 0.0
+    public var outputGain: Float = 0.0
+    public var intensity: Float = 0.5
+    public var rate: Float = 1.0
+    public var feedback: Float = 0.0
+    public var modDepth: Float = 0.0
+    public var stereoWidth: Float = 0.0
+
     public var latency: Int { 0 }
     public var isProcessing: Bool { status == .running && !isBypassed }
     public var effectState: [String: Float] {
@@ -43,7 +54,7 @@ public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked S
         setupEffectParameters()
     }
     
-    public func process(input: AudioBuffer) -> AudioBuffer {
+    public func process(input: MachineProtocols.AudioBuffer) -> MachineProtocols.AudioBuffer {
         lastActiveTimestamp = Date()
         // TODO: Implement effects processing
         return input
@@ -142,6 +153,56 @@ public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked S
         } catch {
             // Ignore modulation errors for now
         }
+    }
+
+    // MARK: - Additional FXProcessorProtocol Methods
+
+    public func flushBuffers() {
+        // Clear any internal buffers
+        resetEffectState()
+    }
+
+    public func getEffectParameterGroups() -> [ParameterGroup] {
+        return Array(parameters.groups.values)
+    }
+
+    public func processSidechain(input: MachineProtocols.AudioBuffer, sidechain: MachineProtocols.AudioBuffer?) -> MachineProtocols.AudioBuffer {
+        // Default implementation ignores sidechain
+        return process(input: input)
+    }
+
+    public func getTailTime() -> Double {
+        // Default no tail time
+        return 0.0
+    }
+
+    public func setTempoSync(bpm: Double, timeSignature: TimeSignature) {
+        // Store tempo sync information
+        do {
+            try parameters.updateParameter(id: "bpm", value: Float(bpm))
+            try parameters.updateParameter(id: "timeSignatureNumerator", value: Float(timeSignature.numerator))
+            try parameters.updateParameter(id: "timeSignatureDenominator", value: Float(timeSignature.denominator))
+        } catch {
+            // Ignore parameter errors
+        }
+    }
+
+    public func modulateEffect(intensity: Float, rate: Float, feedback: Float) {
+        self.intensity = intensity
+        self.rate = rate
+        self.feedback = feedback
+    }
+
+    public func setEffectParameter(id: String, value: Float, smoothTime: Float) {
+        do {
+            try parameters.updateParameter(id: id, value: value)
+        } catch {
+            // Ignore parameter errors
+        }
+    }
+
+    public func triggerAction(_ action: String, value: Float) {
+        triggerAction(action)
     }
     
     // Enhanced lifecycle methods

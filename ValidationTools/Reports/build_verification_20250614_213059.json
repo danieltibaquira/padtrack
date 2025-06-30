@@ -1,0 +1,110 @@
+{
+  "timestamp": "2025-06-15T02:30:59Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "passed",
+      "message": "Swift Package compiled successfully",
+      "details": "[1/2] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Compiling UIComponents ContentView.swift
+[4/5] Emitting module UIComponents
+[5/5] Compiling UIComponents UIComponents.swift
+Build complete! (1.12s)",
+      "timestamp": "2025-06-15T02:31:01Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": "308 |         XCTAssertEqual(button.theme.primaryColor, theme.primaryColor)
+
+/Users/danieltibaquira/padtrack/Tests/UIComponentsTests/UIComponentsTests.swift:318:19: error: extra argument 'unit' in call
+316 |             range: 0.0...100.0,
+317 |             value: 50.0,
+318 |             unit: "%"
+    |                   `- error: extra argument 'unit' in call
+319 |         )
+320 |         
+error: fatalError",
+      "timestamp": "2025-06-15T02:31:02Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 11-inch",
+      "details": "SwiftDriverJobDiscovery normal arm64 Emitting module for UIComponents (in target 'UIComponents' from project 'DigitonePad')
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ MIDIRouter.swift /Users/danieltibaquira/padtrack/Sources/MIDIModule/MIDIRouter.swift (in target 'MIDIModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/MIDIModule/MIDIRouter.swift (in target 'MIDIModule' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-15T02:31:05Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 12.9-inch",
+      "details": "                                             as! UIViewController
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ MIDIRouter.swift /Users/danieltibaquira/padtrack/Sources/MIDIModule/MIDIRouter.swift (in target 'MIDIModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/MIDIModule/MIDIRouter.swift (in target 'MIDIModule' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-15T02:31:07Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Air",
+      "details": "
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ MIDIRouter.swift /Users/danieltibaquira/padtrack/Sources/MIDIModule/MIDIRouter.swift (in target 'MIDIModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/MIDIModule/MIDIRouter.swift (in target 'MIDIModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ UIComponents.swift /Users/danieltibaquira/padtrack/Sources/UIComponents/UIComponents.swift (in target 'UIComponents' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(4 failures)",
+      "timestamp": "2025-06-15T02:31:09Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "failed",
+      "message": "iOS build failed for iPad mini",
+      "details": "    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name UIComponents -Onone -enforce-exclusivity\=checked @/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/UIComponents.build/Objects-normal/arm64/UIComponents.SwiftFileList -DDEBUG -enable-upcoming-feature StrictConcurrency -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.2.sdk -target arm64-apple-ios16.0-simulator -g -module-cache-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Index.noindex/DataStore -enable-experimental-feature OpaqueTypeErasure -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator -F /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator18.2-22C146-07b28473f605e47e75261259d3ef3b5a.sdkstatcache -output-file-map /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/UIComponents.build/Objects-normal/arm64/UIComponents-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/UIComponents.build/Objects-normal/arm64/UIComponents.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/UIComponents.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/UIComponents.build/Objects-normal/arm64/UIComponents_const_extract_protocols.json -Xcc -iquote -Xcc /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/UIComponents.build/UIComponents-generated-files.hmap -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/UIComponents.build/UIComponents-own-target-headers.hmap -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/UIComponents.build/UIComponents-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/DigitonePad-fa58f9b9dc693cda2657e914cef342f3-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/UIComponents.build/UIComponents-project-headers.hmap -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/UIComponents.build/DerivedSources-normal/arm64 -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/UIComponents.build/DerivedSources/arm64 -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/UIComponents.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/UIComponents.build/Objects-normal/arm64/UIComponents-Swift.h -working-directory /Users/danieltibaquira/padtrack -experimental-emit-module-separately -disable-cmo
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ MIDIRouter.swift /Users/danieltibaquira/padtrack/Sources/MIDIModule/MIDIRouter.swift (in target 'MIDIModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/MIDIModule/MIDIRouter.swift (in target 'MIDIModule' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-15T02:31:11Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-06-15T02:31:12Z"
+    },
+    "build_warnings": {
+      "status": "failed",
+      "message": "11 build warnings detected",
+      "details": "Excessive warnings indicate potential issues",
+      "timestamp": "2025-06-15T02:31:12Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 2,
+    "failed_tests": 6,
+    "warnings": 0
+  }
+}

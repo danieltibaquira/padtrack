@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-06-15T03:53:59Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "memory_profiling",
+  "device_profiles": {
+    "ipad_pro__11_inch___4th_generation_": {
+      "device_name": "iPad Pro (11-inch) (4th generation)",
+      "status": "failed",
+      "error": "Build failed",
+      "timestamp": "2025-06-15T03:54:01Z"
+    },

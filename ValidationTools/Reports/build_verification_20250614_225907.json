@@ -1,0 +1,115 @@
+{
+  "timestamp": "2025-06-15T03:59:07Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": " 28 |         sessionOptions: AVAudioSession.CategoryOptions = {
+ 29 |             #if os(iOS)
+
+AVFAudio.AVAudioSession.Category:11:23: note: 'playAndRecord' has been explicitly marked unavailable here
+ 9 |     public static let record: AVAudioSession.Category
+10 |     @available(macOS, unavailable)
+11 |     public static let playAndRecord: AVAudioSession.Category
+   |                       `- note: 'playAndRecord' has been explicitly marked unavailable here
+12 |     @available(macOS, unavailable)
+13 |     public static let audioProcessing: AVAudioSession.Category",
+      "timestamp": "2025-06-15T03:59:09Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": " 29 |             #if os(iOS)
+
+AVFAudio.AVAudioSession.Category:11:23: note: 'playAndRecord' has been explicitly marked unavailable here
+ 9 |     public static let record: AVAudioSession.Category
+10 |     @available(macOS, unavailable)
+11 |     public static let playAndRecord: AVAudioSession.Category
+   |                       `- note: 'playAndRecord' has been explicitly marked unavailable here
+12 |     @available(macOS, unavailable)
+13 |     public static let audioProcessing: AVAudioSession.Category
+error: fatalError",
+      "timestamp": "2025-06-15T03:59:10Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 11-inch",
+      "details": "    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/Objects-normal/arm64/AppShell.abi.json /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator/AppShell.framework/Modules/AppShell.swiftmodule/arm64-apple-ios-simulator.abi.json
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/AppShell/AppShell.swift (in target 'AppShell' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ AppShell.swift /Users/danieltibaquira/padtrack/Sources/AppShell/AppShell.swift (in target 'AppShell' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-15T03:59:12Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 12.9-inch",
+      "details": "    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/tapi stubify -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.2.sdk -F/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator -L/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator/AudioEngine.framework/AudioEngine -o /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator/AudioEngine.framework/AudioEngine.tbd
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/AppShell/AppShell.swift (in target 'AppShell' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ AppShell.swift /Users/danieltibaquira/padtrack/Sources/AppShell/AppShell.swift (in target 'AppShell' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-15T03:59:13Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Air",
+      "details": "SwiftDriverJobDiscovery normal arm64 Emitting module for AppShell (in target 'AppShell' from project 'DigitonePad')
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/AppShell/AppShell.swift (in target 'AppShell' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ AppShell.swift /Users/danieltibaquira/padtrack/Sources/AppShell/AppShell.swift (in target 'AppShell' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-15T03:59:15Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "failed",
+      "message": "iOS build failed for iPad mini",
+      "details": "        ^
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/AppShell/AppShell.swift (in target 'AppShell' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ AppShell.swift /Users/danieltibaquira/padtrack/Sources/AppShell/AppShell.swift (in target 'AppShell' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-15T03:59:16Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-06-15T03:59:16Z"
+    },
+    "build_warnings": {
+      "status": "passed",
+      "message": "No build warnings found",
+      "details": "Clean build with no warnings",
+      "timestamp": "2025-06-15T03:59:16Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 2,
+    "failed_tests": 6,
+    "warnings": 0
+  }
+}

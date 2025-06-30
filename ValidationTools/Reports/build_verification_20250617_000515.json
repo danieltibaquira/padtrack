@@ -1,0 +1,114 @@
+{
+  "timestamp": "2025-06-17T05:05:15Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "492 |     }
+
+/Users/danieltibaquira/padtrack/Sources/UIComponents/KeyCombo/KeyComboViews.swift:497:18: error: cannot find type 'UIRectCorner' in scope
+495 | struct RoundedCorner: Shape {
+496 |     var radius: CGFloat = .infinity
+497 |     var corners: UIRectCorner = .allCorners
+    |                  `- error: cannot find type 'UIRectCorner' in scope
+498 | 
+499 |     func path(in rect: CGRect) -> Path {",
+      "timestamp": "2025-06-17T05:05:18Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": "
+/Users/danieltibaquira/padtrack/Sources/UIComponents/KeyCombo/KeyComboViews.swift:497:18: error: cannot find type 'UIRectCorner' in scope
+495 | struct RoundedCorner: Shape {
+496 |     var radius: CGFloat = .infinity
+497 |     var corners: UIRectCorner = .allCorners
+    |                  `- error: cannot find type 'UIRectCorner' in scope
+498 | 
+499 |     func path(in rect: CGRect) -> Path {
+
+error: fatalError",
+      "timestamp": "2025-06-17T05:05:20Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 11-inch",
+      "details": "note: Removed stale file '/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator/DigitonePad.app/_CodeSignature'
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ MainLayoutView.swift /Users/danieltibaquira/padtrack/Sources/DigitonePad/MainLayoutView.swift (in target 'DigitonePad' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/DigitonePad/MainLayoutView.swift (in target 'DigitonePad' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-17T05:05:25Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 12.9-inch",
+      "details": "    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios16.0-simulator -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.2.sdk -O0 -L/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -L/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator -F/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -F/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator -filelist /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/Objects-normal/arm64/AppShell.LinkFileList -install_name @rpath/AppShell.framework/AppShell -Xlinker -rpath -Xlinker @executable_path/Frameworks -dead_strip -Xlinker -object_path_lto -Xlinker /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/Objects-normal/arm64/AppShell_lto.o -Xlinker -export_dynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/Objects-normal/arm64/AppShell.swiftmodule -framework DataLayer -framework AudioEngine -framework SequencerModule -framework VoiceModule -framework FilterModule -framework FXModule -framework MIDIModule -framework UIComponents -framework MachineProtocols -compatibility_version 1 -current_version 1 -Xlinker -dependency_info -Xlinker /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/AppShell.build/Objects-normal/arm64/AppShell_dependency_info.dat -o /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator/AppShell.framework/AppShell
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ MainLayoutView.swift /Users/danieltibaquira/padtrack/Sources/DigitonePad/MainLayoutView.swift (in target 'DigitonePad' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/DigitonePad/MainLayoutView.swift (in target 'DigitonePad' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-17T05:05:27Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Air",
+      "details": "SwiftDriverJobDiscovery normal arm64 Emitting module for DigitonePad (in target 'DigitonePad' from project 'DigitonePad')
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ MainLayoutView.swift /Users/danieltibaquira/padtrack/Sources/DigitonePad/MainLayoutView.swift (in target 'DigitonePad' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/DigitonePad/MainLayoutView.swift (in target 'DigitonePad' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-17T05:05:29Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "failed",
+      "message": "iOS build failed for iPad mini",
+      "details": "SwiftDriverJobDiscovery normal arm64 Emitting module for DigitonePad (in target 'DigitonePad' from project 'DigitonePad')
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/DigitonePad/MainLayoutView.swift (in target 'DigitonePad' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ MainLayoutView.swift /Users/danieltibaquira/padtrack/Sources/DigitonePad/MainLayoutView.swift (in target 'DigitonePad' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-17T05:05:31Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-06-17T05:05:31Z"
+    },
+    "build_warnings": {
+      "status": "failed",
+      "message": "62 build warnings detected",
+      "details": "Excessive warnings indicate potential issues",
+      "timestamp": "2025-06-17T05:05:31Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 1,
+    "failed_tests": 7,
+    "warnings": 0
+  }
+}

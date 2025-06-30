@@ -1,0 +1,79 @@
+{
+  "timestamp": "2025-06-17T04:48:18Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "343 |                     Button("Cancel") {
+344 |                         presentationMode.wrappedValue.dismiss()
+
+SwiftUI.ToolbarItemPlacement:50:23: note: 'navigationBarTrailing' has been explicitly marked unavailable here
+48 |     @available(watchOS, unavailable)
+49 |     @available(visionOS, introduced: 1.0, deprecated: 100000.0, message: "use topBarTrailing instead")
+50 |     public static let navigationBarTrailing: ToolbarItemPlacement
+   |                       `- note: 'navigationBarTrailing' has been explicitly marked unavailable here
+51 |     @available(tvOS 18.0, watchOS 10.0, *)
+52 |     @available(macOS, unavailable)",
+      "timestamp": "2025-06-17T04:48:21Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": "/Users/danieltibaquira/padtrack/Tests/DataLayerTests/DataLayerTests.swift:6:8: error: no such module 'TestUtilities'
+  4 | 
+  5 | // Import test utilities and mocks
+  6 | import TestUtilities
+    |        `- error: no such module 'TestUtilities'
+  7 | import MockObjects
+  8 | 
+[10/160] Emitting module VoiceModuleTests
+[11/160] Emitting module UIComponentsTests
+error: fatalError",
+      "timestamp": "2025-06-17T04:48:24Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Pro 11-inch",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-17T04:48:27Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Pro 12.9-inch",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-17T04:48:28Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Air",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-17T04:48:30Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "passed",
+      "message": "iOS build successful for iPad mini",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-17T04:48:32Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-06-17T04:48:32Z"
+    },
+    "build_warnings": {
+      "status": "passed",
+      "message": "No build warnings found",
+      "details": "Clean build with no warnings",
+      "timestamp": "2025-06-17T04:48:32Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 6,
+    "failed_tests": 2,
+    "warnings": 0
+  }
+}

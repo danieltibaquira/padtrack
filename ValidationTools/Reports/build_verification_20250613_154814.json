@@ -1,0 +1,101 @@
+{
+  "timestamp": "2025-06-13T20:48:14Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "passed",
+      "message": "Swift Package compiled successfully",
+      "details": "    /Users/danieltibaquira/padtrack/Tests/DataLayerTests/EntityValidationTests.swift.disabled
+[0/1] Planning build
+Building for debugging...
+[0/1] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.76s)",
+      "timestamp": "2025-06-13T20:48:16Z"
+    },
+    "swift_package_tests": {
+      "status": "passed",
+      "message": "All Swift Package tests passed",
+      "details": "Executed 149 tests successfully",
+      "timestamp": "2025-06-13T20:48:22Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 11-inch",
+      "details": "		{ platform:iOS Simulator, id:CF54741A-EECC-4767-82B8-623F003E99CF, OS:18.2, name:iPhone 16 Pro }
+		{ platform:iOS Simulator, id:CF54741A-EECC-4767-82B8-623F003E99CF, OS:18.2, name:iPhone 16 Pro }
+		{ platform:iOS Simulator, id:D6F6DDFA-2186-4DD4-82A6-3BE071FB3F6F, OS:18.2, name:iPhone 16 Pro Max }
+		{ platform:iOS Simulator, id:D6F6DDFA-2186-4DD4-82A6-3BE071FB3F6F, OS:18.2, name:iPhone 16 Pro Max }
+		{ platform:iOS Simulator, id:633B743D-B5ED-43E0-81DB-8C6882238F55, OS:17.2, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:633B743D-B5ED-43E0-81DB-8C6882238F55, OS:17.2, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:BAB41264-0FE2-4430-987A-FC70F15E7DF7, OS:17.5, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:BAB41264-0FE2-4430-987A-FC70F15E7DF7, OS:17.5, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:778D9919-DF3E-496D-BF85-DB42BD9C7393, OS:18.2, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:778D9919-DF3E-496D-BF85-DB42BD9C7393, OS:18.2, name:iPhone SE (3rd generation) }",
+      "timestamp": "2025-06-13T20:48:54Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 12.9-inch",
+      "details": "		{ platform:iOS Simulator, id:CF54741A-EECC-4767-82B8-623F003E99CF, OS:18.2, name:iPhone 16 Pro }
+		{ platform:iOS Simulator, id:CF54741A-EECC-4767-82B8-623F003E99CF, OS:18.2, name:iPhone 16 Pro }
+		{ platform:iOS Simulator, id:D6F6DDFA-2186-4DD4-82A6-3BE071FB3F6F, OS:18.2, name:iPhone 16 Pro Max }
+		{ platform:iOS Simulator, id:D6F6DDFA-2186-4DD4-82A6-3BE071FB3F6F, OS:18.2, name:iPhone 16 Pro Max }
+		{ platform:iOS Simulator, id:633B743D-B5ED-43E0-81DB-8C6882238F55, OS:17.2, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:633B743D-B5ED-43E0-81DB-8C6882238F55, OS:17.2, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:BAB41264-0FE2-4430-987A-FC70F15E7DF7, OS:17.5, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:BAB41264-0FE2-4430-987A-FC70F15E7DF7, OS:17.5, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:778D9919-DF3E-496D-BF85-DB42BD9C7393, OS:18.2, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:778D9919-DF3E-496D-BF85-DB42BD9C7393, OS:18.2, name:iPhone SE (3rd generation) }",
+      "timestamp": "2025-06-13T20:49:26Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Air",
+      "details": "		{ platform:iOS Simulator, id:CF54741A-EECC-4767-82B8-623F003E99CF, OS:18.2, name:iPhone 16 Pro }
+		{ platform:iOS Simulator, id:CF54741A-EECC-4767-82B8-623F003E99CF, OS:18.2, name:iPhone 16 Pro }
+		{ platform:iOS Simulator, id:D6F6DDFA-2186-4DD4-82A6-3BE071FB3F6F, OS:18.2, name:iPhone 16 Pro Max }
+		{ platform:iOS Simulator, id:D6F6DDFA-2186-4DD4-82A6-3BE071FB3F6F, OS:18.2, name:iPhone 16 Pro Max }
+		{ platform:iOS Simulator, id:633B743D-B5ED-43E0-81DB-8C6882238F55, OS:17.2, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:633B743D-B5ED-43E0-81DB-8C6882238F55, OS:17.2, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:BAB41264-0FE2-4430-987A-FC70F15E7DF7, OS:17.5, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:BAB41264-0FE2-4430-987A-FC70F15E7DF7, OS:17.5, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:778D9919-DF3E-496D-BF85-DB42BD9C7393, OS:18.2, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:778D9919-DF3E-496D-BF85-DB42BD9C7393, OS:18.2, name:iPhone SE (3rd generation) }",
+      "timestamp": "2025-06-13T20:49:59Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "failed",
+      "message": "iOS build failed for iPad mini",
+      "details": "		{ platform:iOS Simulator, id:CF54741A-EECC-4767-82B8-623F003E99CF, OS:18.2, name:iPhone 16 Pro }
+		{ platform:iOS Simulator, id:CF54741A-EECC-4767-82B8-623F003E99CF, OS:18.2, name:iPhone 16 Pro }
+		{ platform:iOS Simulator, id:D6F6DDFA-2186-4DD4-82A6-3BE071FB3F6F, OS:18.2, name:iPhone 16 Pro Max }
+		{ platform:iOS Simulator, id:D6F6DDFA-2186-4DD4-82A6-3BE071FB3F6F, OS:18.2, name:iPhone 16 Pro Max }
+		{ platform:iOS Simulator, id:633B743D-B5ED-43E0-81DB-8C6882238F55, OS:17.2, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:633B743D-B5ED-43E0-81DB-8C6882238F55, OS:17.2, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:BAB41264-0FE2-4430-987A-FC70F15E7DF7, OS:17.5, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:BAB41264-0FE2-4430-987A-FC70F15E7DF7, OS:17.5, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:778D9919-DF3E-496D-BF85-DB42BD9C7393, OS:18.2, name:iPhone SE (3rd generation) }
+		{ platform:iOS Simulator, id:778D9919-DF3E-496D-BF85-DB42BD9C7393, OS:18.2, name:iPhone SE (3rd generation) }",
+      "timestamp": "2025-06-13T20:50:31Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-06-13T20:50:31Z"
+    },
+    "build_warnings": {
+      "status": "warning",
+      "message": "1 build warnings detected",
+      "details": "Warnings should be reviewed and addressed",
+      "timestamp": "2025-06-13T20:50:31Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 4,
+    "failed_tests": 4,
+    "warnings": 1
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "timestamp": "2025-06-15T03:03:53Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "188 |             }
+
+/Users/danieltibaquira/padtrack/Sources/MIDIModule/MIDIInteractor.swift:195:17: error: sending 'self' risks causing data races
+193 |         return try await withCheckedThrowingContinuation { continuation in
+194 |             DispatchQueue.main.async {
+195 |                 self.sendMIDIMessage(message)
+    |                 |- error: sending 'self' risks causing data races
+    |                 `- note: task-isolated 'self' is captured by a main actor-isolated closure. main actor-isolated uses in closure may race against later nonisolated uses
+196 |                 continuation.resume()
+197 |             }",
+      "timestamp": "2025-06-15T03:03:56Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": "
+/Users/danieltibaquira/padtrack/Sources/MIDIModule/MIDIInteractor.swift:195:17: error: sending 'self' risks causing data races
+193 |         return try await withCheckedThrowingContinuation { continuation in
+194 |             DispatchQueue.main.async {
+195 |                 self.sendMIDIMessage(message)
+    |                 |- error: sending 'self' risks causing data races
+    |                 `- note: task-isolated 'self' is captured by a main actor-isolated closure. main actor-isolated uses in closure may race against later nonisolated uses
+196 |                 continuation.resume()
+197 |             }
+error: fatalError",
+      "timestamp": "2025-06-15T03:03:57Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Pro 11-inch",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-15T03:03:59Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Pro 12.9-inch",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-15T03:04:01Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Air",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-15T03:04:03Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "passed",
+      "message": "iOS build successful for iPad mini",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-15T03:04:04Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-06-15T03:04:05Z"
+    },
+    "build_warnings": {
+      "status": "warning",
+      "message": "1 build warnings detected",
+      "details": "Warnings should be reviewed and addressed",
+      "timestamp": "2025-06-15T03:04:05Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 6,
+    "failed_tests": 2,
+    "warnings": 1
+  }
+}

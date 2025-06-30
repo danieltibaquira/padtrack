@@ -1,31 +1,41 @@
 import XCTest
 @testable import MachineProtocols
+@testable import AudioEngine
 
 final class MachineProtocolsTests: XCTestCase {
 
     // MARK: - AudioBuffer Tests
 
     func testAudioBufferCreation() throws {
-        let buffer = AudioBuffer(
-            sampleRate: 44100,
-            channelCount: 2,
+        let data = UnsafeMutablePointer<Float>.allocate(capacity: 2048)
+        defer { data.deallocate() }
+
+        let buffer = AudioEngine.AudioBuffer(
+            data: data,
             frameCount: 1024,
-            samples: Array(repeating: 0.0, count: 2048)
+            channelCount: 2,
+            sampleRate: 44100
         )
 
         XCTAssertEqual(buffer.sampleRate, 44100)
         XCTAssertEqual(buffer.channelCount, 2)
         XCTAssertEqual(buffer.frameCount, 1024)
-        XCTAssertEqual(buffer.samples.count, 2048)
     }
 
     func testAudioBufferConvenienceInit() throws {
-        let buffer = AudioBuffer(sampleRate: 48000, channelCount: 1, frameCount: 512)
+        let data = UnsafeMutablePointer<Float>.allocate(capacity: 512)
+        defer { data.deallocate() }
+
+        let buffer = AudioEngine.AudioBuffer(
+            data: data,
+            frameCount: 512,
+            channelCount: 1,
+            sampleRate: 48000
+        )
 
         XCTAssertEqual(buffer.sampleRate, 48000)
         XCTAssertEqual(buffer.channelCount, 1)
         XCTAssertEqual(buffer.frameCount, 512)
-        XCTAssertEqual(buffer.samples.count, 512)
         XCTAssertTrue(buffer.samples.allSatisfy { $0 == 0.0 })
     }
 
@@ -414,7 +424,15 @@ final class MachineProtocolsTests: XCTestCase {
         try fxProcessor.initialize(configuration: config)
         try fxProcessor.start()
 
-        let inputBuffer = AudioBuffer(sampleRate: 44100, channelCount: 2, frameCount: 512)
+        let data = UnsafeMutablePointer<Float>.allocate(capacity: 1024)
+        defer { data.deallocate() }
+
+        let inputBuffer = AudioEngine.AudioBuffer(
+            data: data,
+            frameCount: 512,
+            channelCount: 2,
+            sampleRate: 44100
+        )
         let outputBuffer = fxProcessor.process(input: inputBuffer)
 
         XCTAssertEqual(outputBuffer.sampleRate, inputBuffer.sampleRate)
@@ -430,11 +448,15 @@ final class MachineProtocolsTests: XCTestCase {
         try fxProcessor.initialize(configuration: config)
         try fxProcessor.start()
 
-        let inputBuffer = AudioBuffer(
-            sampleRate: 44100,
-            channelCount: 2,
+        let data2 = UnsafeMutablePointer<Float>.allocate(capacity: 1024)
+        defer { data2.deallocate() }
+        data2.initialize(repeating: 0.5, count: 1024)
+
+        let inputBuffer = AudioEngine.AudioBuffer(
+            data: data2,
             frameCount: 512,
-            samples: Array(repeating: 0.5, count: 1024)
+            channelCount: 2,
+            sampleRate: 44100
         )
 
         // Test with bypass disabled
@@ -549,7 +571,15 @@ final class MachineProtocolsTests: XCTestCase {
         try fxProcessor.initialize(configuration: config)
         try fxProcessor.start()
 
-        let inputBuffer = AudioBuffer(sampleRate: 44100, channelCount: 2, frameCount: 512)
+        let data3 = UnsafeMutablePointer<Float>.allocate(capacity: 1024)
+        defer { data3.deallocate() }
+
+        let inputBuffer = AudioEngine.AudioBuffer(
+            data: data3,
+            frameCount: 512,
+            channelCount: 2,
+            sampleRate: 44100
+        )
 
         // Measure audio processing performance
         measure {

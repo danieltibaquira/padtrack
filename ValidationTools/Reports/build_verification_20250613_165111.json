@@ -1,0 +1,79 @@
+{
+  "timestamp": "2025-06-13T21:51:11Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "296 |     }
+297 | }
+
+/Users/danieltibaquira/padtrack/Sources/UIComponents/ContentView.swift:295:9: error: referencing subscript 'subscript(dynamicMember:)' requires wrapper 'ObservedObject<HapticFeedbackManager>.Wrapper'
+293 |     
+294 |     public func triggerHapticFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle) {
+295 |         hapticManager.trigger(style)
+    |         `- error: referencing subscript 'subscript(dynamicMember:)' requires wrapper 'ObservedObject<HapticFeedbackManager>.Wrapper'
+296 |     }
+297 | }",
+      "timestamp": "2025-06-13T21:51:15Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": "116 |     private init() {
+
+/Users/danieltibaquira/padtrack/Sources/UIComponents/UIComponents.swift:123:34: error: cannot find type 'UIImpactFeedbackGenerator' in scope
+121 |     }
+122 |     
+123 |     public func trigger(_ style: UIImpactFeedbackGenerator.FeedbackStyle) {
+    |                                  `- error: cannot find type 'UIImpactFeedbackGenerator' in scope
+124 |         switch style {
+125 |         case .light:
+error: fatalError",
+      "timestamp": "2025-06-13T21:51:17Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Pro 11-inch",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-13T21:51:22Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Pro 12.9-inch",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-13T21:51:24Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "passed",
+      "message": "iOS build successful for iPad Air",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-13T21:51:27Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "passed",
+      "message": "iOS build successful for iPad mini",
+      "details": "Build completed without errors",
+      "timestamp": "2025-06-13T21:51:30Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-06-13T21:51:30Z"
+    },
+    "build_warnings": {
+      "status": "warning",
+      "message": "1 build warnings detected",
+      "details": "Warnings should be reviewed and addressed",
+      "timestamp": "2025-06-13T21:51:30Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 6,
+    "failed_tests": 2,
+    "warnings": 1
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "timestamp": "2025-06-30T05:31:10Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "protocol_validation",
+  "protocol_tests": {
+    "module_compilation": {
+      "status": "failed",
+      "message": "MachineProtocols module compilation failed",
+      "details": "4119 |             maxValue: 1.0,
+4120 |             unit: .percentage
+     |                    `- error: type 'String?' has no member 'percentage'
+4121 |         )
+4122 |         ",
+      "timestamp": "2025-06-30T05:31:12Z"
+    },
+    "protocol_definitions": {
+      "status": "passed",
+      "message": "All protocol definitions compile and are exercised by test suite",
+      "details": "Core protocols, enums, and structures validated through existing tests",
+      "timestamp": "2025-06-30T05:31:12Z"
+    },

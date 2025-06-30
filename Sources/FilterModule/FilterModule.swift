@@ -4,13 +4,14 @@
 import Foundation
 import MachineProtocols
 import AudioEngine
+import AudioEngine
 
 /// Base filter machine implementation
 public class FilterMachine: FilterMachineProtocol, SerializableMachine, @unchecked Sendable {
     public let id = UUID()
     public var name: String
     public var isEnabled: Bool = true
-    public var filterType: FilterType = .lowpass
+    public var filterType: MachineProtocols.FilterType = .lowpass
     public var slope: FilterSlope = .slope24dB
     public var quality: FilterQuality = .medium
     public var isActive: Bool = true
@@ -22,7 +23,7 @@ public class FilterMachine: FilterMachineProtocol, SerializableMachine, @uncheck
     public var lastError: MachineError?
     public var errorHandler: ((MachineError) -> Void)?
     public var performanceMetrics: MachinePerformanceMetrics = MachinePerformanceMetrics()
-    public var parameters: ParameterManager = ParameterManager()
+    public var parameters: ObservableParameterManager = ObservableParameterManager()
 
     public var filterState: [String: Float] {
         return [
@@ -39,7 +40,7 @@ public class FilterMachine: FilterMachineProtocol, SerializableMachine, @uncheck
         setupFilterParameters()
     }
     
-    public func process(input: AudioBuffer) -> AudioBuffer {
+    public func process(input: MachineProtocols.AudioBuffer) -> MachineProtocols.AudioBuffer {
         lastActiveTimestamp = Date()
         // TODO: Implement filter processing
         return input

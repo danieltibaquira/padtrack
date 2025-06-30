@@ -1,0 +1,114 @@
+{
+  "timestamp": "2025-06-17T11:04:37Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "284 |     public var velocity: Float = 0.8
+
+/Users/danieltibaquira/padtrack/Tests/MockObjects/MockSequencer.swift:113:26: error: 'nil' requires a contextual type
+111 |         patterns.removeAll()
+112 |         eventHandlers.removeAll()
+113 |         currentPattern = nil
+    |                          `- error: 'nil' requires a contextual type
+114 |         currentStep = 0
+115 |     }",
+      "timestamp": "2025-06-17T11:04:41Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": "
+/Users/danieltibaquira/padtrack/Tests/MockObjects/MockDataLayer.swift:40:34: error: type 'DataLayerError' has no member 'initializationError'
+ 38 |     public func initialize() throws {
+ 39 |         if shouldFailOperations {
+ 40 |             throw DataLayerError.initializationError("Mock initialization failure")
+    |                                  `- error: type 'DataLayerError' has no member 'initializationError'
+ 41 |         }
+ 42 |         
+
+error: fatalError",
+      "timestamp": "2025-06-17T11:04:44Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 11-inch",
+      "details": "** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ FMDrumVoice.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoice.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoice.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ FMDrumVoiceMachine.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoiceMachine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoiceMachine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(5 failures)",
+      "timestamp": "2025-06-17T11:04:46Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 12.9-inch",
+      "details": "    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend -c /Users/danieltibaquira/padtrack/Sources/VoiceModule/VoiceManager.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/VoiceModule.swift -primary-file /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMSynthesis.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMSynthesisEngine.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMVoiceMachine.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoiceMachine.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumSynthesisEngine.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoice.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/DrumComponents.swift -emit-dependencies-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/VoiceModule.build/Objects-normal/arm64/FMSynthesis.d -emit-const-values-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/VoiceModule.build/Objects-normal/arm64/FMSynthesis.swiftconstvalues -emit-reference-dependencies-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/VoiceModule.build/Objects-normal/arm64/FMSynthesis.swiftdeps -serialize-diagnostics-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/VoiceModule.build/Objects-normal/arm64/FMSynthesis.dia -target arm64-apple-ios16.0-simulator -Xllvm -aarch64-use-tbi -enable-objc-interop -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.2.sdk -I /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator -F /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator -no-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=4 -module-cache-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -swift-version 5 -enforce-exclusivity\=checked -Onone -D DEBUG -serialize-debugging-options -const-gather-protocols-file /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/VoiceModule.build/Objects-normal/arm64/VoiceModule_const_extract_protocols.json -enable-experimental-feature DebugDescriptionMacro -enable-experimental-feature OpaqueTypeErasure -enable-upcoming-feature StrictConcurrency -enable-bare-slash-regex -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/danieltibaquira/padtrack -resource-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift -enable-anonymous-context-mangled-names -file-compilation-dir /Users/danieltibaquira/padtrack -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -ivfsstatcache -Xcc /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator18.2-22C146-07b28473f605e47e75261259d3ef3b5a.sdkstatcache -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/VoiceModule.build/swift-overrides.hmap -Xcc -iquote -Xcc /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/VoiceModule.build/VoiceModule-generated-files.hmap -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/VoiceModule.build/VoiceModule-own-target-headers.hmap -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/VoiceModule.build/VoiceModule-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/DigitonePad-fa58f9b9dc693cda2657e914cef342f3-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/VoiceModule.build/VoiceModule-project-headers.hmap -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/VoiceModule.build/DerivedSources-normal/arm64 -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/VoiceModule.build/DerivedSources/arm64 -Xcc -I/Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/VoiceModule.build/DerivedSources -Xcc -DDEBUG\=1 -module-name VoiceModule -frontend-parseable-output -disable-clang-spi -target-sdk-version 18.2 -target-sdk-name iphonesimulator18.2 -external-plugin-path /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server -external-plugin-path /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/local/lib/swift/host/plugins\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/local/lib/swift/host/plugins -o /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Build/Intermediates.noindex/DigitonePad.build/Debug-iphonesimulator/VoiceModule.build/Objects-normal/arm64/FMSynthesis.o -index-unit-output-path /DigitonePad.build/Debug-iphonesimulator/VoiceModule.build/Objects-normal/arm64/FMSynthesis.o -index-store-path /Users/danieltibaquira/Library/Developer/Xcode/DerivedData/DigitonePad-cedlhfeovofbepdqwxveduaseyta/Index.noindex/DataStore -index-system-modules
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ FMDrumVoiceMachine.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoiceMachine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoiceMachine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(3 failures)",
+      "timestamp": "2025-06-17T11:04:48Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Air",
+      "details": "** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ FMDrumVoice.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoice.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoice.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ FMDrumVoiceMachine.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoiceMachine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoiceMachine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(5 failures)",
+      "timestamp": "2025-06-17T11:04:51Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "failed",
+      "message": "iOS build failed for iPad mini",
+      "details": "** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ FMDrumVoice.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoice.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoice.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 Compiling\ FMDrumVoiceMachine.swift /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoiceMachine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	SwiftCompile normal arm64 /Users/danieltibaquira/padtrack/Sources/VoiceModule/FMDrumVoiceMachine.swift (in target 'VoiceModule' from project 'DigitonePad')
+	Building project DigitonePad with scheme DigitonePad
+(5 failures)",
+      "timestamp": "2025-06-17T11:04:53Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-06-17T11:04:53Z"
+    },
+    "build_warnings": {
+      "status": "failed",
+      "message": "30 build warnings detected",
+      "details": "Excessive warnings indicate potential issues",
+      "timestamp": "2025-06-17T11:04:53Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 1,
+    "failed_tests": 7,
+    "warnings": 0
+  }
+}

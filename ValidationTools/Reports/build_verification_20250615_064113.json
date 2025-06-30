@@ -1,0 +1,20 @@
+{
+  "timestamp": "2025-06-15T11:41:13Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "6409 |             let hasConfiguration = _configuration != nil
+6410 |             let hasBufferPool = bufferPool != nil
+
+/Users/danieltibaquira/padtrack/Sources/AudioEngine/AudioEngine.swift:6430:11: warning: 'catch' block is unreachable because no errors are thrown in 'do' block
+6428 |                 metrics: metrics
+6429 |             )
+6430 |         } catch {
+     |           `- warning: 'catch' block is unreachable because no errors are thrown in 'do' block
+6431 |             let executionTime = CFAbsoluteTimeGetCurrent() - startTime
+6432 |             return AudioTestResult(",
+      "timestamp": "2025-06-15T11:41:18Z"
+    },

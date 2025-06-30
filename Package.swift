@@ -58,11 +58,16 @@ let package = Package(
         // Shared protocols to prevent circular dependencies
         .library(
             name: "MachineProtocols",
-            targets: ["MachineProtocols"])
+            targets: ["MachineProtocols"]),
+
+        // Main DigitonePad application
+        .executable(
+            name: "DigitonePad",
+            targets: ["DigitonePad"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        // Add external dependencies here as needed
+        .package(url: "https://github.com/nalexn/ViewInspector", from: "0.9.0")
     ],
     targets: [
         // MARK: - Core Targets
@@ -118,7 +123,7 @@ let package = Package(
             name: "AppShell",
             dependencies: [
                 "DataLayer",
-                "AudioEngine", 
+                "AudioEngine",
                 "SequencerModule",
                 "VoiceModule",
                 "FilterModule",
@@ -127,47 +132,89 @@ let package = Package(
                 "UIComponents",
                 "MachineProtocols"
             ]),
+
+        // Main DigitonePad application target
+        .executableTarget(
+            name: "DigitonePad",
+            dependencies: [
+                // "AppShell",  // Temporarily commented out due to build issues
+                "DataLayer",
+                "FXModule",
+                "UIComponents",
+                "MachineProtocols"
+            ]),
         
         // MARK: - Test Targets
-        
+
+        // Test utilities and mock objects
+        .target(
+            name: "TestUtilities",
+            dependencies: ["MachineProtocols", "DataLayer", "AudioEngine"],
+            path: "Tests",
+            sources: ["TestUtilities.swift", "MockObjects/"]),
+
         .testTarget(
             name: "MachineProtocolsTests",
-            dependencies: ["MachineProtocols"]),
-        
+            dependencies: ["MachineProtocols", "TestUtilities"]),
+
         .testTarget(
             name: "DataLayerTests",
-            dependencies: ["DataLayer"]),
-        
+            dependencies: ["DataLayer", "TestUtilities"]),
+
         .testTarget(
             name: "AudioEngineTests",
-            dependencies: ["AudioEngine"]),
-        
+            dependencies: ["AudioEngine", "SequencerModule", "TestUtilities"]),
+
         .testTarget(
             name: "SequencerModuleTests",
-            dependencies: ["SequencerModule"]),
-        
+            dependencies: ["SequencerModule", "TestUtilities"]),
+
         .testTarget(
             name: "VoiceModuleTests",
-            dependencies: ["VoiceModule"]),
-        
+            dependencies: ["VoiceModule", "TestUtilities"]),
+
         .testTarget(
             name: "FilterModuleTests",
-            dependencies: ["FilterModule"]),
-        
+            dependencies: ["FilterModule", "TestUtilities"]),
+
         .testTarget(
             name: "FXModuleTests",
-            dependencies: ["FXModule"]),
-        
+            dependencies: ["FXModule", "TestUtilities"]),
+
         .testTarget(
             name: "MIDIModuleTests",
-            dependencies: ["MIDIModule"]),
-        
+            dependencies: ["MIDIModule", "TestUtilities"]),
+
         .testTarget(
             name: "UIComponentsTests",
-            dependencies: ["UIComponents"]),
-        
+            dependencies: ["UIComponents", "TestUtilities"]),
+
         .testTarget(
             name: "AppShellTests",
-            dependencies: ["AppShell"])
-    ]
+            dependencies: ["AppShell", "TestUtilities"]),
+
+        .testTarget(
+            name: "DigitonePadTests",
+            dependencies: [
+                "DigitonePad",
+                "DataLayer",
+                "FXModule",
+                "UIComponents",
+                "TestUtilities",
+                .product(name: "ViewInspector", package: "ViewInspector")
+            ]),
+
+        // Interactor tests
+        .testTarget(
+            name: "InteractorTests",
+            dependencies: ["TestUtilities"],
+            path: "Tests/InteractorTests"),
+
+        // Code coverage tests
+        .testTarget(
+            name: "CodeCoverageTests",
+            dependencies: ["TestUtilities"],
+            path: "Tests/CodeCoverageTests")
+    ],
+    swiftLanguageModes: [.v5, .v6]
 ) 

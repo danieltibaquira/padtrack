@@ -4,6 +4,7 @@
 import Foundation
 import MachineProtocols
 import AudioEngine
+import AudioEngine
 
 /// Base voice machine implementation
 public class VoiceMachine: VoiceMachineProtocol, SerializableMachine, @unchecked Sendable {
@@ -21,7 +22,7 @@ public class VoiceMachine: VoiceMachineProtocol, SerializableMachine, @unchecked
     public var lastError: MachineError?
     public var errorHandler: ((MachineError) -> Void)?
     public var performanceMetrics: MachinePerformanceMetrics = MachinePerformanceMetrics()
-    public var parameters: ParameterManager = ParameterManager()
+    public var parameters: ObservableParameterManager = ObservableParameterManager()
 
     // Voice-specific properties
     private var _voiceStates: [VoiceState] = []
@@ -34,7 +35,7 @@ public class VoiceMachine: VoiceMachineProtocol, SerializableMachine, @unchecked
         setupVoiceParameters()
     }
     
-    public func process(input: AudioBuffer) -> AudioBuffer {
+    public func process(input: MachineProtocols.AudioBuffer) -> MachineProtocols.AudioBuffer {
         lastActiveTimestamp = Date()
         // TODO: Implement audio processing
         return input

@@ -1,0 +1,35 @@
+{
+  "timestamp": "2025-06-15T04:50:13Z",
+  "project_root": "/Users/danieltibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "2128 |         }
+2129 | 
+
+/Users/danieltibaquira/padtrack/Sources/AudioEngine/AudioEngine.swift:2159:94: error: extra argument 'error' in call
+2157 |             // Perform conversion
+2158 |             var error: NSError?
+2159 |             let status = converter.convert(to: outputPCMBuffer, from: inputPCMBuffer, error: &error)
+     |                                                                                              `- error: extra argument 'error' in call
+2160 | 
+2161 |             if status == .error {",
+      "timestamp": "2025-06-15T04:50:18Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": "2129 | 
+
+/Users/danieltibaquira/padtrack/Sources/AudioEngine/AudioEngine.swift:2159:94: error: extra argument 'error' in call
+2157 |             // Perform conversion
+2158 |             var error: NSError?
+2159 |             let status = converter.convert(to: outputPCMBuffer, from: inputPCMBuffer, error: &error)
+     |                                                                                              `- error: extra argument 'error' in call
+2160 | 
+2161 |             if status == .error {
+error: fatalError",
+      "timestamp": "2025-06-15T04:50:21Z"
+    },
