@@ -8,7 +8,7 @@ import MachineProtocols
 
 /// Presenter that handles MIDI presentation logic and mediates between View and Interactor
 @MainActor
-public final class MIDIPresenter: @preconcurrency MIDIPresenterProtocol, @preconcurrency MIDIInteractorOutputProtocol {
+public final class MIDIPresenter: MIDIPresenterProtocol, MIDIInteractorOutputProtocol {
     public weak var view: MIDIViewProtocol?
     public var interactor: MIDIInteractorProtocol?
     public var router: MIDIRouterProtocol?

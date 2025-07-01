@@ -10,7 +10,6 @@ import MachineProtocols
 // MARK: - VIPER Protocols
 
 /// View protocol for MIDI UI components
-@preconcurrency
 public protocol MIDIViewProtocol: AnyObject {
     var presenter: MIDIPresenterProtocol? { get set }
     

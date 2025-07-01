@@ -9,7 +9,7 @@ import MachineProtocols
 
 /// SwiftUI ViewModel that bridges to the VIPER architecture
 @MainActor
-public class MIDIViewModel: ObservableObject, @preconcurrency MIDIViewProtocol {
+public class MIDIViewModel: ObservableObject, MIDIViewProtocol {
     
     // MARK: - Published Properties
     

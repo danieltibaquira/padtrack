@@ -157,7 +157,7 @@ public class Trig: NSManagedObject {
         // Decode existing pLocks if any
         if let pLocksData = pLocks {
             do {
-                if let existingLocks = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(pLocksData) as? [String: Any] {
+                if let existingLocks = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSDictionary.self, from: pLocksData) as? [String: Any] {
                     locks = existingLocks
                 }
             } catch {
@@ -183,7 +183,7 @@ public class Trig: NSManagedObject {
         guard let pLocksData = pLocks else { return nil }
 
         do {
-            if let locks = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(pLocksData) as? [String: Any] {
+            if let locks = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSDictionary.self, from: pLocksData) as? [String: Any] {
                 return locks[parameter]
             }
         } catch {
@@ -199,7 +199,7 @@ public class Trig: NSManagedObject {
         guard let pLocksData = pLocks else { return }
 
         do {
-            if var locks = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(pLocksData) as? [String: Any] {
+            if var locks = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSDictionary.self, from: pLocksData) as? [String: Any] {
                 locks.removeValue(forKey: parameter)
 
                 if locks.isEmpty {
