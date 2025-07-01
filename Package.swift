@@ -25,6 +25,11 @@ let package = Package(
             name: "DataLayer",
             targets: ["DataLayer"]),
         
+        // Data models (Core Data)
+        .library(
+            name: "DataModel",
+            targets: ["DataModel"]),
+        
         // Pattern sequencing
         .library(
             name: "SequencerModule",
@@ -77,11 +82,16 @@ let package = Package(
             name: "MachineProtocols",
             dependencies: []),
         
+        // Data models (Core Data)
+        .target(
+            name: "DataModel",
+            dependencies: ["MachineProtocols"],
+            exclude: ["Documentation.docc/"]),
+        
         // Data persistence layer
         .target(
             name: "DataLayer",
-            dependencies: ["MachineProtocols"],
-            resources: [.process("Resources")],
+            dependencies: ["MachineProtocols", "DataModel"],
             exclude: ["Documentation.docc/"]),
         
         // Core audio processing engine
@@ -93,7 +103,7 @@ let package = Package(
         // Pattern sequencing module
         .target(
             name: "SequencerModule", 
-            dependencies: ["MachineProtocols", "DataLayer"]),
+            dependencies: ["MachineProtocols", "DataLayer", "DataModel"]),
         
         // Sound synthesis module
         .target(
@@ -126,6 +136,7 @@ let package = Package(
             name: "AppShell",
             dependencies: [
                 "DataLayer",
+                "DataModel",
                 "AudioEngine",
                 "SequencerModule",
                 "VoiceModule",
@@ -140,8 +151,9 @@ let package = Package(
         .executableTarget(
             name: "DigitonePad",
             dependencies: [
-                // "AppShell",  // Temporarily commented out due to build issues
+                "AppShell",
                 "DataLayer",
+                "DataModel",
                 "FXModule",
                 "UIComponents",
                 "MachineProtocols"
@@ -152,14 +164,17 @@ let package = Package(
         // Test utilities and mock objects
         .target(
             name: "TestUtilities",
-            dependencies: ["MachineProtocols", "DataLayer", "AudioEngine"],
-            path: "Tests",
-            sources: ["TestUtilities.swift", "MockObjects/"],
+            dependencies: ["MachineProtocols", "DataLayer", "DataModel", "AudioEngine"],
+            path: "Tests/TestUtilities",
             exclude: ["README.md", "TestPlan.md", "TestCaseTemplates.md", "CodeCoverage/"]),
 
         .testTarget(
             name: "MachineProtocolsTests",
             dependencies: ["MachineProtocols", "TestUtilities"]),
+
+        .testTarget(
+            name: "DataModelTests",
+            dependencies: ["DataModel", "TestUtilities"]),
 
         .testTarget(
             name: "DataLayerTests",
@@ -202,6 +217,7 @@ let package = Package(
             dependencies: [
                 "DigitonePad",
                 "DataLayer",
+                "DataModel",
                 "FXModule",
                 "UIComponents",
                 "TestUtilities",

@@ -90,6 +90,26 @@ targets:
         PRODUCT_NAME: MachineProtocols
         GENERATE_INFOPLIST_FILE: true
 
+  DataModel:
+    type: framework
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources/DataModel
+        excludes:
+          - "Resources/**"
+          - "Documentation.docc/**"
+    resources:
+      - path: Sources/DataModel/Resources
+        optional: true
+    dependencies:
+      - target: MachineProtocols
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.datamodel
+        PRODUCT_NAME: DataModel
+        GENERATE_INFOPLIST_FILE: true
+
   DataLayer:
     type: framework
     platform: iOS
@@ -98,10 +118,13 @@ targets:
       - path: Sources/DataLayer
         excludes:
           - "Resources/**"
+          - "Documentation.docc/**"
     resources:
       - path: Sources/DataLayer/Resources
+        optional: true
     dependencies:
       - target: MachineProtocols
+      - target: DataModel
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.datalayer
@@ -114,6 +137,9 @@ targets:
     deploymentTarget: "16.0"
     sources:
       - path: Sources/AudioEngine
+        excludes:
+          - "README.md"
+          - "Documentation/**"
     dependencies:
       - target: MachineProtocols
     settings:
@@ -131,6 +157,7 @@ targets:
     dependencies:
       - target: MachineProtocols
       - target: DataLayer
+      - target: DataModel
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.sequencermodule
@@ -202,6 +229,8 @@ targets:
     deploymentTarget: "16.0"
     sources:
       - path: Sources/UIComponents
+        excludes:
+          - "KeyCombo/KeyComboSystemDesign.md"
     dependencies:
       - target: MachineProtocols
     settings:
@@ -218,6 +247,7 @@ targets:
       - path: Sources/AppShell
     dependencies:
       - target: DataLayer
+      - target: DataModel
       - target: AudioEngine
       - target: SequencerModule
       - target: VoiceModule
@@ -242,6 +272,7 @@ targets:
           - "**/*.md"
     dependencies:
       - target: MachineProtocols
+      - target: DataModel
       - target: DataLayer
       - target: AudioEngine
       - target: SequencerModule
