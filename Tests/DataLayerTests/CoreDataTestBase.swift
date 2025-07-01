@@ -1,5 +1,5 @@
 import XCTest
-@preconcurrency import CoreData
+import CoreData
 @testable import DataLayer
 
 /// Base class for Core Data tests with in-memory store setup

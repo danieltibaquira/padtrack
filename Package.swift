@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 5.10
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -81,12 +81,14 @@ let package = Package(
         .target(
             name: "DataLayer",
             dependencies: ["MachineProtocols"],
-            resources: [.process("Resources")]),
+            resources: [.process("Resources")],
+            exclude: ["Documentation.docc/"]),
         
         // Core audio processing engine
         .target(
             name: "AudioEngine",
-            dependencies: ["MachineProtocols"]),
+            dependencies: ["MachineProtocols"],
+            exclude: ["README.md", "Documentation/"]),
         
         // Pattern sequencing module
         .target(
@@ -116,7 +118,8 @@ let package = Package(
         // Reusable UI components
         .target(
             name: "UIComponents",
-            dependencies: ["MachineProtocols"]),
+            dependencies: ["MachineProtocols"],
+            exclude: ["KeyCombo/KeyComboSystemDesign.md"]),
         
         // Main application shell
         .target(
@@ -151,7 +154,8 @@ let package = Package(
             name: "TestUtilities",
             dependencies: ["MachineProtocols", "DataLayer", "AudioEngine"],
             path: "Tests",
-            sources: ["TestUtilities.swift", "MockObjects/"]),
+            sources: ["TestUtilities.swift", "MockObjects/"],
+            exclude: ["README.md", "TestPlan.md", "TestCaseTemplates.md", "CodeCoverage/"]),
 
         .testTarget(
             name: "MachineProtocolsTests",
@@ -215,6 +219,5 @@ let package = Package(
             name: "CodeCoverageTests",
             dependencies: ["TestUtilities"],
             path: "Tests/CodeCoverageTests")
-    ],
-    swiftLanguageModes: [.v5, .v6]
+    ]
 ) 

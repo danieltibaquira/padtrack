@@ -80,7 +80,7 @@ public class Preset: NSManagedObject {
         guard let settingsData = settings else { return [:] }
 
         do {
-            if let settingsDict = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(settingsData) as? [String: Any] {
+            if let settingsDict = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSDictionary.self, from: settingsData) as? [String: Any] {
                 return settingsDict
             }
         } catch {

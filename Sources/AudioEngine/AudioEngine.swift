@@ -5,7 +5,7 @@
 // audio session management, error handling, and performance monitoring.
 
 import Foundation
-@preconcurrency import AVFoundation
+import AVFoundation
 import MachineProtocols
 import Accelerate
 import simd

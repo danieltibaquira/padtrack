@@ -788,12 +788,12 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
         let destination = MIDIGetDestination(Int(device.uniqueID))
 
         // Create MIDI packet
-        var packet = MIDIPacket()
+        let packet = MIDIPacket()
         var packetList = MIDIPacketList(numPackets: 1, packet: packet)
 
         // Prepare MIDI data
         let statusByte = message.type.rawValue | (message.channel & 0x0F)
-        var midiData: [UInt8] = [statusByte, message.data1, message.data2]
+        let midiData: [UInt8] = [statusByte, message.data1, message.data2]
 
         // Adjust data length based on message type
         switch message.type {
@@ -814,7 +814,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
     }
 
     private func parseMIDIEventList(_ eventList: UnsafePointer<MIDIEventList>) -> [MIDIMessage] {
-        var messages: [MIDIMessage] = []
+        let messages: [MIDIMessage] = []
 
         // Parse MIDI event list (simplified implementation)
         // In a real implementation, this would properly parse the event list structure
