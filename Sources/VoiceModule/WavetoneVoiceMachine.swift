@@ -8,6 +8,8 @@ import Foundation
 import Accelerate
 import MachineProtocols
 import AudioEngine
+import AVFoundation
+import simd
 
 // MARK: - Oscillator Modulation Types
 
@@ -481,1318 +483,1210 @@ public final class WavetoneNoiseGenerator: @unchecked Sendable {
     }
 }
 
-// MARK: - WAVETONE Voice Machine
+// MARK: - WAVETONE Voice Machine Parameters
 
-/// Complete WAVETONE Voice Machine with dual oscillators, modulation, and noise
-public final class WavetoneVoiceMachine: VoiceMachine, @unchecked Sendable {
+/// Complete parameter set for WAVETONE Voice Machine
+public struct WavetoneVoiceMachineParameters: Sendable {
+    
+    // MARK: - Oscillator Parameters
+    public var oscillator1Wavetable: Int = 0        // Wavetable index (0-127)
+    public var oscillator1Tune: Float = 0.0         // Semitones (-24 to +24)
+    public var oscillator1FineTune: Float = 0.0     // Cents (-50 to +50)
+    public var oscillator1Level: Float = 0.8        // Output level (0.0 - 1.0)
+    public var oscillator1PhaseDistortion: Float = 0.0  // Phase distortion amount (0.0 - 1.0)
+    
+    public var oscillator2Wavetable: Int = 1        // Wavetable index (0-127)
+    public var oscillator2Tune: Float = 0.0         // Semitones (-24 to +24)
+    public var oscillator2FineTune: Float = 0.0     // Cents (-50 to +50)
+    public var oscillator2Level: Float = 0.8        // Output level (0.0 - 1.0)
+    public var oscillator2PhaseDistortion: Float = 0.0  // Phase distortion amount (0.0 - 1.0)
+    
+    // MARK: - Modulation Parameters
+    public var ringModulationDepth: Float = 0.0     // Ring modulation depth (0.0 - 1.0)
+    public var hardSyncAmount: Float = 0.0          // Hard sync amount (0.0 - 1.0)
+    public var modulationMode: Int = 0              // 0=Off, 1=Ring, 2=Hard Sync, 3=FM, 4=AM
+    
+    // MARK: - Noise Parameters
+    public var noiseType: Int = 0                   // Noise type (0-9, see NoiseType enum)
+    public var noiseLevel: Float = 0.0              // Noise level (0.0 - 1.0)
+    public var noiseFilterCutoff: Float = 1000.0    // Noise filter frequency (20Hz - 20kHz)
+    public var noiseFilterResonance: Float = 0.0    // Noise filter resonance (0.0 - 1.0)
+    
+    // MARK: - Envelope Parameters (3 envelopes: Amp, Filter, Aux)
+    public var ampEnvelopeAttack: Float = 0.01      // Attack time (0.001 - 10.0 seconds)
+    public var ampEnvelopeDecay: Float = 0.3        // Decay time (0.001 - 10.0 seconds)
+    public var ampEnvelopeSustain: Float = 0.7      // Sustain level (0.0 - 1.0)
+    public var ampEnvelopeRelease: Float = 0.5      // Release time (0.001 - 10.0 seconds)
+    
+    public var filterEnvelopeAttack: Float = 0.005  // Attack time (0.001 - 10.0 seconds)
+    public var filterEnvelopeDecay: Float = 2.0     // Decay time (0.001 - 10.0 seconds)
+    public var filterEnvelopeSustain: Float = 0.2   // Sustain level (0.0 - 1.0)
+    public var filterEnvelopeRelease: Float = 1.5   // Release time (0.001 - 10.0 seconds)
+    
+    public var auxEnvelopeAttack: Float = 0.5       // Attack time (0.001 - 10.0 seconds)
+    public var auxEnvelopeDecay: Float = 0.8        // Decay time (0.001 - 10.0 seconds)
+    public var auxEnvelopeSustain: Float = 0.8      // Sustain level (0.0 - 1.0)
+    public var auxEnvelopeRelease: Float = 1.2      // Release time (0.001 - 10.0 seconds)
+    
+    // MARK: - Global Parameters
+    public var masterVolume: Float = 0.8            // Master volume (0.0 - 1.0)
+    public var masterTune: Float = 0.0              // Master tuning (-100 to +100 cents)
+    public var polyphony: Int = 8                   // Max voices (1-16)
+    public var portamento: Float = 0.0              // Portamento time (0.0 - 5.0 seconds)
+    public var velocitySensitivity: Float = 0.5     // Velocity sensitivity (0.0 - 1.0)
+    public var keyTracking: Float = 0.0             // Key tracking (-1.0 to +1.0)
+    
+    public init() {
+        // Default values are set in property declarations
+    }
+}
 
-    // MARK: - Core Components
+// MARK: - Parameter Management System
 
-    /// Dual oscillator system
-    private var oscillator1: WavetoneOscillator
-    private var oscillator2: WavetoneOscillator
-
-    /// Noise generator
-    private var noiseGenerator: WavetoneNoiseGenerator
-
-    /// Wavetable manager for accessing wavetables
-    private let wavetableManager: WavetableManager
-
-    /// Modulation matrix for complex routing
-    private var modulationMatrix: WavetoneModulationMatrix
-
-    /// Envelope system for amplitude and modulation control
-    private var envelopeSystem: WavetoneEnvelopeSystem
-
-    // MARK: - Polyphony Management
-
-    /// Individual voice instance for polyphonic operation
-    private struct WavetoneVoice {
-        let id: UUID
-        var note: UInt8
-        var velocity: UInt8
-        var channel: UInt8
-        var isActive: Bool
-        var startTime: UInt64
-        var oscillator1: WavetoneOscillator
-        var oscillator2: WavetoneOscillator
-        var noiseGenerator: WavetoneNoiseGenerator
-        var envelopeSystem: WavetoneEnvelopeSystem
-        var modulationMatrix: WavetoneModulationMatrix
-
-        init(sampleRate: Double, note: UInt8, velocity: UInt8, channel: UInt8, timestamp: UInt64) {
-            self.id = UUID()
-            self.note = note
-            self.velocity = velocity
-            self.channel = channel
-            self.isActive = true
-            self.startTime = timestamp
-
-            // Initialize voice-specific components
-            self.oscillator1 = WavetoneOscillator(sampleRate: sampleRate)
-            self.oscillator2 = WavetoneOscillator(sampleRate: sampleRate)
-            self.noiseGenerator = WavetoneNoiseGenerator(sampleRate: sampleRate)
-            self.envelopeSystem = WavetoneEnvelopeSystem(sampleRate: sampleRate)
-            self.modulationMatrix = WavetoneModulationMatrix()
-
-            // Set note frequency
-            let frequency = 440.0 * pow(2.0, (Double(note) - 69.0) / 12.0)
-            self.oscillator1.frequency = frequency
-            self.oscillator2.frequency = frequency
-
-            // Trigger envelopes
-            let velocityScale = Float(velocity) / 127.0
-            self.envelopeSystem.noteOn(velocity: velocityScale, noteNumber: Int(note))
-            self.modulationMatrix.noteOn(velocity: velocityScale)
-        }
-
-        mutating func noteOff() {
-            envelopeSystem.noteOff()
-            modulationMatrix.noteOff()
-        }
-
-        mutating func updateFromGlobalParameters(_ globalParams: [String: Float]) {
-            // Update oscillator parameters
-            if let tuning1 = globalParams["osc1_tuning"] {
-                oscillator1.setTuning(tuning1)
-            }
-            if let pos1 = globalParams["osc1_wavetable_pos"] {
-                oscillator1.wavetablePosition = pos1
-            }
-            if let distortion1 = globalParams["osc1_phase_distortion"] {
-                oscillator1.phaseDistortionAmount = distortion1
-            }
-            if let level1 = globalParams["osc1_level"] {
-                oscillator1.amplitude = level1
-            }
-
-            // Similar for oscillator 2
-            if let tuning2 = globalParams["osc2_tuning"] {
-                oscillator2.setTuning(tuning2)
-            }
-            if let pos2 = globalParams["osc2_wavetable_pos"] {
-                oscillator2.wavetablePosition = pos2
-            }
-            if let distortion2 = globalParams["osc2_phase_distortion"] {
-                oscillator2.phaseDistortionAmount = distortion2
-            }
-            if let level2 = globalParams["osc2_level"] {
-                oscillator2.amplitude = level2
-            }
-
-            // Update noise parameters
-            if let noiseLevel = globalParams["noise_level"] {
-                noiseGenerator.level = noiseLevel
-            }
-            if let noiseType = globalParams["noise_type"] {
-                let noiseTypes: [WavetoneNoiseGenerator.NoiseType] = [.white, .pink, .brown, .blue, .violet, .filtered, .granular, .crackle]
-                let index = Int(noiseType.rounded())
-                if index >= 0 && index < noiseTypes.count {
-                    noiseGenerator.noiseType = noiseTypes[index]
+/// Parameter smoothing and automation system for WAVETONE
+@unchecked Sendable
+public final class WavetoneParameterManager {
+    
+    // MARK: - Properties
+    
+    private var currentParameters: WavetoneVoiceMachineParameters
+    private var targetParameters: WavetoneVoiceMachineParameters
+    private var parameterSmoothers: [String: ParameterSmoother] = [:]
+    private let sampleRate: Float
+    
+    // Parameter update callbacks
+    private var updateCallbacks: [(WavetoneVoiceMachineParameters) -> Void] = []
+    
+    // Thread safety
+    private let parameterQueue = DispatchQueue(label: "wavetone.parameters", qos: .userInteractive)
+    
+    // MARK: - Initialization
+    
+    public init(sampleRate: Float) {
+        self.sampleRate = sampleRate
+        self.currentParameters = WavetoneVoiceMachineParameters()
+        self.targetParameters = WavetoneVoiceMachineParameters()
+        
+        setupParameterSmoothers()
+    }
+    
+    // MARK: - Public Interface
+    
+    /// Update a parameter with smoothing
+    public func setParameter<T: Numeric>(_ keyPath: WritableKeyPath<WavetoneVoiceMachineParameters, T>, value: T) {
+        parameterQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            self.targetParameters[keyPath: keyPath] = value
+            
+            // Trigger smoothing for this parameter
+            let parameterName = String(describing: keyPath)
+            if let smoother = self.parameterSmoothers[parameterName] {
+                if let floatValue = value as? Float {
+                    smoother.setTarget(floatValue)
                 }
             }
-
-            // Update envelope parameters
-            if let attack = globalParams["amp_attack"] {
-                envelopeSystem.amplitudeEnvelope.config.attack.time = attack
-            }
-            if let decay = globalParams["amp_decay"] {
-                envelopeSystem.amplitudeEnvelope.config.decay.time = decay
-            }
-            if let sustain = globalParams["amp_sustain"] {
-                envelopeSystem.amplitudeEnvelope.config.sustain.level = sustain
-            }
-            if let release = globalParams["amp_release"] {
-                envelopeSystem.amplitudeEnvelope.config.release.time = release
+        }
+    }
+    
+    /// Get current parameter value
+    public func getParameter<T>(_ keyPath: KeyPath<WavetoneVoiceMachineParameters, T>) -> T {
+        return parameterQueue.sync {
+            return currentParameters[keyPath: keyPath]
+        }
+    }
+    
+    /// Process parameter smoothing (call from audio thread)
+    public func processParameterSmoothing() -> WavetoneVoiceMachineParameters {
+        // Update smoothed parameters
+        for (parameterName, smoother) in parameterSmoothers {
+            let smoothedValue = smoother.getSmoothedValue()
+            updateParameterByName(parameterName, value: smoothedValue)
+        }
+        
+        return currentParameters
+    }
+    
+    /// Add parameter update callback
+    public func addUpdateCallback(_ callback: @escaping (WavetoneVoiceMachineParameters) -> Void) {
+        parameterQueue.async { [weak self] in
+            self?.updateCallbacks.append(callback)
+        }
+    }
+    
+    /// Load preset parameters
+    public func loadPreset(_ parameters: WavetoneVoiceMachineParameters) {
+        parameterQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            self.targetParameters = parameters
+            self.currentParameters = parameters
+            
+            // Update all smoothers to new values
+            self.updateAllSmoothers()
+            
+            // Notify callbacks
+            for callback in self.updateCallbacks {
+                callback(parameters)
             }
         }
     }
+    
+    /// Get current parameters (thread-safe)
+    public func getCurrentParameters() -> WavetoneVoiceMachineParameters {
+        return parameterQueue.sync {
+            return currentParameters
+        }
+    }
+    
+    // MARK: - Private Implementation
+    
+    private func setupParameterSmoothers() {
+        // Oscillator parameters (fast smoothing for audio-rate changes)
+        parameterSmoothers["oscillator1Level"] = ParameterSmoother(sampleRate: sampleRate, smoothingTime: 0.005)
+        parameterSmoothers["oscillator2Level"] = ParameterSmoother(sampleRate: sampleRate, smoothingTime: 0.005)
+        parameterSmoothers["oscillator1PhaseDistortion"] = ParameterSmoother(sampleRate: sampleRate, smoothingTime: 0.01)
+        parameterSmoothers["oscillator2PhaseDistortion"] = ParameterSmoother(sampleRate: sampleRate, smoothingTime: 0.01)
+        
+        // Modulation parameters
+        parameterSmoothers["ringModulationDepth"] = ParameterSmoother(sampleRate: sampleRate, smoothingTime: 0.01)
+        parameterSmoothers["hardSyncAmount"] = ParameterSmoother(sampleRate: sampleRate, smoothingTime: 0.01)
+        
+        // Noise parameters
+        parameterSmoothers["noiseLevel"] = ParameterSmoother(sampleRate: sampleRate, smoothingTime: 0.005)
+        parameterSmoothers["noiseFilterCutoff"] = ParameterSmoother(sampleRate: sampleRate, smoothingTime: 0.02)
+        parameterSmoothers["noiseFilterResonance"] = ParameterSmoother(sampleRate: sampleRate, smoothingTime: 0.01)
+        
+        // Envelope parameters (slower smoothing to avoid artifacts)
+        parameterSmoothers["ampEnvelopeAttack"] = ParameterSmoother(sampleRate: sampleRate, smoothingTime: 0.05)
+        parameterSmoothers["ampEnvelopeDecay"] = ParameterSmoother(sampleRate: sampleRate, smoothingTime: 0.05)
+        parameterSmoothers["ampEnvelopeSustain"] = ParameterSmoother(sampleRate: sampleRate, smoothingTime: 0.05)
+        parameterSmoothers["ampEnvelopeRelease"] = ParameterSmoother(sampleRate: sampleRate, smoothingTime: 0.05)
+        
+        // Global parameters
+        parameterSmoothers["masterVolume"] = ParameterSmoother(sampleRate: sampleRate, smoothingTime: 0.01)
+        parameterSmoothers["masterTune"] = ParameterSmoother(sampleRate: sampleRate, smoothingTime: 0.1)
+        parameterSmoothers["portamento"] = ParameterSmoother(sampleRate: sampleRate, smoothingTime: 0.02)
+    }
+    
+    private func updateParameterByName(_ name: String, value: Float) {
+        switch name {
+        case "oscillator1Level": currentParameters.oscillator1Level = value
+        case "oscillator2Level": currentParameters.oscillator2Level = value
+        case "oscillator1PhaseDistortion": currentParameters.oscillator1PhaseDistortion = value
+        case "oscillator2PhaseDistortion": currentParameters.oscillator2PhaseDistortion = value
+        case "ringModulationDepth": currentParameters.ringModulationDepth = value
+        case "hardSyncAmount": currentParameters.hardSyncAmount = value
+        case "noiseLevel": currentParameters.noiseLevel = value
+        case "noiseFilterCutoff": currentParameters.noiseFilterCutoff = value
+        case "noiseFilterResonance": currentParameters.noiseFilterResonance = value
+        case "ampEnvelopeAttack": currentParameters.ampEnvelopeAttack = value
+        case "ampEnvelopeDecay": currentParameters.ampEnvelopeDecay = value
+        case "ampEnvelopeSustain": currentParameters.ampEnvelopeSustain = value
+        case "ampEnvelopeRelease": currentParameters.ampEnvelopeRelease = value
+        case "masterVolume": currentParameters.masterVolume = value
+        case "masterTune": currentParameters.masterTune = value
+        case "portamento": currentParameters.portamento = value
+        default: break
+        }
+    }
+    
+    private func updateAllSmoothers() {
+        parameterSmoothers["oscillator1Level"]?.setTarget(currentParameters.oscillator1Level)
+        parameterSmoothers["oscillator2Level"]?.setTarget(currentParameters.oscillator2Level)
+        parameterSmoothers["oscillator1PhaseDistortion"]?.setTarget(currentParameters.oscillator1PhaseDistortion)
+        parameterSmoothers["oscillator2PhaseDistortion"]?.setTarget(currentParameters.oscillator2PhaseDistortion)
+        parameterSmoothers["ringModulationDepth"]?.setTarget(currentParameters.ringModulationDepth)
+        parameterSmoothers["hardSyncAmount"]?.setTarget(currentParameters.hardSyncAmount)
+        parameterSmoothers["noiseLevel"]?.setTarget(currentParameters.noiseLevel)
+        parameterSmoothers["noiseFilterCutoff"]?.setTarget(currentParameters.noiseFilterCutoff)
+        parameterSmoothers["noiseFilterResonance"]?.setTarget(currentParameters.noiseFilterResonance)
+        parameterSmoothers["ampEnvelopeAttack"]?.setTarget(currentParameters.ampEnvelopeAttack)
+        parameterSmoothers["ampEnvelopeDecay"]?.setTarget(currentParameters.ampEnvelopeDecay)
+        parameterSmoothers["ampEnvelopeSustain"]?.setTarget(currentParameters.ampEnvelopeSustain)
+        parameterSmoothers["ampEnvelopeRelease"]?.setTarget(currentParameters.ampEnvelopeRelease)
+        parameterSmoothers["masterVolume"]?.setTarget(currentParameters.masterVolume)
+        parameterSmoothers["masterTune"]?.setTarget(currentParameters.masterTune)
+        parameterSmoothers["portamento"]?.setTarget(currentParameters.portamento)
+    }
+}
 
-    /// Active voices for polyphonic operation
-    private var voices: [WavetoneVoice] = []
+// MARK: - WAVETONE Voice
 
-    /// Voice allocation tracking
-    private var voiceAllocationQueue: [UUID] = []
-
-    /// Global parameter cache for efficient voice updates
-    private var globalParameterCache: [String: Float] = [:]
-
-    // MARK: - Legacy Voice State (for backward compatibility)
-
-    private var currentNote: UInt8 = 60
-    private var currentVelocity: UInt8 = 100
-    private var isNoteActive: Bool = false
-
-    // MARK: - Audio Processing
-
-    private let sampleRate: Double
-    private var outputBuffer: [Float] = []
-    private var tempBuffer: [Float] = []
-
+/// Individual voice for WAVETONE synthesis
+@unchecked Sendable
+public final class WavetoneVoice {
+    
+    // MARK: - Properties
+    
+    private let sampleRate: Float
+    private var isActive: Bool = false
+    private var noteNumber: Int = 60
+    private var velocity: Float = 1.0
+    private var frequency: Float = 440.0
+    
+    // Synthesis components (using existing implementations)
+    private var wavetableData1: WavetableData
+    private var wavetableData2: WavetableData
+    private var oscillatorModulation: OscillatorModulationSystem
+    private var noiseGenerator: NoiseGenerator
+    private var envelopeSystem: WavetoneEnvelopeSystem
+    
+    // Audio processing buffers
+    private var oscillator1Buffer: [Float]
+    private var oscillator2Buffer: [Float]
+    private var noiseBuffer: [Float]
+    private var mixBuffer: [Float]
+    
+    private let bufferSize: Int = 64
+    
     // MARK: - Initialization
-
-    public override init(name: String = "WAVETONE", polyphony: Int = 16) {
-        self.sampleRate = 44100.0
-
-        // Initialize oscillators
-        self.oscillator1 = WavetoneOscillator(sampleRate: sampleRate)
-        self.oscillator2 = WavetoneOscillator(sampleRate: sampleRate)
-
-        // Initialize noise generator
-        self.noiseGenerator = WavetoneNoiseGenerator(sampleRate: sampleRate)
-
-        // Initialize wavetable manager
-        self.wavetableManager = WavetableManager()
-
-        // Initialize modulation matrix
-        self.modulationMatrix = WavetoneModulationMatrix()
-
-        // Initialize envelope system
+    
+    public init(sampleRate: Float) {
+        self.sampleRate = sampleRate
+        
+        // Initialize synthesis components
+        self.wavetableData1 = WavetableData.createSineProgression(frameCount: 64)
+        self.wavetableData2 = WavetableData.createSawtoothProgression(frameCount: 32)
+        self.oscillatorModulation = OscillatorModulationSystem(sampleRate: sampleRate)
+        self.noiseGenerator = NoiseGenerator(sampleRate: sampleRate)
         self.envelopeSystem = WavetoneEnvelopeSystem(sampleRate: sampleRate)
-
-        super.init(name: name, polyphony: polyphony)
-
-        setupWavetoneParameters()
-        setupDefaultWavetables()
-        setupModulationRouting()
-
-        // Initialize buffers
-        outputBuffer = [Float](repeating: 0.0, count: 1024)
-        tempBuffer = [Float](repeating: 0.0, count: 1024)
+        
+        // Initialize audio buffers
+        self.oscillator1Buffer = Array(repeating: 0.0, count: bufferSize)
+        self.oscillator2Buffer = Array(repeating: 0.0, count: bufferSize)
+        self.noiseBuffer = Array(repeating: 0.0, count: bufferSize)
+        self.mixBuffer = Array(repeating: 0.0, count: bufferSize)
     }
-
-    // MARK: - VoiceMachine Protocol Implementation
-
-    public override func noteOn(note: UInt8, velocity: UInt8, channel: UInt8, timestamp: UInt64?) {
-        let noteTimestamp = timestamp ?? UInt64(Date().timeIntervalSince1970 * 1000000)
-
-        // Check if we have available voices
-        if voices.count >= polyphony {
-            // Voice stealing - find oldest voice or voice in release phase
-            if let voiceToSteal = findVoiceToSteal() {
-                removeVoice(voiceToSteal)
-            } else {
-                // No voice available and can't steal - ignore note
-                return
+    
+    // MARK: - Public Interface
+    
+    /// Start voice with note on
+    public func noteOn(noteNumber: Int, velocity: Float) {
+        self.noteNumber = noteNumber
+        self.velocity = velocity
+        self.frequency = midiNoteToFrequency(noteNumber)
+        self.isActive = true
+        
+        // Trigger envelopes
+        envelopeSystem.noteOn(velocity: velocity, noteNumber: noteNumber)
+    }
+    
+    /// Stop voice with note off
+    public func noteOff() {
+        envelopeSystem.noteOff()
+    }
+    
+    /// Process audio for this voice
+    public func processAudio(parameters: WavetoneVoiceMachineParameters, outputBuffer: inout [Float], blockSize: Int) {
+        guard isActive else {
+            // Clear output buffer
+            for i in 0..<min(blockSize, outputBuffer.count) {
+                outputBuffer[i] = 0.0
             }
+            return
         }
-
-        // Create new voice
-        var newVoice = WavetoneVoice(
-            sampleRate: sampleRate,
-            note: note,
-            velocity: velocity,
-            channel: channel,
-            timestamp: noteTimestamp
-        )
-
-        // Apply current global parameters to the new voice
-        newVoice.updateFromGlobalParameters(globalParameterCache)
-
-        // Set wavetables from global oscillators
-        newVoice.oscillator1.currentWavetable = oscillator1.currentWavetable
-        newVoice.oscillator2.currentWavetable = oscillator2.currentWavetable
-
-        // Add voice to active voices
-        voices.append(newVoice)
-        voiceAllocationQueue.append(newVoice.id)
-
-        // Update legacy state for backward compatibility
-        currentNote = note
-        currentVelocity = velocity
-        isNoteActive = true
-
-        super.noteOn(note: note, velocity: velocity, channel: channel, timestamp: timestamp)
-    }
-
-    public override func noteOff(note: UInt8, velocity: UInt8, channel: UInt8, timestamp: UInt64?) {
-        // Find and release matching voices
-        for i in 0..<voices.count {
-            if voices[i].note == note && voices[i].channel == channel && voices[i].isActive {
-                voices[i].noteOff()
-                // Note: Don't remove voice immediately - let envelope finish release phase
-            }
-        }
-
-        // Legacy compatibility
-        if note == currentNote {
-            isNoteActive = false
-            modulationMatrix.noteOff()
-            envelopeSystem.noteOff()
-        }
-
-        super.noteOff(note: note, velocity: velocity, channel: channel, timestamp: timestamp)
-    }
-
-    public override func allNotesOff() {
-        // Release all active voices
-        for i in 0..<voices.count {
-            voices[i].noteOff()
-        }
-
-        // Legacy compatibility
-        isNoteActive = false
-        oscillator1.resetPhase()
-        oscillator2.resetPhase()
-        modulationMatrix.allNotesOff()
-        envelopeSystem.allNotesOff()
-
-        super.allNotesOff()
-    }
-
-    // MARK: - Voice Management Helper Methods
-
-    /// Find a voice to steal when polyphony limit is reached
-    private func findVoiceToSteal() -> UUID? {
-        // First, try to find a voice in release phase
-        for voice in voices {
-            if !voice.isActive || voice.envelopeSystem.amplitudeEnvelope.currentPhase == .release {
-                return voice.id
-            }
-        }
-
-        // If no voice in release, steal the oldest voice
-        return voiceAllocationQueue.first
-    }
-
-    /// Remove a voice from the active voices
-    private func removeVoice(_ voiceId: UUID) {
-        voices.removeAll { $0.id == voiceId }
-        voiceAllocationQueue.removeAll { $0 == voiceId }
-    }
-
-    /// Clean up finished voices (voices that have completed their release phase)
-    private func cleanupFinishedVoices() {
-        let initialCount = voices.count
-
-        voices.removeAll { (voice: WavetoneVoice) -> Bool in
-            let envelope = voice.envelopeSystem.amplitudeEnvelope
-            return envelope.currentPhase == .idle && envelope.level < 0.001
-        }
-
-        // Update allocation queue
-        let activeVoiceIds = Set(voices.map { $0.id })
-        voiceAllocationQueue.removeAll { !activeVoiceIds.contains($0) }
-
-        // Update active voice count for base class
-        activeVoices = voices.count
-    }
-
-    /// Update global parameter cache and propagate to all voices
-    private func updateGlobalParameters() {
-        // Collect current parameter values
-        globalParameterCache.removeAll()
-        for parameter in parameters.getAllParameters() {
-            globalParameterCache[parameter.id] = parameters.getValue(parameter.id)
-        }
-
-        // Update all active voices with new parameters
-        for i in 0..<voices.count {
-            voices[i].updateFromGlobalParameters(globalParameterCache)
-        }
-    }
-
-    /// Get current polyphony usage information
-    public func getPolyphonyInfo() -> (active: Int, total: Int, usage: Float) {
-        cleanupFinishedVoices()
-        let activeCount = voices.count
-        let usage = Float(activeCount) / Float(polyphony)
-        return (active: activeCount, total: polyphony, usage: usage)
-    }
-
-    public override func process(input: MachineProtocols.AudioBuffer) -> MachineProtocols.AudioBuffer {
-        let frameCount = input.frameCount
-        let channelCount = input.channelCount
-
-        // Ensure output buffer is large enough
-        if outputBuffer.count < frameCount * channelCount {
-            outputBuffer = [Float](repeating: 0.0, count: frameCount * channelCount)
-            tempBuffer = [Float](repeating: 0.0, count: frameCount)
-        }
-
-        // Clear output buffer
-        for i in 0..<frameCount * channelCount {
-            outputBuffer[i] = 0.0
-        }
-
-        // Clear temp buffer
-        for i in 0..<frameCount {
-            tempBuffer[i] = 0.0
-        }
-
-        // Clean up finished voices
-        cleanupFinishedVoices()
-
-        // Update global parameters if needed
-        updateGlobalParameters()
-
-        // Process all active voices
-        processPolyphonicAudio(frameCount: frameCount)
-
-        // Interleave for stereo output
-        for frame in 0..<frameCount {
-            let sample = tempBuffer[frame]
-            for channel in 0..<channelCount {
-                outputBuffer[frame * channelCount + channel] = sample
-            }
-        }
-
-        return AudioEngine.AudioBuffer(
-            data: outputBuffer,
-            frameCount: frameCount,
-            channelCount: channelCount,
-            sampleRate: input.sampleRate
-        )
-    }
-
-    // MARK: - Audio Processing Implementation
-
-    /// Process audio for all active voices (polyphonic)
-    private func processPolyphonicAudio(frameCount: Int) {
-        guard !voices.isEmpty else { return }
-
-        // Process each voice and mix to output
-        for voiceIndex in 0..<voices.count {
-            processVoiceAudio(voiceIndex: voiceIndex, frameCount: frameCount)
-        }
-
-        // Apply master volume scaling to prevent clipping
-        let voiceCount = Float(voices.count)
-        let scalingFactor = 1.0 / max(1.0, sqrt(voiceCount))  // Gentle scaling to prevent clipping
-
-        for i in 0..<frameCount {
-            tempBuffer[i] *= scalingFactor
-        }
-    }
-
-    /// Process audio for a single voice
-    private func processVoiceAudio(voiceIndex: Int, frameCount: Int) {
-        guard voiceIndex < voices.count else { return }
-
-        let voice = voices[voiceIndex]
-
-        // Process each sample for this voice
-        for i in 0..<frameCount {
-            var sample: Float = 0.0
-
-            // Update voice modulation matrix
-            voice.modulationMatrix.updateModulation()
-
-            // Process voice envelope system
-            let envelopeValues = voice.envelopeSystem.processEnvelopes()
-
-            // Get modulation values for this voice
-            let osc1ModInput = voice.modulationMatrix.getModulationValue(destination: .oscillator1)
-            let osc2ModInput = voice.modulationMatrix.getModulationValue(destination: .oscillator2)
-            let noiseModInput = voice.modulationMatrix.getModulationValue(destination: .noise)
-
-            // Process oscillators
-            let osc1Sample = voice.oscillator1.processSample(modulationInput: osc1ModInput)
-            let osc2Sample = voice.oscillator2.processSample(modulationInput: osc2ModInput)
-
-            // Mix oscillators with proper ring modulation handling
-            var mixedSample: Float = 0.0
-
-            if voice.oscillator1.modulationType == .ringModulation {
-                // OSC1 ring modulates with OSC2
-                let ringModulated = osc1Sample * osc2Sample
-                let dryMix = osc1Sample * (1.0 - voice.oscillator1.modulationAmount)
-                let wetMix = ringModulated * voice.oscillator1.modulationAmount
-                mixedSample += dryMix + wetMix + osc2Sample
-            } else if voice.oscillator2.modulationType == .ringModulation {
-                // OSC2 ring modulates with OSC1
-                let ringModulated = osc2Sample * osc1Sample
-                let dryMix = osc2Sample * (1.0 - voice.oscillator2.modulationAmount)
-                let wetMix = ringModulated * voice.oscillator2.modulationAmount
-                mixedSample += dryMix + wetMix + osc1Sample
-            } else {
-                // No ring modulation, simple mix
-                mixedSample += osc1Sample + osc2Sample
-            }
-
-            sample += mixedSample
-
-            // Add noise with envelope modulation
-            let noiseSample = voice.noiseGenerator.processSample()
-            let envelopedNoise = noiseSample * envelopeValues.aux  // Use aux envelope for noise
-            sample += envelopedNoise
-
-            // Apply amplitude envelope
-            sample *= envelopeValues.amplitude
-
-            // Mix into main output buffer
-            tempBuffer[i] += sample
-        }
-    }
-
-    private func processAudioBlock(frameCount: Int) {
-        // Update modulation matrix
-        modulationMatrix.updateModulation()
-
-        // Process envelope system
+        
+        let actualBlockSize = min(blockSize, bufferSize)
+        
+        // Process envelopes
         let envelopeValues = envelopeSystem.processEnvelopes()
-
-        // Get modulation values
-        let osc1ModInput = modulationMatrix.getModulationValue(destination: .oscillator1)
-        let osc2ModInput = modulationMatrix.getModulationValue(destination: .oscillator2)
-        let noiseModInput = modulationMatrix.getModulationValue(destination: .noise)
-
-        // Process each sample
-        for i in 0..<frameCount {
-            var sample: Float = 0.0
-
-            // Process oscillator 1
-            let osc1Sample = oscillator1.processSample(modulationInput: osc1ModInput)
-
-            // Process oscillator 2 with potential modulation from oscillator 1
-            var osc2ModulationInput = osc2ModInput
-
-            // Apply ring modulation if enabled
-            if oscillator2.modulationType == .ringModulation {
-                osc2ModulationInput = osc1Sample * oscillator2.modulationAmount
+        let ampEnvelope = envelopeValues[.amplitude] ?? 0.0
+        
+        // Check if voice should be deactivated
+        if !envelopeSystem.isActive {
+            isActive = false
+            for i in 0..<actualBlockSize {
+                outputBuffer[i] = 0.0
             }
-
-            let osc2Sample = oscillator2.processSample(modulationInput: osc2ModulationInput)
-
-            // Mix oscillators with proper ring modulation handling
-            var mixedSample: Float = 0.0
-
-            // Check if either oscillator has ring modulation enabled
-            if oscillator1.modulationType == .ringModulation {
-                // OSC1 ring modulates with OSC2
-                let ringModulated = osc1Sample * osc2Sample
-                let dryMix = osc1Sample * (1.0 - oscillator1.modulationAmount)
-                let wetMix = ringModulated * oscillator1.modulationAmount
-                mixedSample += dryMix + wetMix + osc2Sample
-            } else if oscillator2.modulationType == .ringModulation {
-                // OSC2 ring modulates with OSC1
-                let ringModulated = osc2Sample * osc1Sample
-                let dryMix = osc2Sample * (1.0 - oscillator2.modulationAmount)
-                let wetMix = ringModulated * oscillator2.modulationAmount
-                mixedSample += dryMix + wetMix + osc1Sample
-            } else {
-                // No ring modulation, simple mix
-                mixedSample += osc1Sample + osc2Sample
-            }
-
-            sample += mixedSample
-
-            // Add noise with envelope modulation
-            let noiseSample = noiseGenerator.processSample()
-            let envelopedNoise = noiseSample * envelopeValues.aux  // Use aux envelope for noise
-            sample += envelopedNoise
-
-            // Apply amplitude envelope and master amplitude
-            sample *= envelopeValues.amplitude
-            tempBuffer[i] = sample * 0.5  // Scale down to prevent clipping
+            return
+        }
+        
+        // Generate oscillator 1
+        generateOscillator1(parameters: parameters, blockSize: actualBlockSize)
+        
+        // Generate oscillator 2
+        generateOscillator2(parameters: parameters, blockSize: actualBlockSize)
+        
+        // Apply oscillator modulation (ring mod, hard sync, etc.)
+        applyOscillatorModulation(parameters: parameters, blockSize: actualBlockSize)
+        
+        // Generate noise
+        generateNoise(parameters: parameters, blockSize: actualBlockSize)
+        
+        // Mix all sources
+        mixSources(parameters: parameters, blockSize: actualBlockSize)
+        
+        // Apply amplitude envelope and master volume
+        for i in 0..<actualBlockSize {
+            outputBuffer[i] = mixBuffer[i] * ampEnvelope * parameters.masterVolume * velocity
         }
     }
-
-    // MARK: - Parameter Management
-
-    private func setupWavetoneParameters() {
-        // Oscillator 1 parameters
-        parameters.addParameter(Parameter(
-            id: "osc1_tuning",
-            name: "OSC1 Tuning",
-            description: "Oscillator 1 tuning in semitones",
-            value: 0.0,
-            minValue: -24.0,
-            maxValue: 24.0,
-            defaultValue: 0.0,
-            unit: "semitones",
-            category: .synthesis,
-            dataType: .float,
-            scaling: .linear,
-            isAutomatable: true
-        ,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "osc1_wavetable_pos",
-            name: "OSC1 Wavetable Position",
-            description: "Position within the wavetable",
-            value: 0.0,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 0.0,
-            unit: "",
-            category: .synthesis,
-            dataType: .float,
-            scaling: .linear,
-            isAutomatable: true,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "osc1_phase_distortion",
-            name: "OSC1 Phase Distortion",
-            description: "Amount of phase distortion",
-            value: 0.0,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 0.0,
-            unit: "",
-            category: .synthesis,
-            dataType: .float,
-            scaling: .linear,
-            isAutomatable: true,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "osc1_level",
-            name: "OSC1 Level",
-            description: "Oscillator 1 output level",
-            value: 0.8,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 0.8,
-            unit: "",
-            category: .synthesis,
-            dataType: .float,
-            scaling: .linear,
-            isAutomatable: true,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        // Oscillator 2 parameters
-        parameters.addParameter(Parameter(
-            id: "osc2_tuning",
-            name: "OSC2 Tuning",
-            description: "Oscillator 2 tuning in semitones",
-            value: 0.0,
-            minValue: -24.0,
-            maxValue: 24.0,
-            defaultValue: 0.0,
-            unit: "semitones",
-            category: .synthesis,
-            dataType: .float,
-            scaling: .linear,
-            isAutomatable: true,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "osc2_wavetable_pos",
-            name: "OSC2 Wavetable Position",
-            description: "Position within the wavetable",
-            value: 0.0,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 0.0,
-            unit: "",
-            category: .synthesis,
-            dataType: .float,
-            scaling: .linear,
-            isAutomatable: true
-        ,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "osc2_phase_distortion",
-            name: "OSC2 Phase Distortion",
-            description: "Amount of phase distortion",
-            value: 0.0,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 0.0,
-            unit: "",
-            category: .synthesis,
-            dataType: .float,
-            scaling: .linear,
-            isAutomatable: true
-        ,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "osc2_level",
-            name: "OSC2 Level",
-            description: "Oscillator 2 output level",
-            value: 0.8,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 0.8,
-            unit: "",
-            category: .synthesis,
-            dataType: .float,
-            scaling: .linear,
-            isAutomatable: true
-        ,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        // Modulation parameters
-        parameters.addParameter(Parameter(
-            id: "ring_mod_amount",
-            name: "Ring Mod Amount",
-            description: "Ring modulation amount",
-            value: 0.0,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 0.0,
-            unit: "",
-            category: .modulation,
-            dataType: .float,
-            scaling: .linear,
-            isAutomatable: true
-        ,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "hard_sync_enable",
-            name: "Hard Sync Enable",
-            description: "Enable hard sync between oscillators",
-            value: 0.0,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 0.0,
-            unit: "",
-            category: .modulation,
-            dataType: .boolean,
-            scaling: .linear,
-            isAutomatable: true
-        ,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        // Noise parameters
-        parameters.addParameter(Parameter(
-            id: "noise_level",
-            name: "Noise Level",
-            description: "Noise generator level",
-            value: 0.0,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 0.0,
-            unit: "",
-            category: .synthesis,
-            dataType: .float,
-            scaling: .linear,
-            isAutomatable: true
-        ,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "noise_type",
-            name: "Noise Type",
-            description: "Type of noise generation algorithm",
-            value: 0.0,
-            minValue: 0.0,
-            maxValue: 7.0,
-            defaultValue: 0.0,
-            unit: "",
-            category: .synthesis,
-            dataType: .enumeration,
-            scaling: .linear,
-            isAutomatable: true
-        ,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "noise_base_freq",
-            name: "Noise Base Frequency",
-            description: "Base frequency for filtered noise",
-            value: 1000.0,
-            minValue: 20.0,
-            maxValue: 20000.0,
-            defaultValue: 1000.0,
-            unit: "Hz",
-            category: .synthesis,
-            dataType: .float,
-            scaling: .exponential,
-            isAutomatable: true
-        ,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "noise_width",
-            name: "Noise Width",
-            description: "Bandwidth for filtered noise",
-            value: 1000.0,
-            minValue: 10.0,
-            maxValue: 10000.0,
-            defaultValue: 1000.0,
-            unit: "Hz",
-            category: .synthesis,
-            dataType: .float,
-            scaling: .exponential,
-            isAutomatable: true
-        ,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "noise_grain",
-            name: "Noise Grain",
-            description: "Grain density for granular/crackle noise",
-            value: 0.5,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 0.5,
-            unit: "",
-            category: .synthesis,
-            dataType: .float,
-            scaling: .linear,
-            isAutomatable: true
-        ,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "noise_resonance",
-            name: "Noise Resonance",
-            description: "Filter resonance for filtered noise",
-            value: 0.0,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 0.0,
-            unit: "",
-            category: .synthesis,
-            dataType: .float,
-            scaling: .linear,
-            isAutomatable: true
-        ,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "noise_character",
-            name: "Noise Character",
-            description: "Character control for noise algorithms",
-            value: 0.5,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 0.5,
-            unit: "",
-            category: .synthesis,
-            dataType: .float,
-            scaling: .linear,
-            isAutomatable: true
-        ,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        // Amplitude envelope parameters
-        parameters.addParameter(Parameter(
-            id: "amp_attack",
-            name: "Amp Attack",
-            description: "Amplitude envelope attack time",
-            value: 0.01,
-            minValue: 0.001,
-            maxValue: 10.0,
-            defaultValue: 0.01,
-            unit: "s",
-            category: .envelope,
-            dataType: .float,
-            scaling: .exponential,
-            isAutomatable: true,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "amp_decay",
-            name: "Amp Decay",
-            description: "Amplitude envelope decay time",
-            value: 0.3,
-            minValue: 0.001,
-            maxValue: 10.0,
-            defaultValue: 0.3,
-            unit: "s",
-            category: .envelope,
-            dataType: .float,
-            scaling: .exponential,
-            isAutomatable: true,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "amp_sustain",
-            name: "Amp Sustain",
-            description: "Amplitude envelope sustain level",
-            value: 0.7,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 0.7,
-            unit: "",
-            category: .envelope,
-            dataType: .float,
-            scaling: .exponential,
-            isAutomatable: true,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "amp_release",
-            name: "Amp Release",
-            description: "Amplitude envelope release time",
-            value: 1.0,
-            minValue: 0.001,
-            maxValue: 10.0,
-            defaultValue: 1.0,
-            unit: "s",
-            category: .envelope,
-            dataType: .float,
-            scaling: .exponential,
-            isAutomatable: true,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        // Modulation matrix parameters
-        parameters.addParameter(Parameter(
-            id: "mod_wheel",
-            name: "Mod Wheel",
-            description: "Modulation wheel input",
-            value: 0.0,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 0.0,
-            unit: "",
-            category: .modulation,
-            dataType: .float,
-            scaling: .linear,
-            isAutomatable: true,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "aftertouch",
-            name: "Aftertouch",
-            description: "Channel aftertouch input",
-            value: 0.0,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 0.0,
-            unit: "",
-            category: .modulation,
-            dataType: .float,
-            scaling: .linear,
-            isAutomatable: true,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "velocity",
-            name: "Velocity",
-            description: "Note velocity input",
-            value: 1.0,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 1.0,
-            unit: "",
-            category: .modulation,
-            dataType: .float,
-            scaling: .linear,
-            isAutomatable: false,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "lfo1_rate",
-            name: "LFO1 Rate",
-            description: "LFO 1 rate in Hz",
-            value: 1.0,
-            minValue: 0.01,
-            maxValue: 100.0,
-            defaultValue: 1.0,
-            unit: "Hz",
-            category: .modulation,
-            dataType: .float,
-            scaling: .exponential,
-            isAutomatable: true,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        parameters.addParameter(Parameter(
-            id: "lfo1_depth",
-            name: "LFO1 Depth",
-            description: "LFO 1 modulation depth",
-            value: 0.0,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 0.0,
-            unit: "",
-            category: .modulation,
-            dataType: .float,
-            scaling: .linear,
-            isAutomatable: true,
-            stepSize: nil,
-            enumerationValues: nil,
-            changeCallback: nil
-        ))
-
-        // Set parameter update callback
-        parameters.setUpdateCallback { [weak self] parameterID, value in
-            self?.handleParameterUpdate(parameterID: parameterID, value: value)
+    
+    /// Check if voice is active
+    public var active: Bool {
+        return isActive
+    }
+    
+    /// Get voice note number
+    public var currentNoteNumber: Int {
+        return noteNumber
+    }
+    
+    // MARK: - Private Implementation
+    
+    private func generateOscillator1(parameters: WavetoneVoiceMachineParameters, blockSize: Int) {
+        let tuning = parameters.oscillator1Tune + (parameters.oscillator1FineTune / 100.0)
+        let tunedFrequency = frequency * pow(2.0, tuning / 12.0)
+        
+        // Generate wavetable audio with phase distortion
+        for i in 0..<blockSize {
+            let phase = Float(i) / Float(blockSize) // Simplified phase calculation
+            let distortedPhase = applyPhaseDistortion(phase: phase, amount: parameters.oscillator1PhaseDistortion)
+            oscillator1Buffer[i] = wavetableData1.synthesize(phase: distortedPhase, frequency: tunedFrequency)
         }
     }
-
-    private func handleParameterUpdate(parameterID: String, value: Float) {
-        // Update global parameter cache
-        globalParameterCache[parameterID] = value
-
-        switch parameterID {
-        case "osc1_tuning":
-            oscillator1.setTuning(value)
-            // Update all active voices
-            for i in 0..<voices.count {
-                voices[i].oscillator1.setTuning(value)
+    
+    private func generateOscillator2(parameters: WavetoneVoiceMachineParameters, blockSize: Int) {
+        let tuning = parameters.oscillator2Tune + (parameters.oscillator2FineTune / 100.0)
+        let tunedFrequency = frequency * pow(2.0, tuning / 12.0)
+        
+        // Generate wavetable audio with phase distortion
+        for i in 0..<blockSize {
+            let phase = Float(i) / Float(blockSize) // Simplified phase calculation
+            let distortedPhase = applyPhaseDistortion(phase: phase, amount: parameters.oscillator2PhaseDistortion)
+            oscillator2Buffer[i] = wavetableData2.synthesize(phase: distortedPhase, frequency: tunedFrequency)
+        }
+    }
+    
+    private func applyOscillatorModulation(parameters: WavetoneVoiceMachineParameters, blockSize: Int) {
+        switch parameters.modulationMode {
+        case 1: // Ring Modulation
+            for i in 0..<blockSize {
+                let modulated = oscillatorModulation.processRingModulation(
+                    carrier: oscillator1Buffer[i],
+                    modulator: oscillator2Buffer[i],
+                    depth: parameters.ringModulationDepth
+                )
+                oscillator1Buffer[i] = modulated
             }
-        case "osc1_wavetable_pos":
-            oscillator1.wavetablePosition = value
-            for i in 0..<voices.count {
-                voices[i].oscillator1.wavetablePosition = value
+            
+        case 2: // Hard Sync
+            for i in 0..<blockSize {
+                let synced = oscillatorModulation.processHardSync(
+                    slave: oscillator1Buffer[i],
+                    master: oscillator2Buffer[i],
+                    amount: parameters.hardSyncAmount
+                )
+                oscillator1Buffer[i] = synced
             }
-        case "osc1_phase_distortion":
-            oscillator1.phaseDistortionAmount = value
-            for i in 0..<voices.count {
-                voices[i].oscillator1.phaseDistortionAmount = value
-            }
-        case "osc1_level":
-            oscillator1.amplitude = value
-            for i in 0..<voices.count {
-                voices[i].oscillator1.amplitude = value
-            }
-        case "osc2_tuning":
-            oscillator2.setTuning(value)
-            for i in 0..<voices.count {
-                voices[i].oscillator2.setTuning(value)
-            }
-        case "osc2_wavetable_pos":
-            oscillator2.wavetablePosition = value
-            for i in 0..<voices.count {
-                voices[i].oscillator2.wavetablePosition = value
-            }
-        case "osc2_phase_distortion":
-            oscillator2.phaseDistortionAmount = value
-            for i in 0..<voices.count {
-                voices[i].oscillator2.phaseDistortionAmount = value
-            }
-        case "osc2_level":
-            oscillator2.amplitude = value
-            for i in 0..<voices.count {
-                voices[i].oscillator2.amplitude = value
-            }
-
-        // Modulation parameters
-        case "ring_mod_amount":
-            oscillator1.setModulation(type: .ringModulation, amount: value)
-        case "hard_sync_enable":
-            if value > 0.5 {
-                oscillator2.setModulation(type: .hardSync, amount: 1.0)
-                oscillator2.syncSource = oscillator1
-            } else {
-                oscillator2.setModulation(type: .none, amount: 0.0)
-                oscillator2.syncSource = nil
-            }
-
-        // Noise parameters
-        case "noise_level":
-            noiseGenerator.level = value
-        case "noise_type":
-            let noiseTypes: [WavetoneNoiseGenerator.NoiseType] = [.white, .pink, .brown, .blue, .violet, .filtered, .granular, .crackle]
-            let index = Int(value.rounded())
-            if index >= 0 && index < noiseTypes.count {
-                noiseGenerator.noiseType = noiseTypes[index]
-            }
-        case "noise_base_freq":
-            noiseGenerator.baseFrequency = value
-        case "noise_width":
-            noiseGenerator.width = value
-        case "noise_grain":
-            noiseGenerator.grain = value
-        case "noise_resonance":
-            noiseGenerator.resonance = value
-        case "noise_character":
-            noiseGenerator.character = value
-        case "amp_attack":
-            envelopeSystem.amplitudeEnvelope.config.attack.time = value
-        case "amp_decay":
-            envelopeSystem.amplitudeEnvelope.config.decay.time = value
-        case "amp_sustain":
-            envelopeSystem.amplitudeEnvelope.config.sustain.level = value
-        case "amp_release":
-            envelopeSystem.amplitudeEnvelope.config.release.time = value
-
-        // Modulation matrix parameters
-        case "mod_wheel":
-            modulationMatrix.setModulationSource(.modWheel, value: value)
-        case "aftertouch":
-            modulationMatrix.setModulationSource(.aftertouch, value: value)
-        case "velocity":
-            modulationMatrix.setModulationSource(.velocity, value: value)
-        case "lfo1_rate":
-            modulationMatrix.setLFORate(1, rate: value)
-        case "lfo1_depth":
-            modulationMatrix.setLFODepth(1, depth: value)
-
-        default:
+            
+        default: // No modulation
             break
         }
     }
-
-    private func setupDefaultWavetables() {
-        // Set default wavetables for oscillators
-        let wavetables = wavetableManager.getAllWavetables()
-        if !wavetables.isEmpty {
-            oscillator1.setWavetable(wavetables[0])
-            if wavetables.count > 1 {
-                oscillator2.setWavetable(wavetables[1])
-            } else {
-                oscillator2.setWavetable(wavetables[0])
+    
+    private func generateNoise(parameters: WavetoneVoiceMachineParameters, blockSize: Int) {
+        if parameters.noiseLevel > 0.001 {
+            noiseGenerator.processBlock(outputBuffer: &noiseBuffer, blockSize: blockSize)
+            
+            // Apply noise level
+            for i in 0..<blockSize {
+                noiseBuffer[i] *= parameters.noiseLevel
+            }
+        } else {
+            // Clear noise buffer
+            for i in 0..<blockSize {
+                noiseBuffer[i] = 0.0
             }
         }
     }
-
-    private func setupModulationRouting() {
-        // Configure default modulation routing
-        modulationMatrix.setupDefaultRouting()
+    
+    private func mixSources(parameters: WavetoneVoiceMachineParameters, blockSize: Int) {
+        // Mix oscillators and noise
+        for i in 0..<blockSize {
+            mixBuffer[i] = (oscillator1Buffer[i] * parameters.oscillator1Level) +
+                          (oscillator2Buffer[i] * parameters.oscillator2Level) +
+                          noiseBuffer[i]
+            
+            // Apply soft clipping to prevent harsh distortion
+            mixBuffer[i] = tanh(mixBuffer[i])
+        }
     }
+    
+    private func applyPhaseDistortion(phase: Float, amount: Float) -> Float {
+        if amount <= 0.001 {
+            return phase
+        }
+        
+        // Simple sine-based phase distortion
+        let distorted = phase + (amount * sin(phase * 2.0 * .pi))
+        return fmod(distorted, 1.0)
+    }
+    
+    private func midiNoteToFrequency(_ noteNumber: Int) -> Float {
+        return 440.0 * pow(2.0, Float(noteNumber - 69) / 12.0)
+    }
+}
 
+// MARK: - WAVETONE Voice Machine
+
+/// Complete WAVETONE Voice Machine implementation
+/// Combines wavetable synthesis, phase distortion, oscillator modulation, noise generation, and envelopes
+@unchecked Sendable
+public final class WavetoneVoiceMachine: VoiceMachine {
+    
+    // MARK: - Parameter Management System
+    public struct WavetoneParameters {
+        // Master Controls
+        public var masterVolume: Float = 0.8
+        public var masterTune: Float = 0.0        // -12 to +12 semitones
+        public var portamento: Float = 0.0        // 0.0 to 5.0 seconds
+        public var pitchBend: Float = 0.0         // -2.0 to +2.0 semitones
+        
+        // Oscillator 1 (Wavetable)
+        public var osc1Level: Float = 0.8
+        public var osc1Tune: Float = 0.0          // -24 to +24 semitones
+        public var osc1FineTune: Float = 0.0      // -50 to +50 cents
+        public var osc1WavetableIndex: Int = 0
+        public var osc1WavePosition: Float = 0.0  // 0.0 to 1.0
+        public var osc1PhaseDistortion: Float = 0.0  // 0.0 to 1.0
+        
+        // Oscillator 2 (Wavetable)
+        public var osc2Level: Float = 0.8
+        public var osc2Tune: Float = 0.0          // -24 to +24 semitones
+        public var osc2FineTune: Float = 0.0      // -50 to +50 cents
+        public var osc2WavetableIndex: Int = 1
+        public var osc2WavePosition: Float = 0.0  // 0.0 to 1.0
+        public var osc2PhaseDistortion: Float = 0.0  // 0.0 to 1.0
+        
+        // Modulation
+        public var ringModulation: Float = 0.0    // 0.0 to 1.0
+        public var hardSync: Float = 0.0          // 0.0 to 1.0
+        public var syncDirection: Int = 1         // 1 = osc1->osc2, 2 = osc2->osc1
+        
+        // Noise Generator
+        public var noiseType: Int = 0             // NoiseType index
+        public var noiseLevel: Float = 0.0        // 0.0 to 1.0
+        public var noiseFilter: Float = 0.5       // 0.0 to 1.0 (filter frequency)
+        public var noiseResonance: Float = 0.0    // 0.0 to 1.0
+        
+        // Envelope Parameters (Amplitude)
+        public var ampEnvAttack: Float = 0.1
+        public var ampEnvDecay: Float = 0.2
+        public var ampEnvSustain: Float = 0.7
+        public var ampEnvRelease: Float = 0.3
+        public var ampEnvVelocity: Float = 0.5
+        
+        // Envelope Parameters (Filter)
+        public var filterEnvAttack: Float = 0.05
+        public var filterEnvDecay: Float = 0.8
+        public var filterEnvSustain: Float = 0.3
+        public var filterEnvRelease: Float = 2.0
+        public var filterEnvAmount: Float = 0.0   // -1.0 to 1.0
+        
+        // LFO
+        public var lfoRate: Float = 1.0           // 0.1 to 20.0 Hz
+        public var lfoDepth: Float = 0.0          // 0.0 to 1.0
+        public var lfoShape: Int = 0              // 0=sine, 1=triangle, 2=square, 3=saw
+        public var lfoSync: Bool = false
+        public var lfoTarget: Int = 0             // 0=pitch, 1=filter, 2=amplitude, 3=wavetable
+        
+        public init() {}
+    }
+    
+    // MARK: - Voice State
+    private struct VoiceState {
+        var isActive: Bool = false
+        var noteNumber: Int = 60
+        var velocity: Float = 1.0
+        var frequency: Float = 440.0
+        var phase1: Float = 0.0
+        var phase2: Float = 0.0
+        var envelopeState: WavetoneEnvelopeState = WavetoneEnvelopeState()
+    }
+    
+    private struct WavetoneEnvelopeState {
+        var ampEnvelope: Float = 0.0
+        var filterEnvelope: Float = 0.0
+        var ampPhase: EnvelopePhase = .idle
+        var filterPhase: EnvelopePhase = .idle
+        var ampTime: Float = 0.0
+        var filterTime: Float = 0.0
+        var isReleasing: Bool = false
+    }
+    
+    // MARK: - Properties
+    private let maxVoices = 16
+    private var voices: [VoiceState]
+    private var parameters: WavetoneParameters
+    private var parameterSmoothers: [String: ParameterSmoother]
+    private let sampleRate: Float
+    
+    // Audio components
+    private var wavetables: [WavetableData]
+    private var noiseGenerator: WavetoneNoiseGenerator
+    private var envelopeSystem: WavetoneMultiEnvelopeSystem
+    
+    // Audio buffers
+    private var voiceBuffer: [Float]
+    private var mixBuffer: [Float]
+    private var tempBuffer: [Float]
+    private let blockSize = 128
+    
+    // Performance monitoring
+    private var cpuUsage: Float = 0.0
+    private var processingTime: CFTimeInterval = 0.0
+    private var activeVoiceCount: Int = 0
+    
+    // Thread safety
+    private let voiceQueue = DispatchQueue(label: "wavetone.voices", qos: .userInteractive)
+    private let parameterQueue = DispatchQueue(label: "wavetone.parameters", qos: .userInteractive)
+    
+    // MARK: - Initialization
+    
+    public override init(sampleRate: Float = 44100.0) {
+        self.sampleRate = sampleRate
+        self.voices = Array(repeating: VoiceState(), count: maxVoices)
+        self.parameters = WavetoneParameters()
+        self.parameterSmoothers = [:]
+        
+        // Initialize audio buffers
+        self.voiceBuffer = Array(repeating: 0.0, count: blockSize)
+        self.mixBuffer = Array(repeating: 0.0, count: blockSize)
+        self.tempBuffer = Array(repeating: 0.0, count: blockSize)
+        
+        // Initialize wavetables
+        self.wavetables = [
+            WavetableData.createSineProgression(frameCount: 64),
+            WavetableData.createSawtoothProgression(frameCount: 32),
+            WavetableData.createSquareProgression(frameCount: 16),
+            WavetableData.createTriangleProgression(frameCount: 24)
+        ]
+        
+        // Initialize audio components
+        self.noiseGenerator = WavetoneNoiseGenerator(sampleRate: Double(sampleRate))
+        self.envelopeSystem = WavetoneMultiEnvelopeSystem(sampleRate: Double(sampleRate), blockSize: blockSize)
+        
+        super.init(sampleRate: sampleRate)
+        
+        setupParameterSmoothers()
+    }
+    
+    // MARK: - VoiceMachine Protocol Implementation
+    
+    public override func noteOn(noteNumber: Int, velocity: Float) {
+        voiceQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            let clampedVelocity = max(0.0, min(1.0, velocity))
+            let clampedNote = max(0, min(127, noteNumber))
+            
+            // Find available voice or steal oldest
+            let voiceIndex = self.findAvailableVoice() ?? self.findOldestVoice()
+            
+            // Initialize voice
+            var voice = self.voices[voiceIndex]
+            voice.isActive = true
+            voice.noteNumber = clampedNote
+            voice.velocity = clampedVelocity
+            voice.frequency = self.midiNoteToFrequency(clampedNote)
+            voice.phase1 = 0.0
+            voice.phase2 = 0.0
+            voice.envelopeState = WavetoneEnvelopeState()
+            voice.envelopeState.ampPhase = .attack
+            voice.envelopeState.filterPhase = .attack
+            
+            self.voices[voiceIndex] = voice
+            self.updateActiveVoiceCount()
+            
+            // Trigger envelopes
+            self.envelopeSystem.triggerAll(velocity: clampedVelocity, midiNote: Float(clampedNote))
+        }
+    }
+    
+    public override func noteOff(noteNumber: Int) {
+        voiceQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            // Find active voices with this note number
+            for i in 0..<self.voices.count {
+                if self.voices[i].isActive && self.voices[i].noteNumber == noteNumber {
+                    self.voices[i].envelopeState.isReleasing = true
+                    self.voices[i].envelopeState.ampPhase = .release
+                    self.voices[i].envelopeState.filterPhase = .release
+                }
+            }
+            
+            // Release envelopes
+            self.envelopeSystem.releaseAll()
+        }
+    }
+    
+    public override func allNotesOff() {
+        voiceQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            for i in 0..<self.voices.count {
+                if self.voices[i].isActive {
+                    self.voices[i].envelopeState.isReleasing = true
+                    self.voices[i].envelopeState.ampPhase = .release
+                    self.voices[i].envelopeState.filterPhase = .release
+                }
+            }
+            
+            self.envelopeSystem.releaseAll()
+        }
+    }
+    
+    public override func setPitchBend(_ value: Float) {
+        parameterQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            let clampedValue = max(-2.0, min(2.0, value))
+            self.parameters.pitchBend = clampedValue
+            self.parameterSmoothers["pitchBend"]?.setTarget(clampedValue)
+        }
+    }
+    
+    public override func setModWheel(_ value: Float) {
+        parameterQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            let clampedValue = max(0.0, min(1.0, value))
+            self.parameters.lfoDepth = clampedValue * 0.5  // Scale mod wheel to LFO depth
+            self.parameterSmoothers["lfoDepth"]?.setTarget(self.parameters.lfoDepth)
+        }
+    }
+    
+    public override func processAudio(outputBuffer: AudioBuffer, frameCount: Int) {
+        let startTime = CFAbsoluteTimeGetCurrent()
+        
+        // Process parameter smoothing
+        processParameterSmoothing()
+        
+        // Clear mix buffer
+        vDSP_vclr(&mixBuffer, 1, vDSP_Length(min(frameCount, blockSize)))
+        
+        // Process each active voice
+        voiceQueue.sync {
+            for i in 0..<voices.count {
+                if voices[i].isActive {
+                    processVoice(voiceIndex: i, frameCount: min(frameCount, blockSize))
+                    
+                    // Add to mix buffer
+                    vDSP_vadd(mixBuffer, 1, voiceBuffer, 1, &mixBuffer, 1, vDSP_Length(min(frameCount, blockSize)))
+                }
+            }
+        }
+        
+        // Apply master volume and copy to output
+        let masterVol = parameters.masterVolume
+        vDSP_vsmul(mixBuffer, 1, &masterVol, &tempBuffer, 1, vDSP_Length(min(frameCount, blockSize)))
+        
+        // Copy to output buffer (assuming mono for now)
+        if let outputPointer = outputBuffer.floatChannelData?[0] {
+            cblas_scopy(Int32(min(frameCount, blockSize)), tempBuffer, 1, outputPointer, 1)
+        }
+        
+        // Update performance metrics
+        processingTime = CFAbsoluteTimeGetCurrent() - startTime
+        cpuUsage = Float(processingTime * Double(sampleRate) / Double(frameCount))
+        
+        // Clean up inactive voices
+        cleanupInactiveVoices()
+    }
+    
+    // MARK: - Parameter Management
+    
+    public func setParameter(_ parameter: String, value: Float) {
+        parameterQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            let clampedValue = self.clampParameterValue(parameter, value: value)
+            self.updateParameter(parameter, value: clampedValue)
+            self.parameterSmoothers[parameter]?.setTarget(clampedValue)
+        }
+    }
+    
+    public func getParameter(_ parameter: String) -> Float {
+        return getParameterInternal(parameter)
+    }
+    
+    public func loadPreset(_ presetData: [String: Any]) {
+        parameterQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            for (key, value) in presetData {
+                if let floatValue = value as? Float {
+                    self.updateParameter(key, value: floatValue)
+                    self.parameterSmoothers[key]?.setTarget(floatValue)
+                } else if let intValue = value as? Int {
+                    self.updateParameter(key, value: Float(intValue))
+                }
+            }
+        }
+    }
+    
     // MARK: - Preset Management
-
-    /// Preset data structure for WAVETONE Voice Machine
-    public struct WavetonePreset: Codable {
-        public let name: String
-        public let description: String
-        public let category: String
-        public let parameters: [String: Float]
-        public let wavetable1Name: String?
-        public let wavetable2Name: String?
-        public let version: String
-        public let createdDate: Date
-
-        public init(name: String, description: String = "", category: String = "User",
-                   parameters: [String: Float], wavetable1Name: String? = nil,
-                   wavetable2Name: String? = nil) {
-            self.name = name
-            self.description = description
-            self.category = category
-            self.parameters = parameters
-            self.wavetable1Name = wavetable1Name
-            self.wavetable2Name = wavetable2Name
-            self.version = "1.0"
-            self.createdDate = Date()
+    
+    public func savePreset() -> [String: Any] {
+        return parameterQueue.sync {
+            return [
+                "masterVolume": parameters.masterVolume,
+                "masterTune": parameters.masterTune,
+                "portamento": parameters.portamento,
+                "osc1Level": parameters.osc1Level,
+                "osc1Tune": parameters.osc1Tune,
+                "osc1FineTune": parameters.osc1FineTune,
+                "osc1WavetableIndex": parameters.osc1WavetableIndex,
+                "osc1WavePosition": parameters.osc1WavePosition,
+                "osc1PhaseDistortion": parameters.osc1PhaseDistortion,
+                "osc2Level": parameters.osc2Level,
+                "osc2Tune": parameters.osc2Tune,
+                "osc2FineTune": parameters.osc2FineTune,
+                "osc2WavetableIndex": parameters.osc2WavetableIndex,
+                "osc2WavePosition": parameters.osc2WavePosition,
+                "osc2PhaseDistortion": parameters.osc2PhaseDistortion,
+                "ringModulation": parameters.ringModulation,
+                "hardSync": parameters.hardSync,
+                "noiseType": parameters.noiseType,
+                "noiseLevel": parameters.noiseLevel,
+                "ampEnvAttack": parameters.ampEnvAttack,
+                "ampEnvDecay": parameters.ampEnvDecay,
+                "ampEnvSustain": parameters.ampEnvSustain,
+                "ampEnvRelease": parameters.ampEnvRelease,
+                "filterEnvAttack": parameters.filterEnvAttack,
+                "filterEnvDecay": parameters.filterEnvDecay,
+                "filterEnvSustain": parameters.filterEnvSustain,
+                "filterEnvRelease": parameters.filterEnvRelease,
+                "lfoRate": parameters.lfoRate,
+                "lfoDepth": parameters.lfoDepth
+            ]
         }
     }
-
-    /// Save current state as a preset
-    public func savePreset(name: String, description: String = "", category: String = "User") -> WavetonePreset {
-        var parameterValues: [String: Float] = [:]
-
-        // Collect all current parameter values
-        for parameter in parameters.getAllParameters() {
-            parameterValues[parameter.id] = parameters.getValue(parameter.id)
-        }
-
-        // Get current wavetable names
-        let wavetable1Name = oscillator1.currentWavetable?.metadata.name
-        let wavetable2Name = oscillator2.currentWavetable?.metadata.name
-
-        return WavetonePreset(
-            name: name,
-            description: description,
-            category: category,
-            parameters: parameterValues,
-            wavetable1Name: wavetable1Name,
-            wavetable2Name: wavetable2Name
-        )
-    }
-
-    /// Load a preset
-    public func loadPreset(_ preset: WavetonePreset) {
-        // Load parameter values
-        for (parameterID, value) in preset.parameters {
-            parameters.setValue(parameterID, value: value)
-        }
-
-        // Load wavetables if specified
-        if let wavetable1Name = preset.wavetable1Name {
-            if let wavetable = wavetableManager.getWavetable(named: wavetable1Name) {
-                oscillator1.currentWavetable = wavetable
-            }
-        }
-
-        if let wavetable2Name = preset.wavetable2Name {
-            if let wavetable = wavetableManager.getWavetable(named: wavetable2Name) {
-                oscillator2.currentWavetable = wavetable
-            }
-        }
-    }
-
-    /// Get factory presets
-    public static func getFactoryPresets() -> [WavetonePreset] {
+    
+    // MARK: - Performance Monitoring
+    
+    public var performanceMetrics: [String: Any] {
         return [
-            // Lead preset
-            WavetonePreset(
-                name: "Classic Lead",
-                description: "Bright lead sound with filter sweep",
-                category: "Lead",
-                parameters: [
-                    "osc1_level": 0.8,
-                    "osc2_level": 0.6,
-                    "osc2_tuning": 7.0,  // Perfect fifth
-                    "amp_attack": 0.01,
-                    "amp_decay": 0.3,
-                    "amp_sustain": 0.7,
-                    "amp_release": 0.5,
-                    "lfo1_rate": 5.0,
-                    "lfo1_depth": 0.3
-                ]
-            ),
-
-            // Pad preset
-            WavetonePreset(
-                name: "Warm Pad",
-                description: "Evolving pad with slow attack",
-                category: "Pad",
-                parameters: [
-                    "osc1_level": 0.7,
-                    "osc2_level": 0.7,
-                    "osc2_tuning": -12.0,  // One octave down
-                    "amp_attack": 2.0,
-                    "amp_decay": 1.0,
-                    "amp_sustain": 0.8,
-                    "amp_release": 3.0,
-                    "lfo1_rate": 0.5,
-                    "lfo1_depth": 0.2
-                ]
-            ),
-
-            // Bass preset
-            WavetonePreset(
-                name: "Deep Bass",
-                description: "Rich bass sound with sub oscillator",
-                category: "Bass",
-                parameters: [
-                    "osc1_level": 0.9,
-                    "osc2_level": 0.5,
-                    "osc2_tuning": -24.0,  // Two octaves down
-                    "amp_attack": 0.001,
-                    "amp_decay": 0.2,
-                    "amp_sustain": 0.9,
-                    "amp_release": 0.3,
-                    "lfo1_rate": 2.0,
-                    "lfo1_depth": 0.1
-                ]
-            ),
-
-            // Pluck preset
-            WavetonePreset(
-                name: "Bright Pluck",
-                description: "Percussive pluck with fast decay",
-                category: "Pluck",
-                parameters: [
-                    "osc1_level": 0.8,
-                    "osc2_level": 0.4,
-                    "osc2_tuning": 12.0,  // One octave up
-                    "amp_attack": 0.001,
-                    "amp_decay": 0.1,
-                    "amp_sustain": 0.0,
-                    "amp_release": 0.2,
-                    "lfo1_rate": 0.0,
-                    "lfo1_depth": 0.0
-                ]
-            ),
-
-            // Noise preset
-            WavetonePreset(
-                name: "Wind Texture",
-                description: "Filtered noise for ambient textures",
-                category: "Texture",
-                parameters: [
-                    "osc1_level": 0.3,
-                    "osc2_level": 0.0,
-                    "noise_level": 0.8,
-                    "noise_type": 5.0,  // Filtered noise
-                    "noise_base_freq": 2000.0,
-                    "noise_width": 1000.0,
-                    "noise_resonance": 0.3,
-                    "noise_character": 0.7,
-                    "amp_attack": 1.0,
-                    "amp_decay": 2.0,
-                    "amp_sustain": 0.6,
-                    "amp_release": 2.0
-                ]
-            )
+            "cpuUsage": cpuUsage,
+            "processingTime": processingTime,
+            "activeVoices": activeVoiceCount,
+            "maxVoices": maxVoices,
+            "sampleRate": sampleRate,
+            "blockSize": blockSize
         ]
     }
-
-    /// Initialize with default preset
-    public func loadDefaultPreset() {
-        let defaultPreset = WavetonePreset(
-            name: "Default",
-            description: "Default WAVETONE settings",
-            category: "Init",
-            parameters: [
-                "osc1_level": 0.8,
-                "osc2_level": 0.0,
-                "osc1_tuning": 0.0,
-                "osc2_tuning": 0.0,
-                "amp_attack": 0.01,
-                "amp_decay": 0.3,
-                "amp_sustain": 0.7,
-                "amp_release": 1.0,
-                "noise_level": 0.0
-            ]
-        )
-        loadPreset(defaultPreset)
+    
+    // MARK: - Private Implementation
+    
+    private func setupParameterSmoothers() {
+        let smoothingTimes: [String: Float] = [
+            "masterVolume": 0.01,
+            "masterTune": 0.1,
+            "portamento": 0.02,
+            "pitchBend": 0.005,
+            "osc1Level": 0.005,
+            "osc2Level": 0.005,
+            "osc1PhaseDistortion": 0.01,
+            "osc2PhaseDistortion": 0.01,
+            "ringModulation": 0.01,
+            "hardSync": 0.01,
+            "noiseLevel": 0.005,
+            "lfoDepth": 0.02,
+            "lfoRate": 0.05
+        ]
+        
+        for (parameter, time) in smoothingTimes {
+            parameterSmoothers[parameter] = ParameterSmoother(sampleRate: sampleRate, smoothingTime: time)
+        }
     }
+    
+    private func processParameterSmoothing() {
+        for (parameter, smoother) in parameterSmoothers {
+            let smoothedValue = smoother.getSmoothedValue()
+            updateParameter(parameter, value: smoothedValue)
+        }
+    }
+    
+    private func processVoice(voiceIndex: Int, frameCount: Int) {
+        var voice = voices[voiceIndex]
+        
+        // Clear voice buffer
+        vDSP_vclr(&voiceBuffer, 1, vDSP_Length(frameCount))
+        
+        // Process envelopes
+        processVoiceEnvelopes(&voice, frameCount: frameCount)
+        
+        // Check if voice should be deactivated
+        if voice.envelopeState.ampEnvelope <= 0.001 && voice.envelopeState.isReleasing {
+            voice.isActive = false
+            voices[voiceIndex] = voice
+            return
+        }
+        
+        // Generate oscillator audio
+        processOscillators(&voice, frameCount: frameCount)
+        
+        // Generate noise
+        processNoise(&voice, frameCount: frameCount)
+        
+        // Apply amplitude envelope
+        let ampEnv = voice.envelopeState.ampEnvelope * voice.velocity
+        vDSP_vsmul(voiceBuffer, 1, &ampEnv, &voiceBuffer, 1, vDSP_Length(frameCount))
+        
+        voices[voiceIndex] = voice
+    }
+    
+    private func processVoiceEnvelopes(_ voice: inout VoiceState, frameCount: Int) {
+        // Simplified envelope processing - in real implementation would use WavetoneEnvelopeSystem
+        let ampParams = [parameters.ampEnvAttack, parameters.ampEnvDecay, parameters.ampEnvSustain, parameters.ampEnvRelease]
+        
+        switch voice.envelopeState.ampPhase {
+        case .attack:
+            voice.envelopeState.ampTime += Float(frameCount) / sampleRate
+            let attackProgress = voice.envelopeState.ampTime / ampParams[0]
+            voice.envelopeState.ampEnvelope = min(1.0, attackProgress)
+            
+            if attackProgress >= 1.0 {
+                voice.envelopeState.ampPhase = .decay
+                voice.envelopeState.ampTime = 0.0
+            }
+            
+        case .decay:
+            voice.envelopeState.ampTime += Float(frameCount) / sampleRate
+            let decayProgress = voice.envelopeState.ampTime / ampParams[1]
+            voice.envelopeState.ampEnvelope = 1.0 - (decayProgress * (1.0 - ampParams[2]))
+            
+            if decayProgress >= 1.0 {
+                voice.envelopeState.ampPhase = .sustain
+                voice.envelopeState.ampEnvelope = ampParams[2]
+            }
+            
+        case .sustain:
+            voice.envelopeState.ampEnvelope = ampParams[2]
+            
+        case .release:
+            voice.envelopeState.ampTime += Float(frameCount) / sampleRate
+            let releaseProgress = voice.envelopeState.ampTime / ampParams[3]
+            voice.envelopeState.ampEnvelope = ampParams[2] * (1.0 - releaseProgress)
+            
+            if releaseProgress >= 1.0 {
+                voice.envelopeState.ampEnvelope = 0.0
+                voice.envelopeState.ampPhase = .idle
+            }
+            
+        default:
+            voice.envelopeState.ampEnvelope = 0.0
+        }
+    }
+    
+    private func processOscillators(_ voice: inout VoiceState, frameCount: Int) {
+        let baseFreq = voice.frequency
+        let pitchBendMult = pow(2.0, parameters.pitchBend / 12.0)
+        let masterTuneMult = pow(2.0, parameters.masterTune / 12.0)
+        
+        // Oscillator 1
+        let osc1Freq = baseFreq * pow(2.0, parameters.osc1Tune / 12.0) * pitchBendMult * masterTuneMult
+        let osc1PhaseInc = osc1Freq / sampleRate
+        
+        // Oscillator 2  
+        let osc2Freq = baseFreq * pow(2.0, parameters.osc2Tune / 12.0) * pitchBendMult * masterTuneMult
+        let osc2PhaseInc = osc2Freq / sampleRate
+        
+        for i in 0..<frameCount {
+            // Generate oscillator 1
+            let osc1Sample = generateWavetableSample(
+                wavetableIndex: parameters.osc1WavetableIndex,
+                phase: voice.phase1,
+                wavePosition: parameters.osc1WavePosition,
+                phaseDistortion: parameters.osc1PhaseDistortion
+            )
+            
+            // Generate oscillator 2
+            let osc2Sample = generateWavetableSample(
+                wavetableIndex: parameters.osc2WavetableIndex,
+                phase: voice.phase2,
+                wavePosition: parameters.osc2WavePosition,
+                phaseDistortion: parameters.osc2PhaseDistortion
+            )
+            
+            // Apply modulation
+            var mixedSample = osc1Sample * parameters.osc1Level + osc2Sample * parameters.osc2Level
+            
+            // Ring modulation
+            if parameters.ringModulation > 0.001 {
+                let ringMod = osc1Sample * osc2Sample
+                mixedSample = mixedSample * (1.0 - parameters.ringModulation) + ringMod * parameters.ringModulation
+            }
+            
+            // Hard sync (simplified)
+            if parameters.hardSync > 0.001 && voice.phase2 < osc2PhaseInc {
+                voice.phase1 = 0.0  // Reset osc1 phase when osc2 resets
+            }
+            
+            voiceBuffer[i] += mixedSample
+            
+            // Advance phases
+            voice.phase1 += osc1PhaseInc
+            voice.phase2 += osc2PhaseInc
+            
+            if voice.phase1 >= 1.0 { voice.phase1 -= 1.0 }
+            if voice.phase2 >= 1.0 { voice.phase2 -= 1.0 }
+        }
+    }
+    
+    private func processNoise(_ voice: inout VoiceState, frameCount: Int) {
+        if parameters.noiseLevel > 0.001 {
+            // Configure noise generator
+            noiseGenerator.setParameters(
+                type: WavetoneNoiseGenerator.NoiseType.allCases[min(parameters.noiseType, WavetoneNoiseGenerator.NoiseType.allCases.count - 1)],
+                level: parameters.noiseLevel,
+                baseFreq: parameters.noiseFilter * 10000.0 + 100.0,
+                width: 1000.0,
+                grain: 0.5,
+                resonance: parameters.noiseResonance,
+                character: 0.5
+            )
+            
+            // Generate noise and add to voice buffer
+            for i in 0..<frameCount {
+                let noiseSample = noiseGenerator.processSample()
+                voiceBuffer[i] += noiseSample
+            }
+        }
+    }
+    
+    private func generateWavetableSample(wavetableIndex: Int, phase: Float, wavePosition: Float, phaseDistortion: Float) -> Float {
+        guard wavetableIndex < wavetables.count else { return 0.0 }
+        
+        let wavetable = wavetables[wavetableIndex]
+        var adjustedPhase = phase
+        
+        // Apply phase distortion
+        if phaseDistortion > 0.001 {
+            adjustedPhase = phase + phaseDistortion * sin(phase * 2.0 * .pi)
+            if adjustedPhase > 1.0 { adjustedPhase -= 1.0 }
+            if adjustedPhase < 0.0 { adjustedPhase += 1.0 }
+        }
+        
+        // Calculate frame and sample positions
+        let framePos = wavePosition * Float(wavetable.frameCount - 1)
+        let samplePos = adjustedPhase * Float(wavetable.frameSize)
+        
+        // Use linear interpolation for now (could use more sophisticated interpolation)
+        return wavetable.interpolateSample(framePosition: framePos, samplePosition: samplePos, interpolation: .linear)
+    }
+    
+    private func findAvailableVoice() -> Int? {
+        for i in 0..<voices.count {
+            if !voices[i].isActive {
+                return i
+            }
+        }
+        return nil
+    }
+    
+    private func findOldestVoice() -> Int {
+        // Simplified voice stealing - steal the first active voice
+        for i in 0..<voices.count {
+            if voices[i].isActive {
+                return i
+            }
+        }
+        return 0
+    }
+    
+    private func cleanupInactiveVoices() {
+        for i in 0..<voices.count {
+            if voices[i].isActive && voices[i].envelopeState.ampEnvelope <= 0.001 && voices[i].envelopeState.isReleasing {
+                voices[i].isActive = false
+            }
+        }
+        updateActiveVoiceCount()
+    }
+    
+    private func updateActiveVoiceCount() {
+        activeVoiceCount = voices.filter { $0.isActive }.count
+    }
+    
+    private func midiNoteToFrequency(_ noteNumber: Int) -> Float {
+        return 440.0 * pow(2.0, Float(noteNumber - 69) / 12.0)
+    }
+    
+    private func clampParameterValue(_ parameter: String, value: Float) -> Float {
+        switch parameter {
+        case "masterVolume", "osc1Level", "osc2Level", "noiseLevel", "ringModulation", "hardSync":
+            return max(0.0, min(1.0, value))
+        case "masterTune", "osc1Tune", "osc2Tune":
+            return max(-24.0, min(24.0, value))
+        case "pitchBend":
+            return max(-2.0, min(2.0, value))
+        case "ampEnvAttack", "ampEnvDecay", "ampEnvRelease", "filterEnvAttack", "filterEnvDecay", "filterEnvRelease":
+            return max(0.001, min(10.0, value))
+        case "ampEnvSustain", "filterEnvSustain":
+            return max(0.0, min(1.0, value))
+        case "lfoRate":
+            return max(0.1, min(20.0, value))
+        default:
+            return value
+        }
+    }
+    
+    private func updateParameter(_ parameter: String, value: Float) {
+        switch parameter {
+        case "masterVolume": parameters.masterVolume = value
+        case "masterTune": parameters.masterTune = value
+        case "portamento": parameters.portamento = value
+        case "pitchBend": parameters.pitchBend = value
+        case "osc1Level": parameters.osc1Level = value
+        case "osc1Tune": parameters.osc1Tune = value
+        case "osc1FineTune": parameters.osc1FineTune = value
+        case "osc1WavePosition": parameters.osc1WavePosition = value
+        case "osc1PhaseDistortion": parameters.osc1PhaseDistortion = value
+        case "osc2Level": parameters.osc2Level = value
+        case "osc2Tune": parameters.osc2Tune = value
+        case "osc2FineTune": parameters.osc2FineTune = value
+        case "osc2WavePosition": parameters.osc2WavePosition = value
+        case "osc2PhaseDistortion": parameters.osc2PhaseDistortion = value
+        case "ringModulation": parameters.ringModulation = value
+        case "hardSync": parameters.hardSync = value
+        case "noiseLevel": parameters.noiseLevel = value
+        case "noiseFilter": parameters.noiseFilter = value
+        case "noiseResonance": parameters.noiseResonance = value
+        case "ampEnvAttack": parameters.ampEnvAttack = value
+        case "ampEnvDecay": parameters.ampEnvDecay = value
+        case "ampEnvSustain": parameters.ampEnvSustain = value
+        case "ampEnvRelease": parameters.ampEnvRelease = value
+        case "filterEnvAttack": parameters.filterEnvAttack = value
+        case "filterEnvDecay": parameters.filterEnvDecay = value
+        case "filterEnvSustain": parameters.filterEnvSustain = value
+        case "filterEnvRelease": parameters.filterEnvRelease = value
+        case "lfoRate": parameters.lfoRate = value
+        case "lfoDepth": parameters.lfoDepth = value
+        default: break
+        }
+    }
+    
+    private func getParameterValue(_ parameter: String) -> Float {
+        switch parameter {
+        case "masterVolume": return parameters.masterVolume
+        case "masterTune": return parameters.masterTune
+        case "portamento": return parameters.portamento
+        case "pitchBend": return parameters.pitchBend
+        case "osc1Level": return parameters.osc1Level
+        case "osc1Tune": return parameters.osc1Tune
+        case "osc1FineTune": return parameters.osc1FineTune
+        case "osc1WavePosition": return parameters.osc1WavePosition
+        case "osc1PhaseDistortion": return parameters.osc1PhaseDistortion
+        case "osc2Level": return parameters.osc2Level
+        case "osc2Tune": return parameters.osc2Tune
+        case "osc2FineTune": return parameters.osc2FineTune
+        case "osc2WavePosition": return parameters.osc2WavePosition
+        case "osc2PhaseDistortion": return parameters.osc2PhaseDistortion
+        case "ringModulation": return parameters.ringModulation
+        case "hardSync": return parameters.hardSync
+        case "noiseLevel": return parameters.noiseLevel
+        case "noiseFilter": return parameters.noiseFilter
+        case "noiseResonance": return parameters.noiseResonance
+        case "ampEnvAttack": return parameters.ampEnvAttack
+        case "ampEnvDecay": return parameters.ampEnvDecay
+        case "ampEnvSustain": return parameters.ampEnvSustain
+        case "ampEnvRelease": return parameters.ampEnvRelease
+        case "filterEnvAttack": return parameters.filterEnvAttack
+        case "filterEnvDecay": return parameters.filterEnvDecay
+        case "filterEnvSustain": return parameters.filterEnvSustain
+        case "filterEnvRelease": return parameters.filterEnvRelease
+        case "lfoRate": return parameters.lfoRate
+        case "lfoDepth": return parameters.lfoDepth
+        default: return 0.0
+        }
+    }
+}
+
+// MARK: - Preset System
+public struct WavetonePreset {
+    public let name: String
+    public let parameters: WavetoneVoiceMachine.WavetoneParameters
+    public let amplitudeEnvelope: WavetoneEnvelopeSystem.EnvelopeConfig
+    public let filterEnvelope: WavetoneEnvelopeSystem.EnvelopeConfig
+    
+    public init(name: String, 
+                parameters: WavetoneVoiceMachine.WavetoneParameters,
+                amplitudeEnvelope: WavetoneEnvelopeSystem.EnvelopeConfig,
+                filterEnvelope: WavetoneEnvelopeSystem.EnvelopeConfig) {
+        self.name = name
+        self.parameters = parameters
+        self.amplitudeEnvelope = amplitudeEnvelope
+        self.filterEnvelope = filterEnvelope
+    }
+}
+
+// MARK: - Built-in Presets
+public extension WavetonePreset {
+    
+    static let analog: WavetonePreset = {
+        var params = WavetoneVoiceMachine.WavetoneParameters()
+        params.osc1Level = 0.8
+        params.osc2Level = 0.6
+        params.osc2Tune = -12.0  // One octave down
+        params.ringModulation = 0.1
+        params.noiseLevel = 0.05
+        
+        return WavetonePreset(
+            name: "Analog",
+            parameters: params,
+            amplitudeEnvelope: .plucked,
+            filterEnvelope: .bell
+        )
+    }()
+    
+    static let bell: WavetonePreset = {
+        var params = WavetoneVoiceMachine.WavetoneParameters()
+        params.osc1Level = 0.9
+        params.osc2Level = 0.7
+        params.osc2Tune = 7.0    // Perfect fifth
+        params.osc1PhaseDistortion = 0.3
+        params.ringModulation = 0.2
+        
+        return WavetonePreset(
+            name: "Bell",
+            parameters: params,
+            amplitudeEnvelope: .bell,
+            filterEnvelope: .bell
+        )
+    }()
+    
+    static let pad: WavetonePreset = {
+        var params = WavetoneVoiceMachine.WavetoneParameters()
+        params.osc1Level = 0.7
+        params.osc2Level = 0.7
+        params.osc2FineTune = 5.0  // Slight detune
+        params.portamento = 0.2
+        params.noiseLevel = 0.1
+        
+        return WavetonePreset(
+            name: "Pad",
+            parameters: params,
+            amplitudeEnvelope: .pad,
+            filterEnvelope: .pad
+        )
+    }()
+    
+    static let percussive: WavetonePreset = {
+        var params = WavetoneVoiceMachine.WavetoneParameters()
+        params.osc1Level = 0.9
+        params.osc2Level = 0.4
+        params.osc1PhaseDistortion = 0.6
+        params.noiseLevel = 0.3
+        params.hardSync = 0.4
+        
+        return WavetonePreset(
+            name: "Percussive",
+            parameters: params,
+            amplitudeEnvelope: .percussive,
+            filterEnvelope: .percussive
+        )
+    }()
 }

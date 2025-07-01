@@ -4,7 +4,6 @@
 import Foundation
 import MachineProtocols
 import AudioEngine
-import AudioEngine
 
 /// Base filter machine implementation
 public class FilterMachine: FilterMachineProtocol, SerializableMachine, @unchecked Sendable {
@@ -24,6 +23,18 @@ public class FilterMachine: FilterMachineProtocol, SerializableMachine, @uncheck
     public var errorHandler: ((MachineError) -> Void)?
     public var performanceMetrics: MachinePerformanceMetrics = MachinePerformanceMetrics()
     public var parameters: ObservableParameterManager = ObservableParameterManager()
+
+    // FilterMachineProtocol required properties
+    public var cutoff: Float = 1000.0
+    public var resonance: Float = 0.0
+    public var drive: Float = 0.0
+    public var gain: Float = 0.0
+    public var bandwidth: Float = 1.0
+    public var keyTracking: Float = 0.0
+    public var velocitySensitivity: Float = 0.0
+    public var envelopeAmount: Float = 0.0
+    public var lfoAmount: Float = 0.0
+    public var modulationAmount: Float = 0.0
 
     public var filterState: [String: Float] {
         return [
@@ -48,6 +59,16 @@ public class FilterMachine: FilterMachineProtocol, SerializableMachine, @uncheck
     
     public func reset() {
         resetFilterState()
+        cutoff = 1000.0
+        resonance = 0.0
+        drive = 0.0
+        gain = 0.0
+        bandwidth = 1.0
+        keyTracking = 0.0
+        velocitySensitivity = 0.0
+        envelopeAmount = 0.0
+        lfoAmount = 0.0
+        modulationAmount = 0.0
         filterType = .lowpass
         slope = .slope24dB
         quality = .medium
@@ -59,7 +80,7 @@ public class FilterMachine: FilterMachineProtocol, SerializableMachine, @uncheck
         status = .ready
     }
 
-    // MARK: - FilterMachineProtocol Implementation
+    // MARK: - FilterMachineProtocol Required Methods
 
     public func getFrequencyResponse(at frequency: Float) -> FilterResponse {
         // Basic frequency response calculation
@@ -122,6 +143,21 @@ public class FilterMachine: FilterMachineProtocol, SerializableMachine, @uncheck
         return FilterResponse(frequency: frequency, magnitude: magnitude, phase: phase)
     }
 
+    public func getFrequencyResponseCurve(startFreq: Float, endFreq: Float, points: Int) -> [FilterResponse] {
+        var responses: [FilterResponse] = []
+        let logStart = log10(startFreq)
+        let logEnd = log10(endFreq)
+        let step = (logEnd - logStart) / Float(points - 1)
+        
+        for i in 0..<points {
+            let logFreq = logStart + Float(i) * step
+            let freq = pow(10.0, logFreq)
+            responses.append(getFrequencyResponse(at: freq))
+        }
+        
+        return responses
+    }
+
     public func resetFilterState() {
         isActive = true
     }
@@ -163,6 +199,41 @@ public class FilterMachine: FilterMachineProtocol, SerializableMachine, @uncheck
         )
     }
 
+    public func getFilterParameterGroups() -> [ParameterGroup] {
+        let coreGroup = ParameterGroup(
+            id: "core",
+            name: "Core Filter",
+            parameters: ["cutoff", "resonance", "filterType", "drive"]
+        )
+        
+        let modulationGroup = ParameterGroup(
+            id: "modulation",
+            name: "Modulation",
+            parameters: ["keyTracking", "velocitySensitivity", "envelopeAmount", "lfoAmount", "modulationAmount"]
+        )
+        
+        return [coreGroup, modulationGroup]
+    }
+
+    public func setupFilterParameters() {
+        // Add filter-specific parameters using default implementations
+        // The default implementations from FilterMachineProtocol will handle parameter setup
+    }
+
+    public func applyFilterModulation(envelope: Float, lfo: Float, modulation: Float) {
+        let envelopeMod = envelope * envelopeAmount
+        let lfoMod = lfo * lfoAmount
+        let modMod = modulation * modulationAmount
+        
+        let totalMod = envelopeMod + lfoMod + modMod
+        
+        // Apply modulation to cutoff
+        let modulatedCutoff = cutoff * (1.0 + totalMod)
+        cutoff = max(20.0, min(20000.0, modulatedCutoff))
+        
+        updateFilterCoefficients()
+    }
+
     public func updateFilterCoefficients() {
         // Filter coefficient update - in a real implementation this would recalculate filter coefficients
         lastActiveTimestamp = Date()
@@ -187,6 +258,28 @@ public class FilterMachine: FilterMachineProtocol, SerializableMachine, @uncheck
         cutoff = max(20.0, min(20000.0, newCutoff))
         resonance = max(0.0, min(1.0, newResonance))
         updateFilterCoefficients()
+    }
+
+    // MARK: - MachineProtocol Required Methods
+
+    public func validateParameters() throws -> Bool {
+        guard cutoff >= 20.0 && cutoff <= 20000.0 else {
+            throw CommonMachineError(code: "INVALID_CUTOFF", message: "Cutoff must be between 20 and 20000 Hz", severity: .error)
+        }
+        guard resonance >= 0.0 && resonance <= 1.0 else {
+            throw CommonMachineError(code: "INVALID_RESONANCE", message: "Resonance must be between 0.0 and 1.0", severity: .error)
+        }
+        return true
+    }
+
+    public func healthCheck() -> MachineHealthStatus {
+        if lastError != nil {
+            return .warning
+        }
+        if !isInitialized {
+            return .critical
+        }
+        return .healthy
     }
     
     // Enhanced lifecycle methods
@@ -222,19 +315,19 @@ public class FilterMachine: FilterMachineProtocol, SerializableMachine, @uncheck
         switch key {
         case "cutoff":
             if let floatValue = value as? Float {
-                cutoff = floatValue
+                cutoff = max(20.0, min(20000.0, floatValue))
             } else {
                 throw CommonMachineError(code: "INVALID_PARAMETER_TYPE", message: "Invalid type for cutoff", severity: .error)
             }
         case "resonance":
             if let floatValue = value as? Float {
-                resonance = floatValue
+                resonance = max(0.0, min(1.0, floatValue))
             } else {
                 throw CommonMachineError(code: "INVALID_PARAMETER_TYPE", message: "Invalid type for resonance", severity: .error)
             }
         case "drive":
             if let floatValue = value as? Float {
-                drive = floatValue
+                drive = max(0.0, min(1.0, floatValue))
             } else {
                 throw CommonMachineError(code: "INVALID_PARAMETER_TYPE", message: "Invalid type for drive", severity: .error)
             }
@@ -247,6 +340,7 @@ public class FilterMachine: FilterMachineProtocol, SerializableMachine, @uncheck
         default:
             throw CommonMachineError(code: "UNKNOWN_PARAMETER", message: "Unknown parameter: \(key)", severity: .warning)
         }
+        updateFilterCoefficients()
     }
     
     public func resetPerformanceCounters() {
@@ -265,7 +359,12 @@ public class FilterMachine: FilterMachineProtocol, SerializableMachine, @uncheck
                 "quality": quality.rawValue,
                 "isActive": String(isActive),
                 "status": status.rawValue,
-                "isInitialized": String(isInitialized)
+                "isInitialized": String(isInitialized),
+                "cutoff": String(cutoff),
+                "resonance": String(resonance),
+                "drive": String(drive),
+                "gain": String(gain),
+                "bandwidth": String(bandwidth)
             ]
         )
     }
@@ -299,6 +398,26 @@ public class FilterMachine: FilterMachineProtocol, SerializableMachine, @uncheck
         if let initializedString = state.metadata["isInitialized"] {
             isInitialized = initializedString == "true"
         }
+        if let cutoffString = state.metadata["cutoff"],
+           let cutoffValue = Float(cutoffString) {
+            cutoff = cutoffValue
+        }
+        if let resonanceString = state.metadata["resonance"],
+           let resonanceValue = Float(resonanceString) {
+            resonance = resonanceValue
+        }
+        if let driveString = state.metadata["drive"],
+           let driveValue = Float(driveString) {
+            drive = driveValue
+        }
+        if let gainString = state.metadata["gain"],
+           let gainValue = Float(gainString) {
+            gain = gainValue
+        }
+        if let bandwidthString = state.metadata["bandwidth"],
+           let bandwidthValue = Float(bandwidthString) {
+            bandwidth = bandwidthValue
+        }
 
         // Set parameters
         do {
@@ -315,10 +434,40 @@ public class FilterMachine: FilterMachineProtocol, SerializableMachine, @uncheck
         }
     }
 
-    // MARK: - Setup Methods
+    // MARK: - SerializableMachine
 
-    public func setupFilterParameters() {
-        // Add filter-specific parameters using default implementations
-        // The default implementations from FilterMachineProtocol will handle parameter setup
+    public func getSerializationData() -> MachineSerializationData {
+        return MachineSerializationData(
+            machineId: id.uuidString,
+            machineType: "FilterMachine",
+            name: name,
+            isEnabled: isEnabled,
+            parameters: parameters.getAllValues()
+        )
+    }
+
+    public func restoreFromSerializationData(_ data: MachineSerializationData) throws {
+        name = data.name
+        isEnabled = data.isEnabled
+        try parameters.setValues(data.parameters, notifyChanges: false)
+    }
+
+    public func validateSerializationData(_ data: MachineSerializationData) -> Bool {
+        return data.machineType == "FilterMachine"
+    }
+
+    public func getSupportedSerializationVersion() -> SerializationVersion {
+        return .current
+    }
+}
+
+/// Filter Module main class
+public class FilterModule: @unchecked Sendable {
+    public static let shared = FilterModule()
+    
+    private init() {}
+    
+    public func initialize() {
+        // Initialize Filter module
     }
 }
