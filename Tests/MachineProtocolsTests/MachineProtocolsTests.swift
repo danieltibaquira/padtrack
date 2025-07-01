@@ -192,12 +192,12 @@ final class MachineProtocolsTests: XCTestCase {
     }
 
     func testParameterManagerPresets() throws {
-        print("Starting test")
+        // Starting test
 
         // Test just creating a parameter without any manager
-        print("About to create parameter")
+        // About to create parameter
         let param = Parameter(id: "test", name: "Test", value: 0.5, minValue: 0.0, maxValue: 1.0, defaultValue: 0.5)
-        print("Created parameter: \(param.id)")
+        // Created parameter: \(param.id)
 
         // Test basic parameter functionality
         XCTAssertEqual(param.value, 0.5)
@@ -205,26 +205,26 @@ final class MachineProtocolsTests: XCTestCase {
         XCTAssertEqual(param.name, "Test")
 
         // Test parameter manager
-        print("About to create parameter manager")
+        // About to create parameter manager
         let manager = ParameterManager()
-        print("Created parameter manager")
+        // Created parameter manager
 
-        print("About to add parameter to manager")
+        // About to add parameter to manager
         manager.addParameter(param)
-        print("Added parameter to manager")
+        // Added parameter to manager
 
-        print("About to get parameter value")
+        // About to get parameter value
         let value = manager.getParameterValue(id: "test")
-        print("Got parameter value: \(value ?? -1)")
+        // Got parameter value: \(value ?? -1)
         XCTAssertEqual(value, 0.5)
 
-        print("About to create preset")
+        // About to create preset
         let preset = manager.createPreset(name: "Test Preset")
-        print("Created preset: \(preset.name)")
+        // Created preset: \(preset.name)
         XCTAssertEqual(preset.name, "Test Preset")
         XCTAssertEqual(preset.parameters["test"], 0.5)
 
-        print("Test completed successfully")
+        // Test completed successfully
     }
 
     func testParameterManagerGroups() throws {
@@ -510,7 +510,7 @@ final class MachineProtocolsTests: XCTestCase {
     func testMachineSerializationManager() throws {
         // Create a simple parameter manager first to test
         let paramManager = ParameterManager()
-        print("Created parameter manager")
+        // Created parameter manager
 
         // Create a simple parameter
         let param = Parameter(
@@ -521,18 +521,18 @@ final class MachineProtocolsTests: XCTestCase {
             maxValue: 1.0,
             defaultValue: 0.5
         )
-        print("Created parameter")
+        // Created parameter
 
         paramManager.addParameter(param)
-        print("Added parameter")
+        // Added parameter
 
         let values = paramManager.getAllValues()
-        print("Got values: \(values)")
+        // Got values: \(values)
 
         // Now try creating the voice machine
-        print("About to create voice machine")
+        // About to create voice machine
         let voiceMachine = MockVoiceMachine()
-        print("Created voice machine")
+        // Created voice machine
 
         // Test basic functionality
         XCTAssertEqual(voiceMachine.name, "Mock Voice Machine")

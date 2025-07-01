@@ -177,7 +177,7 @@ public final class RingModulationEngine: @unchecked Sendable {
     ///   - fundamental: Fundamental frequency for anti-aliasing
     /// - Returns: Anti-aliased ring modulated sample
     public func processRingModulationAntiAliased(carrierSample: Float, modulatorSample: Float, depth: Float, fundamental: Float) -> Float {
-        if !smoothedParams.antiAliasing || shouldApplyAntiAliasing(fundamental: fundamental) {
+        if !smoothedParams.antiAliasing || !shouldApplyAntiAliasing(fundamental: fundamental) {
             return processRingModulation(carrierSample: carrierSample, modulatorSample: modulatorSample, depth: depth)
         }
         

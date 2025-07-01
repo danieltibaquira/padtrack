@@ -359,7 +359,7 @@ final class Lowpass4FilterMachineTests: XCTestCase {
         
         XCTAssertLessThan(realTimeRatio, 0.1, "Processing should be much faster than real-time")
         
-        print("4-Pole Filter Performance: \(realTimeRatio * 100)% of real-time")
+        // Performance: \(realTimeRatio * 100)% of real-time
     }
     
     // MARK: - State Management Tests

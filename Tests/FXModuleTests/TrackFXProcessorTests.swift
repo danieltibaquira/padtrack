@@ -508,7 +508,7 @@ final class TrackFXProcessorTests: XCTestCase {
         
         XCTAssertLessThan(realTimeRatio, 0.1, "Processing should be much faster than real-time")
         
-        print("Track FX Performance: \(realTimeRatio * 100)% of real-time")
+        // Performance: \(realTimeRatio * 100)% of real-time
     }
     
     func testStabilityWithExtremeSettings() {
