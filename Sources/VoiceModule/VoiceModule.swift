@@ -4,7 +4,6 @@
 import Foundation
 import MachineProtocols
 import AudioEngine
-import AudioEngine
 
 /// Base voice machine implementation
 public class VoiceMachine: VoiceMachineProtocol, SerializableMachine, @unchecked Sendable {
@@ -23,6 +22,16 @@ public class VoiceMachine: VoiceMachineProtocol, SerializableMachine, @unchecked
     public var errorHandler: ((MachineError) -> Void)?
     public var performanceMetrics: MachinePerformanceMetrics = MachinePerformanceMetrics()
     public var parameters: ObservableParameterManager = ObservableParameterManager()
+
+    // Voice-specific properties required by VoiceMachineProtocol
+    public var masterVolume: Float = 0.8
+    public var masterTuning: Float = 0.0
+    public var portamentoTime: Float = 0.0
+    public var portamentoEnabled: Bool = false
+    public var velocitySensitivity: Float = 1.0
+    public var pitchBendRange: Float = 2.0
+    public var pitchBend: Float = 0.0
+    public var modWheel: Float = 0.0
 
     // Voice-specific properties
     private var _voiceStates: [VoiceState] = []
@@ -126,6 +135,84 @@ public class VoiceMachine: VoiceMachineProtocol, SerializableMachine, @unchecked
         status = .ready
     }
 
+    // MARK: - VoiceMachineProtocol Required Methods
+
+    public func getVoiceParameterGroups() -> [ParameterGroup] {
+        let synthGroup = ParameterGroup(
+            id: "synthesis",
+            name: "Synthesis",
+            parameters: ["masterVolume", "masterTuning", "polyphony"]
+        )
+        
+        let expressionGroup = ParameterGroup(
+            id: "expression",
+            name: "Expression",
+            parameters: ["velocitySensitivity", "pitchBendRange", "portamentoTime", "portamentoEnabled"]
+        )
+        
+        return [synthGroup, expressionGroup]
+    }
+
+    public func applyPitchBend(_ value: Float) {
+        pitchBend = max(-1.0, min(1.0, value))
+        // TODO: Apply pitch bend to all active voices
+    }
+
+    public func applyModulation(_ value: Float) {
+        modWheel = max(0.0, min(1.0, value))
+        // TODO: Apply modulation to all active voices
+    }
+
+    public func setVoiceParameter(voiceId: Int, parameterId: String, value: Float) throws {
+        // TODO: Implement voice-specific parameter setting
+        throw CommonMachineError(code: "NOT_IMPLEMENTED", message: "Voice parameter setting not implemented", severity: .warning)
+    }
+
+    public func getVoiceParameter(voiceId: Int, parameterId: String) -> Float? {
+        // TODO: Implement voice-specific parameter getting
+        return nil
+    }
+
+    public func setSustainPedal(_ enabled: Bool) {
+        // TODO: Implement sustain pedal handling
+    }
+
+    public func setSostenutoPedal(_ enabled: Bool) {
+        // TODO: Implement sostenuto pedal handling
+    }
+
+    public func setSoftPedal(_ enabled: Bool) {
+        // TODO: Implement soft pedal handling
+    }
+
+    public func setAftertouch(_ pressure: Float) {
+        // TODO: Implement aftertouch handling
+    }
+
+    public func setPolyphonicAftertouch(note: UInt8, pressure: Float) {
+        // TODO: Implement polyphonic aftertouch handling
+    }
+
+    // MARK: - MachineProtocol Required Methods
+
+    public func validateParameters() throws -> Bool {
+        // Basic validation
+        guard polyphony >= 1 && polyphony <= 64 else {
+            throw CommonMachineError(code: "INVALID_POLYPHONY", message: "Polyphony must be between 1 and 64", severity: .error)
+        }
+        return true
+    }
+
+    public func healthCheck() -> MachineHealthStatus {
+        if lastError != nil {
+            return .warning
+        }
+        if !isInitialized {
+            return .critical
+        }
+        return .healthy
+    }
+
     // MARK: - Helper Methods
 
     private func allocateVoice() -> Int {
@@ -199,6 +286,18 @@ public class VoiceMachine: VoiceMachineProtocol, SerializableMachine, @unchecked
             } else {
                 throw CommonMachineError(code: "INVALID_PARAMETER_TYPE", message: "Invalid type for voiceStealingMode", severity: .error)
             }
+        case "masterVolume":
+            if let floatValue = value as? Float {
+                masterVolume = max(0.0, min(1.0, floatValue))
+            } else {
+                throw CommonMachineError(code: "INVALID_PARAMETER_TYPE", message: "Invalid type for masterVolume", severity: .error)
+            }
+        case "masterTuning":
+            if let floatValue = value as? Float {
+                masterTuning = max(-100.0, min(100.0, floatValue))
+            } else {
+                throw CommonMachineError(code: "INVALID_PARAMETER_TYPE", message: "Invalid type for masterTuning", severity: .error)
+            }
         default:
             throw CommonMachineError(code: "UNKNOWN_PARAMETER", message: "Unknown parameter: \(key)", severity: .warning)
         }
@@ -219,7 +318,13 @@ public class VoiceMachine: VoiceMachineProtocol, SerializableMachine, @unchecked
                 "activeVoices": String(activeVoices),
                 "voiceStealingMode": voiceStealingMode.rawValue,
                 "status": status.rawValue,
-                "isInitialized": String(isInitialized)
+                "isInitialized": String(isInitialized),
+                "masterVolume": String(masterVolume),
+                "masterTuning": String(masterTuning),
+                "portamentoTime": String(portamentoTime),
+                "portamentoEnabled": String(portamentoEnabled),
+                "velocitySensitivity": String(velocitySensitivity),
+                "pitchBendRange": String(pitchBendRange)
             ]
         )
     }
@@ -250,6 +355,29 @@ public class VoiceMachine: VoiceMachineProtocol, SerializableMachine, @unchecked
         if let initializedString = state.metadata["isInitialized"] {
             isInitialized = initializedString == "true"
         }
+        if let masterVolumeString = state.metadata["masterVolume"],
+           let masterVolumeValue = Float(masterVolumeString) {
+            masterVolume = masterVolumeValue
+        }
+        if let masterTuningString = state.metadata["masterTuning"],
+           let masterTuningValue = Float(masterTuningString) {
+            masterTuning = masterTuningValue
+        }
+        if let portamentoTimeString = state.metadata["portamentoTime"],
+           let portamentoTimeValue = Float(portamentoTimeString) {
+            portamentoTime = portamentoTimeValue
+        }
+        if let portamentoEnabledString = state.metadata["portamentoEnabled"] {
+            portamentoEnabled = portamentoEnabledString == "true"
+        }
+        if let velocitySensitivityString = state.metadata["velocitySensitivity"],
+           let velocitySensitivityValue = Float(velocitySensitivityString) {
+            velocitySensitivity = velocitySensitivityValue
+        }
+        if let pitchBendRangeString = state.metadata["pitchBendRange"],
+           let pitchBendRangeValue = Float(pitchBendRangeString) {
+            pitchBendRange = pitchBendRangeValue
+        }
 
         // Set parameters
         do {
@@ -264,6 +392,32 @@ public class VoiceMachine: VoiceMachineProtocol, SerializableMachine, @unchecked
                 ))
             }
         }
+    }
+
+    // MARK: - SerializableMachine
+
+    public func getSerializationData() -> MachineSerializationData {
+        return MachineSerializationData(
+            machineId: id.uuidString,
+            machineType: "VoiceMachine",
+            name: name,
+            isEnabled: isEnabled,
+            parameters: parameters.getAllValues()
+        )
+    }
+
+    public func restoreFromSerializationData(_ data: MachineSerializationData) throws {
+        name = data.name
+        isEnabled = data.isEnabled
+        try parameters.setValues(data.parameters, notifyChanges: false)
+    }
+
+    public func validateSerializationData(_ data: MachineSerializationData) -> Bool {
+        return data.machineType == "VoiceMachine"
+    }
+
+    public func getSupportedSerializationVersion() -> SerializationVersion {
+        return .current
     }
 
     // MARK: - Setup Methods

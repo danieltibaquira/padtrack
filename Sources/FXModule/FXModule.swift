@@ -4,7 +4,6 @@
 import Foundation
 import MachineProtocols
 import AudioEngine
-import AudioEngine
 
 /// Base effects processor implementation
 public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked Sendable {
@@ -62,6 +61,15 @@ public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked S
     
     public func reset() {
         resetEffectState()
+        wetLevel = 1.0
+        dryLevel = 0.0
+        inputGain = 0.0
+        outputGain = 0.0
+        intensity = 0.5
+        rate = 1.0
+        feedback = 0.0
+        modDepth = 0.0
+        stereoWidth = 0.0
         processingMode = .insert
         quality = .good
         isBypassed = false
@@ -70,6 +78,28 @@ public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked S
         performanceMetrics.reset()
         parameters.resetAllToDefaults()
         status = .ready
+    }
+
+    // MARK: - MachineProtocol Required Methods
+
+    public func validateParameters() throws -> Bool {
+        guard wetLevel >= 0.0 && wetLevel <= 1.0 else {
+            throw CommonMachineError(code: "INVALID_WET_LEVEL", message: "Wet level must be between 0.0 and 1.0", severity: .error)
+        }
+        guard dryLevel >= 0.0 && dryLevel <= 1.0 else {
+            throw CommonMachineError(code: "INVALID_DRY_LEVEL", message: "Dry level must be between 0.0 and 1.0", severity: .error)
+        }
+        return true
+    }
+
+    public func healthCheck() -> MachineHealthStatus {
+        if lastError != nil {
+            return .warning
+        }
+        if !isInitialized {
+            return .critical
+        }
+        return .healthy
     }
 
     // MARK: - FXProcessorProtocol Implementation
@@ -113,57 +143,30 @@ public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked S
         lastActiveTimestamp = Date()
     }
 
-    public func setTempoSync(enabled: Bool, beatDivision: String) {
-        // Store tempo sync settings in parameters
-        do {
-            try parameters.updateParameter(id: "tempoSyncEnabled", value: enabled ? 1.0 : 0.0)
-            try parameters.updateParameter(id: "beatDivision", value: Float(beatDivision.count))
-        } catch {
-            // Ignore parameter errors for now
-        }
-    }
-
-    public func triggerAction(_ action: String) {
-        switch action {
-        case "bypass":
-            isBypassed = !isBypassed
-        case "reset":
-            resetEffectState()
-        case "freeze":
-            // Effect-specific freeze implementation
-            break
-        case "reverse":
-            // Effect-specific reverse implementation
-            break
-        case "tap":
-            // Effect-specific tap tempo implementation
-            break
-        default:
-            break
-        }
-        lastActiveTimestamp = Date()
-    }
-
-    public func modulateParameter(_ parameter: String, amount: Float) {
-        do {
-            if let currentValue = parameters.getParameterValue(id: parameter) {
-                let newValue = currentValue + amount
-                try parameters.updateParameter(id: parameter, value: newValue)
-            }
-        } catch {
-            // Ignore modulation errors for now
-        }
-    }
-
-    // MARK: - Additional FXProcessorProtocol Methods
-
     public func flushBuffers() {
         // Clear any internal buffers
         resetEffectState()
     }
 
+    public func setupEffectParameters() {
+        // Add effect-specific parameters using default implementations
+        // The default implementations from FXProcessorProtocol will handle parameter setup
+    }
+
     public func getEffectParameterGroups() -> [ParameterGroup] {
-        return Array(parameters.groups.values)
+        let mixGroup = ParameterGroup(
+            id: "mix",
+            name: "Mix",
+            parameters: ["wetLevel", "dryLevel", "inputGain", "outputGain"]
+        )
+        
+        let processingGroup = ParameterGroup(
+            id: "processing",
+            name: "Processing",
+            parameters: ["intensity", "rate", "feedback", "modDepth"]
+        )
+        
+        return [mixGroup, processingGroup]
     }
 
     public func processSidechain(input: MachineProtocols.AudioBuffer, sidechain: MachineProtocols.AudioBuffer?) -> MachineProtocols.AudioBuffer {
@@ -188,9 +191,9 @@ public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked S
     }
 
     public func modulateEffect(intensity: Float, rate: Float, feedback: Float) {
-        self.intensity = intensity
-        self.rate = rate
-        self.feedback = feedback
+        self.intensity = max(0.0, min(1.0, intensity))
+        self.rate = max(0.0, rate)
+        self.feedback = max(0.0, min(1.0, feedback))
     }
 
     public func setEffectParameter(id: String, value: Float, smoothTime: Float) {
@@ -202,7 +205,24 @@ public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked S
     }
 
     public func triggerAction(_ action: String, value: Float) {
-        triggerAction(action)
+        switch action {
+        case "bypass":
+            isBypassed = !isBypassed
+        case "reset":
+            resetEffectState()
+        case "freeze":
+            // Effect-specific freeze implementation
+            break
+        case "reverse":
+            // Effect-specific reverse implementation
+            break
+        case "tap":
+            // Effect-specific tap tempo implementation
+            break
+        default:
+            break
+        }
+        lastActiveTimestamp = Date()
     }
     
     // Enhanced lifecycle methods
@@ -238,13 +258,13 @@ public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked S
         switch key {
         case "wetLevel":
             if let floatValue = value as? Float {
-                wetLevel = floatValue
+                wetLevel = max(0.0, min(1.0, floatValue))
             } else {
                 throw CommonMachineError(code: "INVALID_PARAMETER_TYPE", message: "Invalid type for wetLevel", severity: .error)
             }
         case "dryLevel":
             if let floatValue = value as? Float {
-                dryLevel = floatValue
+                dryLevel = max(0.0, min(1.0, floatValue))
             } else {
                 throw CommonMachineError(code: "INVALID_PARAMETER_TYPE", message: "Invalid type for dryLevel", severity: .error)
             }
@@ -259,6 +279,24 @@ public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked S
                 effectType = type
             } else {
                 throw CommonMachineError(code: "INVALID_PARAMETER_TYPE", message: "Invalid type for effectType", severity: .error)
+            }
+        case "intensity":
+            if let floatValue = value as? Float {
+                intensity = max(0.0, min(1.0, floatValue))
+            } else {
+                throw CommonMachineError(code: "INVALID_PARAMETER_TYPE", message: "Invalid type for intensity", severity: .error)
+            }
+        case "rate":
+            if let floatValue = value as? Float {
+                rate = max(0.0, floatValue)
+            } else {
+                throw CommonMachineError(code: "INVALID_PARAMETER_TYPE", message: "Invalid type for rate", severity: .error)
+            }
+        case "feedback":
+            if let floatValue = value as? Float {
+                feedback = max(0.0, min(1.0, floatValue))
+            } else {
+                throw CommonMachineError(code: "INVALID_PARAMETER_TYPE", message: "Invalid type for feedback", severity: .error)
             }
         default:
             throw CommonMachineError(code: "UNKNOWN_PARAMETER", message: "Unknown parameter: \(key)", severity: .warning)
@@ -281,7 +319,12 @@ public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked S
                 "processingMode": processingMode.rawValue,
                 "quality": quality.rawValue,
                 "status": status.rawValue,
-                "isInitialized": String(isInitialized)
+                "isInitialized": String(isInitialized),
+                "wetLevel": String(wetLevel),
+                "dryLevel": String(dryLevel),
+                "intensity": String(intensity),
+                "rate": String(rate),
+                "feedback": String(feedback)
             ]
         )
     }
@@ -315,6 +358,26 @@ public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked S
         if let initializedString = state.metadata["isInitialized"] {
             isInitialized = initializedString == "true"
         }
+        if let wetLevelString = state.metadata["wetLevel"],
+           let wetLevelValue = Float(wetLevelString) {
+            wetLevel = wetLevelValue
+        }
+        if let dryLevelString = state.metadata["dryLevel"],
+           let dryLevelValue = Float(dryLevelString) {
+            dryLevel = dryLevelValue
+        }
+        if let intensityString = state.metadata["intensity"],
+           let intensityValue = Float(intensityString) {
+            intensity = intensityValue
+        }
+        if let rateString = state.metadata["rate"],
+           let rateValue = Float(rateString) {
+            rate = rateValue
+        }
+        if let feedbackString = state.metadata["feedback"],
+           let feedbackValue = Float(feedbackString) {
+            feedback = feedbackValue
+        }
 
         // Set parameters
         do {
@@ -331,10 +394,40 @@ public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked S
         }
     }
 
-    // MARK: - Setup Methods
+    // MARK: - SerializableMachine
 
-    public func setupEffectParameters() {
-        // Add effect-specific parameters using default implementations
-        // The default implementations from FXProcessorProtocol will handle parameter setup
+    public func getSerializationData() -> MachineSerializationData {
+        return MachineSerializationData(
+            machineId: id.uuidString,
+            machineType: "FXProcessor",
+            name: name,
+            isEnabled: isEnabled,
+            parameters: parameters.getAllValues()
+        )
+    }
+
+    public func restoreFromSerializationData(_ data: MachineSerializationData) throws {
+        name = data.name
+        isEnabled = data.isEnabled
+        try parameters.setValues(data.parameters, notifyChanges: false)
+    }
+
+    public func validateSerializationData(_ data: MachineSerializationData) -> Bool {
+        return data.machineType == "FXProcessor"
+    }
+
+    public func getSupportedSerializationVersion() -> SerializationVersion {
+        return .current
+    }
+}
+
+/// FX Module main class
+public class FXModule: @unchecked Sendable {
+    public static let shared = FXModule()
+    
+    private init() {}
+    
+    public func initialize() {
+        // Initialize FX module
     }
 }
