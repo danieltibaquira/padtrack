@@ -45,6 +45,11 @@ let package = Package(
             name: "FilterModule",
             targets: ["FilterModule"]),
         
+        // Filter machines
+        .library(
+            name: "FilterMachine",
+            targets: ["FilterMachine"]),
+        
         // Audio effects
         .library(
             name: "FXModule",
@@ -115,6 +120,11 @@ let package = Package(
             name: "FilterModule",
             dependencies: ["MachineProtocols", "AudioEngine"]),
         
+        // Filter machines module
+        .target(
+            name: "FilterMachine",
+            dependencies: ["MachineProtocols", "AudioEngine"]),
+        
         // Audio effects module
         .target(
             name: "FXModule",
@@ -141,6 +151,7 @@ let package = Package(
                 "SequencerModule",
                 "VoiceModule",
                 "FilterModule",
+                "FilterMachine",
                 "FXModule",
                 "MIDIModule",
                 "UIComponents",
@@ -173,10 +184,6 @@ let package = Package(
             dependencies: ["MachineProtocols", "TestUtilities"]),
 
         .testTarget(
-            name: "DataModelTests",
-            dependencies: ["DataModel", "TestUtilities"]),
-
-        .testTarget(
             name: "DataLayerTests",
             dependencies: ["DataLayer", "TestUtilities"]),
 
@@ -195,6 +202,10 @@ let package = Package(
         .testTarget(
             name: "FilterModuleTests",
             dependencies: ["FilterModule", "TestUtilities"]),
+
+        .testTarget(
+            name: "FilterMachineTests",
+            dependencies: ["FilterMachine", "TestUtilities"]),
 
         .testTarget(
             name: "FXModuleTests",

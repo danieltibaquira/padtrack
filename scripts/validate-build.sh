@@ -55,7 +55,7 @@ validate_package_swift() {
 validate_source_structure() {
     echo -e "${BLUE}📁 Validating source directory structure...${NC}"
     
-    required_modules=("MachineProtocols" "DataModel" "DataLayer" "AudioEngine" "VoiceModule" "FilterModule" "FXModule" "MIDIModule" "UIComponents" "SequencerModule" "AppShell" "DigitonePad")
+    required_modules=("MachineProtocols" "DataModel" "DataLayer" "AudioEngine" "VoiceModule" "FilterModule" "FilterMachine" "FXModule" "MIDIModule" "UIComponents" "SequencerModule" "AppShell" "DigitonePad")
     
     for module in "${required_modules[@]}"; do
         if [ ! -d "Sources/$module" ]; then

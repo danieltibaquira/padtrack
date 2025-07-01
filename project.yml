@@ -194,6 +194,21 @@ targets:
         PRODUCT_NAME: FilterModule
         GENERATE_INFOPLIST_FILE: true
 
+  FilterMachine:
+    type: framework
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources/FilterMachine
+    dependencies:
+      - target: MachineProtocols
+      - target: AudioEngine
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.filtermachine
+        PRODUCT_NAME: FilterMachine
+        GENERATE_INFOPLIST_FILE: true
+
   FXModule:
     type: framework
     platform: iOS
@@ -252,6 +267,7 @@ targets:
       - target: SequencerModule
       - target: VoiceModule
       - target: FilterModule
+      - target: FilterMachine
       - target: FXModule
       - target: MIDIModule
       - target: UIComponents
@@ -278,6 +294,7 @@ targets:
       - target: SequencerModule
       - target: VoiceModule
       - target: FilterModule
+      - target: FilterMachine
       - target: FXModule
       - target: MIDIModule
       - target: UIComponents
