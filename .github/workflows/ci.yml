@@ -21,7 +21,7 @@ jobs:
       uses: actions/checkout@v4
       
     - name: Cache Swift Package Manager
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: .build
         key: ${{ runner.os }}-swift-spm-${{ hashFiles('**/Package.resolved', '**/Package.swift') }}
@@ -59,7 +59,7 @@ jobs:
         xcode-version: '15.4'
         
     - name: Cache Swift Package Manager
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: .build
         key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved', '**/Package.swift') }}
@@ -68,7 +68,7 @@ jobs:
           
     - name: Cache XcodeGen
       id: cache-xcodegen
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: /usr/local/bin/xcodegen
         key: xcodegen-${{ runner.os }}
@@ -135,12 +135,13 @@ jobs:
           
     - name: Upload build artifacts
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: build-logs
+        name: build-logs-${{ strategy.job-index }}
         path: |
           .build/
           *.log
+        retention-days: 7
           
   lint:
     name: SwiftLint
@@ -152,7 +153,7 @@ jobs:
       
     - name: Cache SwiftLint
       id: cache-swiftlint
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: /usr/local/bin/swiftlint
         key: swiftlint-${{ runner.os }}
