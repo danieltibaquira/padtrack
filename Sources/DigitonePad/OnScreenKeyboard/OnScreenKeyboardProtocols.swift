@@ -200,7 +200,7 @@ enum ChordType: String, CaseIterable {
 }
 
 /// Keyboard layout configuration
-struct KeyboardLayout {
+struct KeyboardLayout: Equatable {
     let octaveRange: ClosedRange<Int>
     let whiteKeyWidth: CGFloat
     let whiteKeyHeight: CGFloat

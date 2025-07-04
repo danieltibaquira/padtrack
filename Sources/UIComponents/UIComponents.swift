@@ -439,6 +439,36 @@ public struct Note {
 /// Type alias for test compatibility
 public typealias DigitonePadButtonConfig = ButtonConfig
 
+// MARK: - Toggle Styles
+
+/// Custom toggle style for DigitonePad components
+public struct DigitonePadToggleStyle: ToggleStyle {
+    public init() {}
+
+    public func makeBody(configuration: Configuration) -> some View {
+        HStack {
+            configuration.label
+
+            Spacer()
+
+            Button(action: {
+                configuration.isOn.toggle()
+            }) {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(configuration.isOn ? Color.green : Color.gray)
+                    .frame(width: 50, height: 30)
+                    .overlay(
+                        Circle()
+                            .fill(Color.white)
+                            .frame(width: 26, height: 26)
+                            .offset(x: configuration.isOn ? 10 : -10)
+                    )
+            }
+            .animation(.easeInOut(duration: 0.2), value: configuration.isOn)
+        }
+    }
+}
+
 // MARK: - Module Export
 
 public struct UIComponentsModule {

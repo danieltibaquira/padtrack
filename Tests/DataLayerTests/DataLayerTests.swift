@@ -3,7 +3,6 @@ import CoreData
 @testable import DataLayer
 
 // Import test utilities and mocks
-import TestUtilities
 
 final class DataLayerTests: DigitonePadTestCase {
 

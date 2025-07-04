@@ -188,6 +188,7 @@ targets:
     dependencies:
       - target: MachineProtocols
       - target: AudioEngine
+      - target: VoiceModule
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.filtermodule

@@ -58,7 +58,7 @@ struct ProjectManagementView: View {
                         ], spacing: 16) {
                             ForEach(presenter.projects, id: \.id) { project in
                                 ProjectCard(
-                                    project: project,
+                                    project: ProjectDisplayModel(from: project),
                                     onSelect: { presenter.selectProject(project) },
                                     onDelete: { presenter.deleteProject(project) }
                                 )
@@ -69,7 +69,11 @@ struct ProjectManagementView: View {
                 }
             }
             .background(Color.black.ignoresSafeArea())
+            #if os(iOS)
             .navigationBarHidden(true)
+            #else
+            .toolbar(.hidden)
+            #endif
             .onAppear {
                 presenter.loadProjects()
             }
@@ -167,20 +171,37 @@ struct CreateProjectSheet: View {
                 Spacer()
             }
             .padding()
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
+                #if os(iOS)
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
                         onCancel()
                     }
                 }
-                
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Create") {
                         onCreate(projectName)
                     }
                     .disabled(projectName.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
+                #else
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        onCancel()
+                    }
+                }
+
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Create") {
+                        onCreate(projectName)
+                    }
+                    .disabled(projectName.trimmingCharacters(in: .whitespaces).isEmpty)
+                }
+                #endif
             }
         }
     }
@@ -192,11 +213,17 @@ struct ProjectDisplayModel: Identifiable {
     let id: UUID
     let name: String
     let lastModified: Date
-    
+
     init(from project: Project) {
         self.id = project.id ?? UUID()
         self.name = project.name ?? "Untitled Project"
         self.lastModified = project.updatedAt ?? Date()
+    }
+
+    init(from viewModel: ProjectViewModel) {
+        self.id = viewModel.id
+        self.name = viewModel.name
+        self.lastModified = viewModel.updatedAt
     }
 }
 

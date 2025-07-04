@@ -50,8 +50,7 @@ extension OnScreenKeyboardRouter {
         let view = OnScreenKeyboardView()
         
         // Wire up VIPER components
-        view.presenter = presenter
-        presenter.view = view
+        // Note: SwiftUI view gets presenter via @EnvironmentObject
         presenter.interactor = interactor
         presenter.router = router
         presenter.delegate = delegate

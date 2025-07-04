@@ -25,7 +25,20 @@ struct MasterEffectsView: View {
         .padding()
         .background(Color.black)
         .sheet(isPresented: $showingPresets) {
-            MasterEffectsPresetsView(masterEffects: masterEffects)
+            // TODO: Implement MasterEffectsPresetsView
+            VStack {
+                Text("Master Effects Presets")
+                    .font(.headline)
+                    .padding()
+
+                Text("Preset management coming soon...")
+                    .foregroundColor(.secondary)
+
+                Button("Close") {
+                    showingPresets = false
+                }
+                .padding()
+            }
         }
     }
     
@@ -93,6 +106,9 @@ struct MasterEffectsView: View {
             MasterOverdriveControlsView(overdrive: masterEffects.overdrive)
         case .limiter:
             LimiterControlsView(limiter: masterEffects.limiter)
+        case .eq:
+            Text("EQ Controls - Coming Soon")
+                .foregroundColor(.gray)
         }
     }
     
@@ -165,10 +181,11 @@ struct MasterEffectsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { masterEffects.masterGain },
-                            set: { masterEffects.masterGain = $0 }
+                            get: { Double(masterEffects.masterGain) },
+                            set: { masterEffects.masterGain = Float($0) }
                         ),
                         range: -20...20,
+                        label: "Master",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)
@@ -188,7 +205,7 @@ struct MasterEffectsView: View {
     
     private func dbString(from linear: Float) -> String {
         let db = 20 * log10(max(linear, 1e-6))
-        return "\(db, specifier: "%.1f") dB"
+        return String(format: "%.1f dB", db)
     }
 }
 

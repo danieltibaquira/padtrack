@@ -12,6 +12,7 @@ public class Project: NSManagedObject {
 
         // Set default values
         let now = Date()
+        id = UUID()
         createdAt = now
         updatedAt = now
 

@@ -3,29 +3,31 @@ import SwiftUI
 
 /// Router handles navigation for project management
 public final class ProjectManagementRouter: ProjectManagementRouterProtocol, ObservableObject {
-    
+
     // MARK: - Navigation Methods
-    
-    public static func createProjectManagementModule() -> ProjectManagementView {
+
+    public static func createModule() -> AnyView {
         let view = ProjectManagementView()
         let presenter = ProjectManagementPresenter()
         let interactor = ProjectManagementInteractor()
         let router = ProjectManagementRouter()
-        
-        // Wire up VIPER components
-        view.presenter = presenter
-        presenter.view = view
+
+        // Wire up VIPER components - Note: SwiftUI views handle their own state
         presenter.interactor = interactor
         presenter.router = router
         interactor.presenter = presenter
-        
+
+        return AnyView(view.environmentObject(presenter))
+    }
+
+    static func createProjectManagementModule() -> ProjectManagementView {
+        let view = ProjectManagementView()
         return view
     }
     
-    @MainActor
     public func navigateToMainApp(with project: ProjectViewModel) {
-        Task {
-            await AppState.shared.selectProject(project)
+        Task { @MainActor in
+            AppState.shared.selectProject(project)
         }
         // Additional navigation logic would go here
         // For example, presenting the main app view

@@ -37,6 +37,24 @@ class ProjectManagementPresenter: ProjectManagementPresenterProtocol, Observable
         interactor?.loadProject(id: project.id)
     }
     
+    func loadProjects() {
+        isLoading = true
+        errorMessage = nil
+        interactor?.loadProjects()
+    }
+
+    func selectProject(_ project: ProjectViewModel) {
+        isLoading = true
+        errorMessage = nil
+        interactor?.selectProject(id: project.id)
+    }
+
+    func createProject(name: String) {
+        isLoading = true
+        errorMessage = nil
+        interactor?.createProject(name: name)
+    }
+
     func deleteProject(_ project: ProjectViewModel) {
         isLoading = true
         errorMessage = nil

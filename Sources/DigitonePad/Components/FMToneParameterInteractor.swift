@@ -274,21 +274,4 @@ public class FMToneParameterInteractor: FMToneParameterInteractorProtocol {
 // MARK: - Supporting Types
 // Note: FMToneParameter, FMTonePreset, and FMToneParameterError are defined in FMToneParameterProtocols.swift
 
-extension FMToneParameterError {
-    var errorDescription: String? {
-        switch self {
-        case .invalidParameterIndex:
-            return "Invalid parameter index"
-        case .invalidParameterValue:
-            return "Invalid parameter value"
-        case .parameterUpdateFailed:
-            return "Failed to update parameter"
-        case .voiceMachineNotAvailable:
-            return "FM voice machine not available"
-        case .presetLoadFailed:
-            return "Failed to load preset"
-        case .invalidPageNumber:
-            return "Invalid page number"
-        }
-    }
-}
+// Note: FMToneParameterError errorDescription is defined in FMToneParameterProtocols.swift

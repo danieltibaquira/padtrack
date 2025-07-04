@@ -3,8 +3,6 @@ import XCTest
 @testable import MachineProtocols
 
 // Import test utilities and mocks
-import TestUtilities
-import MockObjects
 
 /// Tests for Project-related business logic (Interactor layer)
 final class ProjectInteractorTests: DigitonePadTestCase {
