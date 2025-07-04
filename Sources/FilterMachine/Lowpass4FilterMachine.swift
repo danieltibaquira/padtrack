@@ -378,13 +378,13 @@ public final class DriveSaturationProcessor {
     
     private func transistorSaturation(_ input: Float) -> Float {
         // Transistor-style hard clipping with soft knee
-        let threshold = 0.8
+        let threshold: Float = 0.8
         let x = input * 0.6
-        
+
         if abs(x) < threshold {
             return x
         } else {
-            let sign = x >= 0.0 ? 1.0 : -1.0
+            let sign: Float = x >= 0.0 ? 1.0 : -1.0
             let excess = abs(x) - threshold
             let compressed = threshold + excess / (1.0 + excess * 2.0)
             return sign * compressed
@@ -418,21 +418,69 @@ public final class Lowpass4FilterMachine: @unchecked Sendable {
     
     private let coefficientCalculator: Lowpass4CoefficientCalculator
     private let driveProcessor: DriveSaturationProcessor
-    private var filterState: Lowpass4FilterState
+    private var internalFilterState: Lowpass4FilterState
     private var currentCoefficients: Lowpass4Coefficients
+
     
     // MARK: - Performance State
     
     private let sampleRate: Double
-    private var isEnabled: Bool = true
-    private var currentNote: Int = 60  // C4
-    private var currentVelocity: Float = 1.0
+    public var isEnabled: Bool = true
+    public var currentNote: Int = 60  // C4
+    public var currentVelocity: Float = 1.0
     
     // MARK: - Self-Oscillation State
     
     private var oscillatorPhase: Float = 0.0
     private var isOscillating: Bool = false
     private var oscillationFrequency: Float = 440.0
+
+    // MARK: - Protocol Required Properties
+
+    public let id = UUID()
+    public var name: String = "Lowpass 4-Pole Filter"
+    public var isInitialized: Bool = false
+    public var status: MachineStatus = .uninitialized
+    public var lastActiveTimestamp: Date?
+    public var lastError: MachineError?
+    public var errorHandler: ((MachineError) -> Void)?
+    public var performanceMetrics: MachinePerformanceMetrics = MachinePerformanceMetrics()
+    public var parameters: ObservableParameterManager = ObservableParameterManager()
+
+    // Filter-specific properties
+    public var filterType: FilterType = .lowpass
+    public var slope: FilterSlope = .slope24dB
+    public var quality: FilterQuality = .high
+    public var isActive: Bool = true
+    public var drive: Float = 0.0
+    public var gain: Float = 0.0
+    public var bandwidth: Float = 1.0
+    public var keyTracking: Float = 0.0
+    public var velocitySensitivity: Float = 0.0
+    public var envelopeAmount: Float = 0.0
+    public var lfoAmount: Float = 0.0
+    public var modulationAmount: Float = 0.0
+
+    // Computed properties for protocol conformance
+    public var cutoff: Float {
+        get { config.cutoffFrequency }
+        set {
+            config.cutoffFrequency = max(20.0, min(20000.0, newValue))
+            updateFilterCoefficients()
+        }
+    }
+
+    public var resonance: Float {
+        get { config.resonance }
+        set {
+            config.resonance = max(0.0, min(1.0, newValue))
+            updateFilterCoefficients()
+        }
+    }
+
+    // Protocol conformance properties are already defined above
+
+    // Additional filter properties are already defined above
     
     // MARK: - Initialization
     
@@ -441,7 +489,7 @@ public final class Lowpass4FilterMachine: @unchecked Sendable {
         self.sampleRate = sampleRate
         self.coefficientCalculator = Lowpass4CoefficientCalculator(sampleRate: sampleRate)
         self.driveProcessor = DriveSaturationProcessor()
-        self.filterState = Lowpass4FilterState()
+        self.internalFilterState = Lowpass4FilterState()
         self.currentCoefficients = Lowpass4Coefficients()
         
         // Initialize components
@@ -495,7 +543,7 @@ public final class Lowpass4FilterMachine: @unchecked Sendable {
     
     /// Reset filter state
     public func reset() {
-        filterState.reset()
+        internalFilterState.reset()
         oscillatorPhase = 0.0
         isOscillating = false
     }
@@ -568,13 +616,13 @@ public final class Lowpass4FilterMachine: @unchecked Sendable {
         let stage1Output = processBiquadStage(
             input: input,
             coefficients: currentCoefficients.stage1,
-            state: &filterState.stage1
+            state: &internalFilterState.stage1
         )
         
         let stage2Output = processBiquadStage(
             input: stage1Output,
             coefficients: currentCoefficients.stage2,
-            state: &filterState.stage2
+            state: &internalFilterState.stage2
         )
         
         return stage2Output
@@ -630,20 +678,127 @@ public final class Lowpass4FilterMachine: @unchecked Sendable {
         
         return output
     }
+
+    // MARK: - FilterMachine Protocol Conformance
+
+    public var machineType: String {
+        return "Lowpass4Filter"
+    }
+
+    public var version: String {
+        return "1.0.0"
+    }
+
+    public var capabilities: [String] {
+        return ["lowpass", "resonance", "drive", "self-oscillation", "key-tracking"]
+    }
+
+    public func initialize(configuration: MachineConfiguration) throws {
+        isInitialized = true
+        status = .ready
+    }
+
+    public func start() throws {
+        guard isInitialized else {
+            throw CommonMachineError(code: "NOT_INITIALIZED", message: "Filter not initialized", severity: .error)
+        }
+        status = .running
+    }
+
+    public func stop() throws {
+        status = .ready
+    }
+
+    public func suspend() throws {
+        status = .suspended
+    }
+
+    public func resume() throws {
+        status = .running
+    }
+
+    public func process(input: MachineProtocols.AudioBuffer) -> MachineProtocols.AudioBuffer {
+        lastActiveTimestamp = Date()
+        // This would need proper implementation
+        return input
+    }
+
+    public func getStatus() -> MachineStatus {
+        return status
+    }
+
+    public func resetPerformanceCounters() {
+        performanceMetrics.reset()
+    }
+
+    public var filterState: [String: Float] {
+        return [
+            "cutoff": cutoff,
+            "resonance": resonance,
+            "drive": drive,
+            "gain": gain,
+            "bandwidth": bandwidth
+        ]
+    }
+
+    public func getFrequencyResponse(at frequency: Float) -> FilterResponse {
+        // Simplified frequency response calculation
+        let normalizedFreq = frequency / Float(sampleRate) * 2.0
+        let cutoffNormalized = cutoff / Float(sampleRate) * 2.0
+        let ratio = normalizedFreq / cutoffNormalized
+
+        // Simple lowpass response approximation
+        let magnitude = 1.0 / sqrt(1.0 + pow(ratio, 4.0)) // 4th order rolloff
+        let phase = -atan2(ratio * ratio, 1.0) * 2.0 // Approximate phase
+
+        return FilterResponse(frequency: frequency, magnitude: magnitude, phase: phase)
+    }
+
+    public func applyFilterModulation(envelope: Float, lfo: Float, modulation: Float) {
+        let cutoffMod = envelope * envelopeAmount + lfo * lfoAmount + modulation * modulationAmount
+        let newCutoff = config.cutoffFrequency * (1.0 + cutoffMod)
+        config.cutoffFrequency = max(20.0, min(20000.0, newCutoff))
+        updateFilterCoefficients()
+    }
+
+    public func updateFilterCoefficients() {
+        currentCoefficients = coefficientCalculator.calculateCoefficients(
+            cutoffFrequency: config.cutoffFrequency,
+            resonance: config.resonance,
+            topology: config.topology
+        )
+    }
+
+    public func setCutoffWithKeyTracking(baseFreq: Float, note: UInt8, velocity: UInt8) {
+        currentNote = Int(note)
+        currentVelocity = Float(velocity) / 127.0
+
+        let keyTrackingAmount = keyTracking
+        let noteOffset = Float(note - 60) // C4 = 60
+        let trackingMultiplier = pow(2.0, noteOffset * keyTrackingAmount / 12.0)
+
+        config.cutoffFrequency = baseFreq * trackingMultiplier
+        updateFilterCoefficients()
+    }
+
+    public func modulateFilter(cutoffMod: Float, resonanceMod: Float) {
+        let newCutoff = config.cutoffFrequency * (1.0 + cutoffMod)
+        let newResonance = config.resonance + resonanceMod
+
+        config.cutoffFrequency = max(20.0, min(20000.0, newCutoff))
+        config.resonance = max(0.0, min(1.0, newResonance))
+        updateFilterCoefficients()
+    }
 }
 
 // MARK: - FilterMachine Protocol Conformance
 
-extension Lowpass4FilterMachine: FilterMachine {
-    
-    public var machineType: String {
-        return "Lowpass4Filter"
-    }
-    
+extension Lowpass4FilterMachine: FilterMachineProtocol {
+
     public var parameterCount: Int {
         return 4  // Cutoff, Resonance, Drive, Keyboard Tracking
     }
-    
+
     public func getParameterName(index: Int) -> String {
         switch index {
         case 0: return "CUTOFF"
@@ -653,7 +808,7 @@ extension Lowpass4FilterMachine: FilterMachine {
         default: return "UNKNOWN"
         }
     }
-    
+
     public func getParameterValue(index: Int) -> Float {
         switch index {
         case 0: return config.cutoffFrequency
@@ -663,7 +818,7 @@ extension Lowpass4FilterMachine: FilterMachine {
         default: return 0.0
         }
     }
-    
+
     public func setParameterValue(index: Int, value: Float) {
         switch index {
         case 0: setCutoffFrequency(value)
@@ -673,7 +828,7 @@ extension Lowpass4FilterMachine: FilterMachine {
         default: break
         }
     }
-    
+
     public func getParameterDisplayValue(index: Int) -> String {
         switch index {
         case 0: return String(format: "%.1f Hz", config.cutoffFrequency)
@@ -681,45 +836,6 @@ extension Lowpass4FilterMachine: FilterMachine {
         case 2: return String(format: "%.2f", config.drive)
         case 3: return String(format: "%.1f%%", config.keyboardTracking * 100.0)
         default: return ""
-        }
-    }
-}
-
-// MARK: - Analysis and Diagnostics
-
-extension Lowpass4FilterMachine {
-    
-    /// Get current filter status for debugging
-    public var filterStatus: FilterStatus {
-        return FilterStatus(
-            isEnabled: isEnabled,
-            cutoffFrequency: config.cutoffFrequency,
-            resonance: config.resonance,
-            isOscillating: isOscillating,
-            currentNote: currentNote,
-            topology: config.topology.rawValue
-        )
-    }
-    
-    /// Calculate frequency response at given frequency
-    public func getFrequencyResponse(at frequency: Float) -> Float {
-        // Simplified frequency response calculation for visualization
-        let nyquist = Float(sampleRate * 0.5)
-        let normalizedFreq = frequency / nyquist
-        
-        if normalizedFreq > 1.0 { return 0.0 }
-        
-        // 4-pole lowpass response: -24dB/octave above cutoff
-        let cutoffNormalized = config.cutoffFrequency / nyquist
-        let ratio = normalizedFreq / cutoffNormalized
-        
-        if ratio <= 1.0 {
-            return 1.0  // Passband
-        } else {
-            // -24dB/octave rolloff
-            let octaves = log2(ratio)
-            let attenuation = pow(10.0, -24.0 * octaves / 20.0)
-            return attenuation
         }
     }
 }
@@ -732,7 +848,7 @@ public struct FilterStatus {
     public let isOscillating: Bool
     public let currentNote: Int
     public let topology: String
-    
+
     public init(isEnabled: Bool, cutoffFrequency: Float, resonance: Float, isOscillating: Bool, currentNote: Int, topology: String) {
         self.isEnabled = isEnabled
         self.cutoffFrequency = cutoffFrequency

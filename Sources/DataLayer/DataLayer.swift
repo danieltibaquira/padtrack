@@ -405,7 +405,7 @@ public final class DataLayerManager: @unchecked Sendable {
         let presets = try presetRepository.fetchPresets(for: project)
 
         for preset in presets {
-            if preset.associatedTracks().isEmpty {
+            if preset.tracks?.count == 0 {
                 try presetRepository.delete(preset)
             }
         }

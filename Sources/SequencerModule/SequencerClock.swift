@@ -394,7 +394,7 @@ public final class SequencerClock: ObservableObject {
     }
     
     /// Continue playback from current position
-    public func continue() {
+    public func `continue`() {
         guard transportState == .paused else { return }
         
         transportState = .playing
@@ -561,7 +561,7 @@ public final class SequencerClock: ObservableObject {
     /// Process MIDI continue message
     public func processMIDIContinue() {
         guard config.midiClockInputEnabled else { return }
-        continue()
+        `continue`()
     }
     
     // MARK: - Loop Control

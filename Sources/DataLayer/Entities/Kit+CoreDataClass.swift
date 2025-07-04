@@ -1,5 +1,6 @@
 import Foundation
 import CoreData
+import DataModel
 
 @objc(Kit)
 public class Kit: NSManagedObject {
@@ -18,15 +19,9 @@ public class Kit: NSManagedObject {
         if name == nil || name?.isEmpty == true {
             name = "New Kit"
         }
-        if kitType == nil || kitType?.isEmpty == true {
-            kitType = "standard"
+        if soundFiles == nil {
+            soundFiles = []
         }
-        masterVolume = 0.8 // Default master volume
-        masterTune = 0.0 // No master tuning offset
-        compressorEnabled = false
-        reverbEnabled = false
-        delayEnabled = false
-        distortionEnabled = false
     }
 
     public override func willSave() {
@@ -46,14 +41,6 @@ public class Kit: NSManagedObject {
         switch key {
         case "name":
             try validateName(value.pointee as? String)
-        case "kitType":
-            try validateKitType(value.pointee as? String)
-        case "description":
-            try validateDescription(value.pointee as? String)
-        case "masterVolume":
-            try validateMasterVolume(value.pointee as? NSNumber)
-        case "masterTune":
-            try validateMasterTune(value.pointee as? NSNumber)
         default:
             break
         }
@@ -79,75 +66,30 @@ public class Kit: NSManagedObject {
         }
     }
 
-    private func validateKitType(_ kitType: String?) throws {
-        guard let kitType = kitType, !kitType.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            throw ValidationError.invalidValue("Kit type cannot be empty")
-        }
 
-        let validKitTypes = ["standard", "drum", "percussion", "melodic", "bass", "lead", "pad", "fx"]
-        guard validKitTypes.contains(kitType.lowercased()) else {
-            throw ValidationError.invalidValue("Invalid kit type: \(kitType). Valid types: \(validKitTypes.joined(separator: ", "))")
-        }
-    }
-
-    private func validateDescription(_ description: String?) throws {
-        if let description = description {
-            guard description.count <= 500 else {
-                throw ValidationError.invalidValue("Kit description cannot exceed 500 characters")
-            }
-        }
-    }
-
-    private func validateMasterVolume(_ masterVolume: NSNumber?) throws {
-        guard let masterVolume = masterVolume?.floatValue else {
-            throw ValidationError.invalidValue("Kit master volume must be specified")
-        }
-
-        guard masterVolume >= 0.0 && masterVolume <= 1.0 else {
-            throw ValidationError.invalidValue("Kit master volume must be between 0.0 and 1.0")
-        }
-    }
-
-    private func validateMasterTune(_ masterTune: NSNumber?) throws {
-        guard let masterTune = masterTune?.floatValue else {
-            throw ValidationError.invalidValue("Kit master tune must be specified")
-        }
-
-        guard masterTune >= -12.0 && masterTune <= 12.0 else {
-            throw ValidationError.invalidValue("Kit master tune must be between -12.0 and 12.0 semitones")
-        }
-    }
 
     private func validateSoundFiles() throws {
-        if let soundFilesData = soundFiles {
-            do {
-                if let soundFileArray = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSArray.self, from: soundFilesData) as? [String] {
-                    for (index, filePath) in soundFileArray.enumerated() {
-                        guard !filePath.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-                            throw ValidationError.invalidValue("Sound file path at index \(index) cannot be empty")
-                        }
-                        
-                        guard filePath.count <= 500 else {
-                            throw ValidationError.invalidValue("Sound file path at index \(index) is too long (max 500 characters)")
-                        }
-                        
-                        // Validate file extension
-                        let validExtensions = ["wav", "aiff", "aif", "m4a", "mp3", "flac"]
-                        let fileExtension = (filePath as NSString).pathExtension.lowercased()
-                        guard validExtensions.contains(fileExtension) else {
-                            throw ValidationError.invalidValue("Invalid sound file extension '\(fileExtension)' at index \(index). Valid extensions: \(validExtensions.joined(separator: ", "))")
-                        }
-                    }
-                    
-                    // Validate kit has reasonable number of sound files (max 16 for 16 tracks)
-                    guard soundFileArray.count <= 16 else {
-                        throw ValidationError.invalidValue("Kit cannot have more than 16 sound files")
-                    }
+        if let soundFileArray = soundFiles {
+            for (index, filePath) in soundFileArray.enumerated() {
+                guard !filePath.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                    throw ValidationError.invalidValue("Sound file path at index \(index) cannot be empty")
                 }
-            } catch let error as ValidationError {
-                throw error
-            } catch {
-                throw ValidationError.invalidValue("Failed to decode sound files data: \(error.localizedDescription)")
+
+                guard filePath.count <= 500 else {
+                    throw ValidationError.invalidValue("Sound file path at index \(index) is too long (max 500 characters)")
+                }
+
+                // Validate file extension
+                let validExtensions = ["wav", "aiff", "aif", "m4a", "mp3", "flac"]
+                let fileExtension = (filePath as NSString).pathExtension.lowercased()
+                guard validExtensions.contains(fileExtension) else {
+                    throw ValidationError.invalidValue("Invalid sound file extension '\(fileExtension)' at index \(index). Valid extensions: \(validExtensions.joined(separator: ", "))")
+                }
+            }
+
+            // Validate kit has reasonable number of sound files (max 16 for 16 tracks)
+            guard soundFileArray.count <= 16 else {
+                throw ValidationError.invalidValue("Kit cannot have more than 16 sound files")
             }
         }
     }
@@ -168,27 +110,13 @@ public class Kit: NSManagedObject {
             }
         }
         
-        do {
-            soundFiles = try NSKeyedArchiver.archivedData(withRootObject: filePaths, requiringSecureCoding: false)
-        } catch {
-            throw ValidationError.invalidValue("Failed to encode sound files: \(error.localizedDescription)")
-        }
+        soundFiles = filePaths
     }
 
     /// Gets sound file paths
     /// - Returns: Array of sound file paths
     public func getSoundFiles() -> [String] {
-        guard let soundFilesData = soundFiles else { return [] }
-        
-        do {
-            if let soundFileArray = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSArray.self, from: soundFilesData) as? [String] {
-                return soundFileArray
-            }
-        } catch {
-            print("Failed to decode sound files: \(error)")
-        }
-        
-        return []
+        return soundFiles ?? []
     }
 
     /// Adds a sound file to the kit
@@ -237,14 +165,6 @@ public class Kit: NSManagedObject {
     public func copy(withName newName: String) -> Kit {
         let kitCopy = Kit(context: managedObjectContext!)
         kitCopy.name = newName
-        kitCopy.kitType = self.kitType
-        kitCopy.description = self.description
-        kitCopy.masterVolume = self.masterVolume
-        kitCopy.masterTune = self.masterTune
-        kitCopy.compressorEnabled = self.compressorEnabled
-        kitCopy.reverbEnabled = self.reverbEnabled
-        kitCopy.delayEnabled = self.delayEnabled
-        kitCopy.distortionEnabled = self.distortionEnabled
         kitCopy.soundFiles = self.soundFiles
         return kitCopy
     }

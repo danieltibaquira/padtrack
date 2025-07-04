@@ -12,7 +12,7 @@ public class FMToneParameterInteractor: FMToneParameterInteractorProtocol {
     // MARK: - Properties
     
     private weak var fmVoiceMachine: FMVoiceMachine?
-    private weak var presenter: FMToneParameterPresenterProtocol?
+    weak var presenter: FMToneParameterPresenterProtocol?
     private var parameterDefinitions: [FMToneParameter] = []
     
     // Current parameter values (normalized 0.0-1.0)
@@ -272,61 +272,9 @@ public class FMToneParameterInteractor: FMToneParameterInteractorProtocol {
 }
 
 // MARK: - Supporting Types
+// Note: FMToneParameter, FMTonePreset, and FMToneParameterError are defined in FMToneParameterProtocols.swift
 
-/// FM TONE parameter definition
-public struct FMToneParameter {
-    let id: String
-    let name: String
-    let shortName: String
-    let page: Int
-    let index: Int
-    let minValue: Double
-    let maxValue: Double
-    let defaultValue: Double
-    let unit: String?
-    let isDiscrete: Bool
-    
-    public init(id: String, name: String, shortName: String, page: Int, index: Int, 
-                minValue: Double, maxValue: Double, defaultValue: Double, 
-                unit: String? = nil, isDiscrete: Bool = false) {
-        self.id = id
-        self.name = name
-        self.shortName = shortName
-        self.page = page
-        self.index = index
-        self.minValue = minValue
-        self.maxValue = maxValue
-        self.defaultValue = defaultValue
-        self.unit = unit
-        self.isDiscrete = isDiscrete
-    }
-}
-
-/// FM TONE preset definition
-public struct FMTonePreset {
-    let id: UUID
-    let name: String
-    let parameters: [String: Double]
-    let createdAt: Date
-    
-    public init(id: UUID = UUID(), name: String, parameters: [String: Double], createdAt: Date = Date()) {
-        self.id = id
-        self.name = name
-        self.parameters = parameters
-        self.createdAt = createdAt
-    }
-}
-
-// MARK: - Errors
-
-enum FMToneParameterError: LocalizedError {
-    case invalidParameterIndex
-    case invalidParameterValue
-    case parameterUpdateFailed
-    case voiceMachineNotAvailable
-    case presetLoadFailed
-    case invalidPageNumber
-    
+extension FMToneParameterError {
     var errorDescription: String? {
         switch self {
         case .invalidParameterIndex:
@@ -343,4 +291,4 @@ enum FMToneParameterError: LocalizedError {
             return "Invalid page number"
         }
     }
-} 
+}

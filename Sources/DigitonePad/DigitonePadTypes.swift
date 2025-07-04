@@ -36,27 +36,4 @@ public final class AppState: ObservableObject {
     }
 }
 
-// MARK: - ProjectManagementRouter Declaration
-
-public final class ProjectManagementRouter {
-    public init() {}
-
-    @MainActor
-    public static func createSwiftUIView() -> some View {
-        VStack {
-            Text("Project Management")
-                .font(.title)
-                .foregroundColor(.white)
-
-            Button("Close") {
-                AppState.shared.showProjectManagement = false
-            }
-            .padding()
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .cornerRadius(8)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.black)
-    }
-}
+// ProjectManagementRouter is defined in ProjectManagement/ProjectManagementRouter.swift

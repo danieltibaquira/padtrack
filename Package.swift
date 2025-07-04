@@ -90,14 +90,13 @@ let package = Package(
         // Data models (Core Data)
         .target(
             name: "DataModel",
-            dependencies: ["MachineProtocols"],
-            exclude: ["Documentation.docc/"]),
+            dependencies: ["MachineProtocols"]),
         
         // Data persistence layer
         .target(
             name: "DataLayer",
             dependencies: ["MachineProtocols", "DataModel"],
-            exclude: ["Documentation.docc/"]),
+            resources: [.process("Resources")]),
         
         // Core audio processing engine
         .target(
@@ -107,8 +106,8 @@ let package = Package(
         
         // Pattern sequencing module
         .target(
-            name: "SequencerModule", 
-            dependencies: ["MachineProtocols", "DataLayer", "DataModel"]),
+            name: "SequencerModule",
+            dependencies: ["MachineProtocols", "DataLayer", "DataModel", "AudioEngine"]),
         
         // Sound synthesis module
         .target(
@@ -118,7 +117,7 @@ let package = Package(
         // Audio filtering module
         .target(
             name: "FilterModule",
-            dependencies: ["MachineProtocols", "AudioEngine"]),
+            dependencies: ["MachineProtocols", "AudioEngine", "VoiceModule"]),
         
         // Filter machines module
         .target(
@@ -176,8 +175,7 @@ let package = Package(
         .target(
             name: "TestUtilities",
             dependencies: ["MachineProtocols", "DataLayer", "DataModel", "AudioEngine"],
-            path: "Tests/TestUtilities",
-            exclude: ["README.md", "TestPlan.md", "TestCaseTemplates.md", "CodeCoverage/"]),
+            path: "Tests/TestUtilities"),
 
         .testTarget(
             name: "MachineProtocolsTests",
@@ -245,6 +243,20 @@ let package = Package(
         .testTarget(
             name: "CodeCoverageTests",
             dependencies: ["TestUtilities"],
-            path: "Tests/CodeCoverageTests")
+            path: "Tests/CodeCoverageTests"),
+
+        // Simple demo app for iPad testing
+        .executableTarget(
+            name: "DigitonePadDemo",
+            dependencies: [
+                "UIComponents"
+            ]),
+
+        // iOS App target for iPad
+        .executableTarget(
+            name: "DigitonePadApp",
+            dependencies: [
+                "UIComponents"
+            ])
     ]
-) 
+)

@@ -56,6 +56,9 @@ public class MasterEffectsProcessor: ObservableObject {
         // Process through effects chain in specified order
         for effectType in effectsOrder {
             switch effectType {
+            case .eq:
+                // EQ processing would go here when implemented
+                break
             case .compressor:
                 if compressor.isEnabled {
                     output = compressor.process(input: output)
@@ -111,6 +114,7 @@ public class MasterEffectsProcessor: ObservableObject {
     /// Get effect by type
     public func getEffect(_ type: MasterEffectType) -> FXProcessor {
         switch type {
+        case .eq: return compressor // Placeholder until EQ is implemented
         case .compressor: return compressor
         case .overdrive: return overdrive
         case .limiter: return limiter
@@ -241,11 +245,7 @@ public class MasterEffectsProcessor: ObservableObject {
 
 // MARK: - Supporting Types
 
-public enum MasterEffectType: String, CaseIterable, Codable, Sendable {
-    case compressor = "Compressor"
-    case overdrive = "Overdrive"
-    case limiter = "Limiter"
-}
+
 
 // MARK: - Preset System
 

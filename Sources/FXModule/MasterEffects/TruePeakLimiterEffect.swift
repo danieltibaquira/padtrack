@@ -80,7 +80,7 @@ public class TruePeakLimiterEffect: FXProcessor, ObservableObject, @unchecked Se
     // MARK: - Initialization
     
     public init() {
-        self.lookaheadBuffer = LookaheadBuffer(maxLookahead: 0.02, sampleRate: sampleRate)
+        self.lookaheadBuffer = LookaheadBuffer(maxDelay: 0.02, sampleRate: sampleRate)
         self.upsampleFilter = OversamplingFilter()
         self.downsampleFilter = OversamplingFilter()
         self.peakDetector = TruePeakDetector()
@@ -277,8 +277,8 @@ public class TruePeakLimiterEffect: FXProcessor, ObservableObject, @unchecked Se
     }
     
     private func updateLookaheadBuffer() {
-        let lookaheadSamples = lookaheadTime * 0.001 * Float(sampleRate)
-        lookaheadBuffer.setLookahead(lookaheadSamples)
+        let lookaheadMs = lookaheadTime
+        lookaheadBuffer.setDelay(lookaheadMs)
     }
     
     // MARK: - Oversampling
@@ -407,95 +407,4 @@ public class TruePeakLimiterEffect: FXProcessor, ObservableObject, @unchecked Se
     }
 }
 
-// MARK: - Supporting Classes
-
-/// Lookahead buffer for delay compensation
-private class LookaheadBuffer {
-    private var buffers: [[Float]] = []
-    private var writeIndex: Int = 0
-    private var lookaheadSamples: Int = 0
-    private var sampleRate: Double
-    
-    init(maxLookahead: Float, sampleRate: Double) {
-        self.sampleRate = sampleRate
-        let maxSamples = Int(maxLookahead * Float(sampleRate))
-        
-        buffers = [
-            Array(repeating: 0.0, count: maxSamples),
-            Array(repeating: 0.0, count: maxSamples)
-        ]
-    }
-    
-    func process(_ input: Float, channel: Int) -> Float {
-        guard channel < buffers.count else { return input }
-        
-        buffers[channel][writeIndex] = input
-        
-        let readIndex = (writeIndex - lookaheadSamples + buffers[channel].count) % buffers[channel].count
-        let output = buffers[channel][readIndex]
-        
-        if channel == buffers.count - 1 {
-            writeIndex = (writeIndex + 1) % buffers[0].count
-        }
-        
-        return output
-    }
-    
-    func setLookahead(_ samples: Float) {
-        lookaheadSamples = Int(samples)
-        lookaheadSamples = max(0, min(lookaheadSamples, buffers[0].count - 1))
-    }
-    
-    func setSampleRate(_ sampleRate: Double) {
-        self.sampleRate = sampleRate
-    }
-    
-    func reset() {
-        for i in 0..<buffers.count {
-            for j in 0..<buffers[i].count {
-                buffers[i][j] = 0.0
-            }
-        }
-        writeIndex = 0
-    }
-}
-
-/// True peak detector using oversampling
-private class TruePeakDetector {
-    private var oversampleBuffer: [Float] = []
-    private let oversampleFactor = 4
-    
-    func detectTruePeak(_ input: Float) -> Float {
-        // Simple true peak estimation
-        // In a full implementation, this would use proper oversampling
-        return input * 1.05 // Conservative estimate of potential inter-sample peaks
-    }
-    
-    func reset() {
-        oversampleBuffer.removeAll()
-    }
-}
-
-/// Simple oversampling filter
-private class OversamplingFilter {
-    private var delayLine: [Float] = Array(repeating: 0.0, count: 64)
-    private var writeIndex: Int = 0
-    
-    func setupAntiAliasingFilter(cutoff: Float, sampleRate: Float) {
-        // Setup would configure filter coefficients
-        // Simplified for this implementation
-    }
-    
-    func process(_ buffer: inout [Float]) {
-        // Simple low-pass filtering
-        // In a full implementation, this would be a proper anti-aliasing filter
-        for i in 1..<buffer.count {
-            buffer[i] = buffer[i] * 0.8 + buffer[i-1] * 0.2
-        }
-    }
-    
-    func reset() {
-        delayLine = Array(repeating: 0.0, count: delayLine.count)
-        writeIndex = 0
-    }
-}
+// MARK: - Supporting Classes (using MasterFXUtilities)

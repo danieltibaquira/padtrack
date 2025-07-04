@@ -313,7 +313,7 @@ public final class Lowpass4FilterMachine: FilterMachine, @unchecked Sendable {
     
     // MARK: - Initialization
     
-    public override init(name: String = "Lowpass 4", sampleRate: Float = 44100.0) {
+    public init(name: String = "Lowpass 4", sampleRate: Float = 44100.0) {
         self.sampleRate = sampleRate
         self.filter = FourPoleLowpassFilter(sampleRate: sampleRate)
         self.keyboardTracking = FilterKeyboardTracking()
@@ -347,7 +347,7 @@ public final class Lowpass4FilterMachine: FilterMachine, @unchecked Sendable {
             // Extract channel data
             for frame in 0..<frameCount {
                 let inputIndex = frame * channelCount + channel
-                tempBuffer[frame] = inputIndex < input.data.count ? input.data[inputIndex] : 0.0
+                tempBuffer[frame] = inputIndex < (input.frameCount * input.channelCount) ? input.data[inputIndex] : 0.0
             }
             
             // Process through filter
@@ -362,8 +362,12 @@ public final class Lowpass4FilterMachine: FilterMachine, @unchecked Sendable {
             }
         }
         
-        return MachineProtocols.AudioBuffer(
-            data: outputBuffer,
+        // Allocate memory for output data
+        let outputData = UnsafeMutablePointer<Float>.allocate(capacity: outputBuffer.count)
+        outputData.initialize(from: outputBuffer, count: outputBuffer.count)
+
+        return AudioEngine.AudioBuffer(
+            data: outputData,
             frameCount: frameCount,
             channelCount: channelCount,
             sampleRate: input.sampleRate
@@ -372,15 +376,14 @@ public final class Lowpass4FilterMachine: FilterMachine, @unchecked Sendable {
     
     // MARK: - MIDI Integration
     
-    public override func noteOn(note: UInt8, velocity: UInt8, channel: UInt8, timestamp: UInt64?) {
+    public func noteOn(note: UInt8, velocity: UInt8, channel: UInt8, timestamp: UInt64?) {
         currentNote = Int(note)
         updateFilterParameters()
-        super.noteOn(note: note, velocity: velocity, channel: channel, timestamp: timestamp)
     }
     
     // MARK: - Parameter Management
     
-    private func setupFilterParameters() {
+    public override func setupFilterParameters() {
         // Cutoff frequency parameter
         parameters.addParameter(Parameter(
             id: "cutoff",
@@ -494,7 +497,7 @@ public final class Lowpass4FilterMachine: FilterMachine, @unchecked Sendable {
         ))
     }
     
-    private func updateFilterParameters() {
+    public func updateFilterParameters() {
         // Apply keyboard tracking to cutoff frequency
         let trackingMultiplier = keyboardTracking.calculateFrequencyMultiplier(for: currentNote)
         let finalCutoff = baseCutoffFrequency * trackingMultiplier
@@ -505,7 +508,8 @@ public final class Lowpass4FilterMachine: FilterMachine, @unchecked Sendable {
     
     // MARK: - Utility Methods
     
-    public func reset() {
+    public override func reset() {
+        super.reset()
         filter.reset()
     }
     

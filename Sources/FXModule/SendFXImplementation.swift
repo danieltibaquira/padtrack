@@ -150,7 +150,7 @@ public enum TimeSignature: String, CaseIterable, Codable {
 
 /// Sync sources
 public enum SyncSource: String, CaseIterable, Codable {
-    case internal = "internal"
+    case `internal` = "internal"
     case external = "external"
     case host = "host"
     
@@ -504,7 +504,7 @@ private final class AdvancedDelayProcessor: @unchecked Sendable {
             writeIndex = (writeIndex + 1) % delayBuffer.count
         }
 
-        return MachineProtocols.AudioBuffer(
+        return AudioEngine.AudioBuffer(
             data: outputData,
             frameCount: frameCount,
             channelCount: channelCount,
@@ -655,7 +655,7 @@ private final class AdvancedReverbProcessor: @unchecked Sendable {
             }
         }
 
-        return MachineProtocols.AudioBuffer(
+        return AudioEngine.AudioBuffer(
             data: outputData,
             frameCount: frameCount,
             channelCount: channelCount,
@@ -820,7 +820,7 @@ private final class AdvancedChorusProcessor: @unchecked Sendable {
             }
         }
 
-        return MachineProtocols.AudioBuffer(
+        return AudioEngine.AudioBuffer(
             data: outputData,
             frameCount: frameCount,
             channelCount: channelCount,
@@ -950,7 +950,7 @@ private final class SendRouter: @unchecked Sendable {
             let copyCount = min(buffer.count, frameCount * channelCount)
             data.initialize(from: buffer, count: copyCount)
 
-            return MachineProtocols.AudioBuffer(
+            return AudioEngine.AudioBuffer(
                 data: data,
                 frameCount: frameCount,
                 channelCount: channelCount,
@@ -1013,7 +1013,7 @@ private final class SendRouter: @unchecked Sendable {
             outputData[i] = buffer1.data[i] + buffer2.data[i] * level
         }
 
-        return MachineProtocols.AudioBuffer(
+        return AudioEngine.AudioBuffer(
             data: outputData,
             frameCount: frameCount,
             channelCount: channelCount,

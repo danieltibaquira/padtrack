@@ -110,8 +110,12 @@ struct SendControlView: View {
             
             // Knob control
             DigitonePadKnob(
-                value: $sendLevel,
+                value: Binding(
+                    get: { Double(sendLevel) },
+                    set: { sendLevel = Float($0) }
+                ),
                 range: 0...1,
+                label: sendName.uppercased(),
                 theme: .darkHardware
             )
             .frame(width: 50, height: 50)

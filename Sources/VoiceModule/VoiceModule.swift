@@ -141,13 +141,15 @@ public class VoiceMachine: VoiceMachineProtocol, SerializableMachine, @unchecked
         let synthGroup = ParameterGroup(
             id: "synthesis",
             name: "Synthesis",
-            parameters: ["masterVolume", "masterTuning", "polyphony"]
+            category: .effects,
+            parameterIds: ["masterVolume", "masterTuning", "polyphony"]
         )
         
         let expressionGroup = ParameterGroup(
             id: "expression",
             name: "Expression",
-            parameters: ["velocitySensitivity", "pitchBendRange", "portamentoTime", "portamentoEnabled"]
+            category: .effects,
+            parameterIds: ["velocitySensitivity", "pitchBendRange", "portamentoTime", "portamentoEnabled"]
         )
         
         return [synthGroup, expressionGroup]

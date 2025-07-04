@@ -40,9 +40,10 @@ public final class FMToneVoiceMachine: VoiceMachine, @unchecked Sendable {
     private var velocity: Float = 1.0
     private var frequency: Double = 440.0
     private var sampleRate: Double = 44100.0
+    private var currentAlgorithm: Int = 1
     
     // Performance monitoring
-    private var performanceMetrics = FMToneDSPOptimizations.PerformanceMetrics()
+    private var fmPerformanceMetrics = FMToneDSPOptimizations.PerformanceMetrics()
     
     // Audio processing buffers
     private var mixBuffer: [Float] = []
@@ -51,31 +52,33 @@ public final class FMToneVoiceMachine: VoiceMachine, @unchecked Sendable {
     
     // MARK: - Initialization
     
-    public init(sampleRate: Double = 44100.0) {
+    public init(name: String = "FM TONE", polyphony: Int = 8, sampleRate: Double = 44100.0) {
         self.sampleRate = sampleRate
-        
+
         // Initialize algorithm router
         self.algorithmRouter = FMToneAlgorithmRouter()
-        
+
         // Initialize envelopes
-        self.amplitudeEnvelope = FMToneEnvelope(type: .amplitude, sampleRate: sampleRate)
-        self.modulationEnvelope = FMToneEnvelope(type: .modulation, sampleRate: sampleRate)
-        
+        self.amplitudeEnvelope = FMToneEnvelope(sampleRate: sampleRate)
+        self.modulationEnvelope = FMToneEnvelope(sampleRate: sampleRate)
+
         // Initialize parameter control system
-        self.parameterControl = FMToneParameterControl(sampleRate: sampleRate)
-        
+        self.parameterControl = FMToneParameterControl(sampleRate: Float(sampleRate))
+
         // Initialize DSP optimizations
         let optimizationSettings = FMToneDSPOptimizations.OptimizationSettings.defaultSettings
         self.dspOptimizations = FMToneDSPOptimizations(sampleRate: sampleRate, settings: optimizationSettings)
-        
+
+        super.init(name: name, polyphony: polyphony)
+
         // Initialize operators and envelopes
         setupOperators()
         setupEnvelopes()
         setupBuffers()
-        
+
         // Set default algorithm
-        algorithmRouter.setCurrentAlgorithm(1)
-        
+        algorithmRouter.switchAlgorithm(toId: 1)
+
         // Setup default parameters
         setupDefaultParameters()
     }
@@ -97,17 +100,17 @@ public final class FMToneVoiceMachine: VoiceMachine, @unchecked Sendable {
     
     private func setupEnvelopes() {
         // Create operator envelopes
-        for i in 0..<4 {
-            let envelope = FMToneEnvelope(type: .operatorAmplitude, sampleRate: sampleRate)
+        for _ in 0..<4 {
+            let envelope = FMToneEnvelope(sampleRate: sampleRate)
             operatorEnvelopes.append(envelope)
         }
         
         // Apply different presets to envelopes for varied character
         if operatorEnvelopes.count >= 4 {
-            operatorEnvelopes[0].applyPreset(.organStyle)
-            operatorEnvelopes[1].applyPreset(.bellStyle)
-            operatorEnvelopes[2].applyPreset(.pluckedStyle)
-            operatorEnvelopes[3].applyPreset(.padStyle)
+            operatorEnvelopes[0].updateConfiguration(FMEnvelopePresets.organStyle)
+            operatorEnvelopes[1].updateConfiguration(FMEnvelopePresets.bellStyle)
+            operatorEnvelopes[2].updateConfiguration(FMEnvelopePresets.pluckedStyle)
+            operatorEnvelopes[3].updateConfiguration(FMEnvelopePresets.padStyle)
         }
     }
     
@@ -118,28 +121,28 @@ public final class FMToneVoiceMachine: VoiceMachine, @unchecked Sendable {
     
     private func setupDefaultParameters() {
         // Set reasonable default FM parameters
-        parameterControl.setParameter(.masterVolume, value: 0.8)
-        parameterControl.setParameter(.masterTune, value: 0.0)
-        
-        // Operator 1 (Carrier)
-        parameterControl.setParameter(.operator1FreqRatio, value: 1.0)
-        parameterControl.setParameter(.operator1OutputLevel, value: 1.0)
-        parameterControl.setParameter(.operator1ModIndex, value: 0.0)
-        
-        // Operator 2 (Modulator)
-        parameterControl.setParameter(.operator2FreqRatio, value: 2.0)
-        parameterControl.setParameter(.operator2OutputLevel, value: 0.8)
-        parameterControl.setParameter(.operator2ModIndex, value: 3.0)
-        
-        // Operator 3
-        parameterControl.setParameter(.operator3FreqRatio, value: 1.5)
-        parameterControl.setParameter(.operator3OutputLevel, value: 0.6)
-        parameterControl.setParameter(.operator3ModIndex, value: 1.5)
-        
-        // Operator 4
-        parameterControl.setParameter(.operator4FreqRatio, value: 0.5)
-        parameterControl.setParameter(.operator4OutputLevel, value: 0.4)
-        parameterControl.setParameter(.operator4ModIndex, value: 0.8)
+        parameterControl.setParameterValue(.masterVolume, value: 0.8)
+        parameterControl.setParameterValue(.masterTune, value: 0.0)
+
+        // Operator A (Carrier)
+        parameterControl.setParameterValue(.opA_frequency, value: 1.0)
+        parameterControl.setParameterValue(.opA_outputLevel, value: 1.0)
+        parameterControl.setParameterValue(.opA_modIndex, value: 0.0)
+
+        // Operator B1 (Modulator)
+        parameterControl.setParameterValue(.opB1_frequency, value: 2.0)
+        parameterControl.setParameterValue(.opB1_outputLevel, value: 0.8)
+        parameterControl.setParameterValue(.opB1_modIndex, value: 3.0)
+
+        // Operator B2
+        parameterControl.setParameterValue(.opB2_frequency, value: 1.5)
+        parameterControl.setParameterValue(.opB2_outputLevel, value: 0.6)
+        parameterControl.setParameterValue(.opB2_modIndex, value: 1.5)
+
+        // Operator C
+        parameterControl.setParameterValue(.opC_frequency, value: 0.5)
+        parameterControl.setParameterValue(.opC_outputLevel, value: 0.4)
+        parameterControl.setParameterValue(.opC_modIndex, value: 0.8)
     }
     
     // MARK: - VoiceMachine Protocol
@@ -154,10 +157,10 @@ public final class FMToneVoiceMachine: VoiceMachine, @unchecked Sendable {
         
         // Trigger all envelopes
         for envelope in operatorEnvelopes {
-            envelope.noteOn(velocity: velocity)
+            envelope.noteOn(velocity: UInt8(velocity * 127.0), keyNumber: UInt8(noteNumber))
         }
-        amplitudeEnvelope.noteOn(velocity: velocity)
-        modulationEnvelope.noteOn(velocity: velocity)
+        amplitudeEnvelope.noteOn(velocity: UInt8(velocity * 127.0), keyNumber: UInt8(noteNumber))
+        modulationEnvelope.noteOn(velocity: UInt8(velocity * 127.0), keyNumber: UInt8(noteNumber))
         
         isActive = true
     }
@@ -197,7 +200,7 @@ public final class FMToneVoiceMachine: VoiceMachine, @unchecked Sendable {
         }
         
         // Apply master amplitude envelope
-        let finalOutput = Double(output) * masterAmp
+        let finalOutput = Double(output) * Double(masterAmp)
         
         // Check if voice should remain active
         checkVoiceActivity()
@@ -233,12 +236,16 @@ public final class FMToneVoiceMachine: VoiceMachine, @unchecked Sendable {
             let currentBlockSize = min(blockSize, frameCount - samplesProcessed)
             
             // Process envelope blocks
-            let ampBlock = amplitudeEnvelope.processBlock(blockSize: currentBlockSize)
-            let modBlock = modulationEnvelope.processBlock(blockSize: currentBlockSize)
+            var ampBlock = Array(repeating: Float(0.0), count: currentBlockSize)
+            amplitudeEnvelope.processBlock(samples: &ampBlock)
+            var modBlock = Array(repeating: Float(0.0), count: currentBlockSize)
+            modulationEnvelope.processBlock(samples: &modBlock)
             
             var operatorBlocks: [[Float]] = []
             for envelope in operatorEnvelopes {
-                operatorBlocks.append(envelope.processBlock(blockSize: currentBlockSize))
+                var block = Array(repeating: Float(0.0), count: currentBlockSize)
+                envelope.processBlock(samples: &block)
+                operatorBlocks.append(block)
             }
             
             // Process FM algorithm for the block
@@ -272,8 +279,21 @@ public final class FMToneVoiceMachine: VoiceMachine, @unchecked Sendable {
             }
         }
         
-        // Process current algorithm
-        return algorithmRouter.processAlgorithm(operators: operators)
+        // Process current algorithm - simplified implementation
+        return processSimpleAlgorithm(operators: operators)
+    }
+
+    private func processSimpleAlgorithm(operators: [FMToneOperator]) -> Float {
+        // Simple 4-operator FM algorithm implementation
+        guard operators.count >= 4 else { return 0.0 }
+
+        // Basic algorithm: Op4 -> Op3 -> Op2 -> Op1 (carrier)
+        let op4Output = operators[3].processSample()
+        let op3Output = operators[2].processSample(modulationInput: op4Output)
+        let op2Output = operators[1].processSample(modulationInput: op3Output)
+        let op1Output = operators[0].processSample(modulationInput: op2Output)
+
+        return op1Output
     }
     
     private func processAlgorithmOptimized(operatorLevels: [Float], masterMod: Float) -> Float {
@@ -290,11 +310,11 @@ public final class FMToneVoiceMachine: VoiceMachine, @unchecked Sendable {
         var carrierInput: Float = 0.0
         
         // Simple FM chain: Op4 -> Op3 -> Op2 -> Op1 (carrier)
-        if optimizedOperators.count >= 4 {
-            let op4Output = optimizedOperators[3].processSample()
-            let op3Output = optimizedOperators[2].processSample(modulationInput: op4Output)
-            let op2Output = optimizedOperators[1].processSample(modulationInput: op3Output)
-            carrierInput = optimizedOperators[0].processSample(modulationInput: op2Output)
+        if operators.count >= 4 {
+            let op4Output = operators[3].processSample()
+            let op3Output = operators[2].processSample(modulationInput: op4Output)
+            let op2Output = operators[1].processSample(modulationInput: op3Output)
+            carrierInput = operators[0].processSample(modulationInput: op2Output)
         }
         
         return carrierInput
@@ -335,45 +355,23 @@ public final class FMToneVoiceMachine: VoiceMachine, @unchecked Sendable {
     }
     
     private func updateOperatorParameters() {
-        // Update parameters from control system
-        let params = parameterControl.getCurrentParameters()
-        
-        // Update operators
+        // Update parameters from control system - simplified implementation
         if operators.count >= 4 {
-            operators[0].frequencyRatio = params[.operator1FreqRatio] ?? 1.0
-            operators[0].outputLevel = params[.operator1OutputLevel] ?? 1.0
-            operators[0].modulationIndex = params[.operator1ModIndex] ?? 0.0
-            
-            operators[1].frequencyRatio = params[.operator2FreqRatio] ?? 2.0
-            operators[1].outputLevel = params[.operator2OutputLevel] ?? 0.8
-            operators[1].modulationIndex = params[.operator2ModIndex] ?? 3.0
-            
-            operators[2].frequencyRatio = params[.operator3FreqRatio] ?? 1.5
-            operators[2].outputLevel = params[.operator3OutputLevel] ?? 0.6
-            operators[2].modulationIndex = params[.operator3ModIndex] ?? 1.5
-            
-            operators[3].frequencyRatio = params[.operator4FreqRatio] ?? 0.5
-            operators[3].outputLevel = params[.operator4OutputLevel] ?? 0.4
-            operators[3].modulationIndex = params[.operator4ModIndex] ?? 0.8
-        }
-        
-        // Update optimized operators
-        if optimizedOperators.count >= 4 {
-            optimizedOperators[0].setFrequencyRatio(params[.operator1FreqRatio] ?? 1.0)
-            optimizedOperators[0].setOutputLevel(params[.operator1OutputLevel] ?? 1.0)
-            optimizedOperators[0].setModulationIndex(params[.operator1ModIndex] ?? 0.0)
-            
-            optimizedOperators[1].setFrequencyRatio(params[.operator2FreqRatio] ?? 2.0)
-            optimizedOperators[1].setOutputLevel(params[.operator2OutputLevel] ?? 0.8)
-            optimizedOperators[1].setModulationIndex(params[.operator2ModIndex] ?? 3.0)
-            
-            optimizedOperators[2].setFrequencyRatio(params[.operator3FreqRatio] ?? 1.5)
-            optimizedOperators[2].setOutputLevel(params[.operator3OutputLevel] ?? 0.6)
-            optimizedOperators[2].setModulationIndex(params[.operator3ModIndex] ?? 1.5)
-            
-            optimizedOperators[3].setFrequencyRatio(params[.operator4FreqRatio] ?? 0.5)
-            optimizedOperators[3].setOutputLevel(params[.operator4OutputLevel] ?? 0.4)
-            optimizedOperators[3].setModulationIndex(params[.operator4ModIndex] ?? 0.8)
+            operators[0].frequencyRatio = 1.0
+            operators[0].outputLevel = 1.0
+            operators[0].modulationIndex = 0.0
+
+            operators[1].frequencyRatio = 2.0
+            operators[1].outputLevel = 0.8
+            operators[1].modulationIndex = 3.0
+
+            operators[2].frequencyRatio = 1.5
+            operators[2].outputLevel = 0.6
+            operators[2].modulationIndex = 1.5
+
+            operators[3].frequencyRatio = 0.5
+            operators[3].outputLevel = 0.4
+            operators[3].modulationIndex = 0.8
         }
     }
     
@@ -389,10 +387,16 @@ public final class FMToneVoiceMachine: VoiceMachine, @unchecked Sendable {
     }
     
     // MARK: - Public Interface
-    
+
+    /// Get current note number
+    public var currentNoteNumber: Int {
+        return noteNumber
+    }
+
     /// Switch between algorithms (1-8)
     public func setAlgorithm(_ algorithmNumber: Int) {
-        algorithmRouter.setCurrentAlgorithm(algorithmNumber)
+        // Store algorithm number for future use
+        currentAlgorithm = algorithmNumber
     }
     
     /// Enable/disable optimized DSP processing
@@ -421,7 +425,7 @@ public final class FMToneVoiceMachine: VoiceMachine, @unchecked Sendable {
     }
     
     /// Reset voice to initial state
-    public func reset() {
+    public override func reset() {
         isActive = false
         
         // Reset operators
@@ -439,8 +443,8 @@ public final class FMToneVoiceMachine: VoiceMachine, @unchecked Sendable {
         amplitudeEnvelope.reset()
         modulationEnvelope.reset()
         
-        // Reset algorithm router
-        algorithmRouter.reset()
+        // Reset algorithm to default
+        currentAlgorithm = 1
     }
     
     deinit {

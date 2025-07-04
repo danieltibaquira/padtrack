@@ -4,7 +4,6 @@ import CoreData
 
 // Import test utilities and mocks
 import TestUtilities
-import MockObjects
 
 final class DataLayerTests: DigitonePadTestCase {
 

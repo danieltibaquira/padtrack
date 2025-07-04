@@ -16,7 +16,7 @@
         <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="patterns" inverseEntity="Project" deletionRule="Nullify"/>
         <relationship name="tracks" toMany="YES" destinationEntity="Track" inverseName="pattern" inverseEntity="Track" deletionRule="Cascade"/>
-        <relationship name="kit" toMany="NO" destinationEntity="Kit" deletionRule="Nullify"/>
+        <relationship name="kit" toMany="NO" destinationEntity="Kit" inverseName="patterns" inverseEntity="Kit" deletionRule="Nullify"/>
         <relationship name="trigs" toMany="YES" destinationEntity="Trig" inverseName="pattern" inverseEntity="Trig" deletionRule="Cascade"/>
     </entity>
     <entity name="Track" representedClassName="Track">
@@ -38,7 +38,7 @@
         <attribute name="soundFiles" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer" customClassName="[String]"/>
         <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="pattern" toMany="NO" destinationEntity="Pattern" inverseName="kit" inverseEntity="Pattern" deletionRule="Nullify"/>
+        <relationship name="patterns" toMany="YES" destinationEntity="Pattern" inverseName="kit" inverseEntity="Pattern" deletionRule="Nullify"/>
         <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="kits" inverseEntity="Project" deletionRule="Nullify"/>
         <relationship name="tracks" toMany="YES" destinationEntity="Track" inverseName="kit" inverseEntity="Track" deletionRule="Nullify"/>
     </entity>

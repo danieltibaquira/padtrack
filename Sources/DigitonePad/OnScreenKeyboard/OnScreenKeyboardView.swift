@@ -2,9 +2,7 @@ import SwiftUI
 import UIComponents
 
 /// Main SwiftUI view for the on-screen keyboard
-struct OnScreenKeyboardView: View, OnScreenKeyboardViewProtocol {
-    var presenter: OnScreenKeyboardPresenterProtocol?
-    
+struct OnScreenKeyboardView: View {
     @EnvironmentObject private var presenterObject: OnScreenKeyboardPresenter
     @State private var keyboardKeys: [KeyboardKey] = []
     @State private var velocityIndicators: [KeyboardKey: Float] = [:]
@@ -19,7 +17,6 @@ struct OnScreenKeyboardView: View, OnScreenKeyboardViewProtocol {
         }
         .background(Color.black)
         .onAppear {
-            setupPresenter()
             generateKeyboardKeys()
             presenterObject.viewDidLoad()
         }
@@ -198,11 +195,7 @@ struct OnScreenKeyboardView: View, OnScreenKeyboardViewProtocol {
     
     // MARK: - Private Methods
     
-    private func setupPresenter() {
-        if presenter == nil {
-            presenter = presenterObject
-        }
-    }
+
     
     private func generateKeyboardKeys() {
         var keys: [KeyboardKey] = []
@@ -308,7 +301,10 @@ struct KeyView: View {
             // Key background
             RoundedRectangle(cornerRadius: 4)
                 .fill(keyColor)
-                .stroke(Color.gray, lineWidth: 1)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 4)
+                        .stroke(Color.gray, lineWidth: 1)
+                )
                 .frame(width: key.position.width, height: key.position.height)
             
             // Key label

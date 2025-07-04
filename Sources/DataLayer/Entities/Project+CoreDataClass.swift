@@ -1,5 +1,6 @@
 import Foundation
 import CoreData
+import DataModel
 
 @objc(Project)
 public class Project: NSManagedObject {

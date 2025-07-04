@@ -793,7 +793,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
         // Prepare MIDI data
         let statusByte = message.type.rawValue | (message.channel & 0x0F)
-        let midiData: [UInt8] = [statusByte, message.data1, message.data2]
+        var midiData: [UInt8] = [statusByte, message.data1, message.data2]
 
         // Adjust data length based on message type
         switch message.type {

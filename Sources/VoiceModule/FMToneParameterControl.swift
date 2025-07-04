@@ -6,7 +6,7 @@ import AudioEngine
 // MARK: - FM TONE Parameter Definitions
 
 /// All FM TONE synthesis parameters organized by category
-public enum FMToneParameterID: String, CaseIterable {
+public enum FMToneParameterID: String, CaseIterable, Codable, Sendable {
     // Algorithm Selection
     case algorithm = "fm_tone_algorithm"
     
@@ -205,6 +205,28 @@ public enum FMToneParameterCategory: String, CaseIterable {
 }
 
 // MARK: - MIDI CC Mapping
+
+/// MIDI mapping curve types
+public enum MappingCurve: String, CaseIterable, Codable, Sendable {
+    case linear = "linear"
+    case exponential = "exponential"
+    case logarithmic = "logarithmic"
+    case sCurve = "s_curve"
+
+    /// Apply the curve to a normalized value (0.0-1.0)
+    public func apply(_ value: Float) -> Float {
+        switch self {
+        case .linear:
+            return value
+        case .exponential:
+            return value * value
+        case .logarithmic:
+            return sqrt(value)
+        case .sCurve:
+            return 0.5 * (1.0 + sin(Float.pi * (value - 0.5)))
+        }
+    }
+}
 
 /// FM TONE MIDI CC mapping configuration
 public struct FMToneMIDIMapping: Codable, Sendable {
@@ -469,11 +491,9 @@ public final class FMToneParameterControl: @unchecked Sendable {
                 }
                 
                 let currentValue = parameterManager.getParameterValue(id: paramID.rawValue) ?? 0.0
-                smoothers[paramID.rawValue] = ParameterSmoother(
-                    initialValue: currentValue,
-                    smoothingTime: smoothingTime,
-                    sampleRate: sampleRate
-                )
+                let smoother = ParameterSmoother(sampleRate: sampleRate, smoothingTime: smoothingTime)
+                smoother.reset(currentValue)
+                smoothers[paramID.rawValue] = smoother
             }
         }
     }
@@ -574,7 +594,7 @@ extension FMToneParameterControl {
     /// Get smoothed parameter value (call from audio thread)
     public func getSmoothedValue(_ parameterID: FMToneParameterID) -> Float {
         return controlQueue.sync {
-            smoothers[parameterID.rawValue]?.getNextValue() ?? 0.0
+            smoothers[parameterID.rawValue]?.process() ?? 0.0
         }
     }
     

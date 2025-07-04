@@ -1,0 +1,115 @@
+{
+  "timestamp": "2025-07-01T19:38:38Z",
+  "project_root": "/Users/daniel.tibaquira/padtrack",
+  "validation_type": "build_verification",
+  "results": {
+    "swift_package_build": {
+      "status": "failed",
+      "message": "Swift Package compilation failed",
+      "details": "238 |             // Ignore parameter update errors
+
+/Users/daniel.tibaquira/padtrack/Sources/FXModule/EffectChain.swift:237:11: warning: 'catch' block is unreachable because no errors are thrown in 'do' block
+235 |             try parameters.updateParameter(id: "chain_wet_level", value: chainWetLevel)
+236 |             try parameters.updateParameter(id: "chain_dry_level", value: chainDryLevel)
+237 |         } catch {
+    |           `- warning: 'catch' block is unreachable because no errors are thrown in 'do' block
+238 |             // Ignore parameter update errors
+239 |         }
+[10/64] Compiling FXModule TrackEffectsProcessor.swift",
+      "timestamp": "2025-07-01T19:38:50Z"
+    },
+    "swift_package_tests": {
+      "status": "failed",
+      "message": "Swift Package tests failed",
+      "details": "
+/Users/daniel.tibaquira/padtrack/Sources/VoiceModule/OscillatorModulation.swift:189:17: warning: initialization of immutable value 'phase' was never used; consider replacing with assignment to '_' or removing it
+187 |         
+188 |         for i in 0..<oversampleFactor {
+189 |             let phase = Float(i) / Float(oversampleFactor)
+    |                 `- warning: initialization of immutable value 'phase' was never used; consider replacing with assignment to '_' or removing it
+190 |             let interpolatedCarrier = carrierSample // In practice, would interpolate
+191 |             let interpolatedModulator = modulatorSample // In practice, would interpolate
+
+error: fatalError",
+      "timestamp": "2025-07-01T19:38:56Z"
+    },
+    "ios_build_ipad_pro_11": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 11-inch",
+      "details": "    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project DigitonePad.xcodeproj -scheme DigitonePad -destination "platform=iOS Simulator,name=iPad Pro (11-inch) (4th generation),OS=17.2" build CODE_SIGNING_ALLOWED=NO
+
+User defaults from command line:
+    IDEPackageSupportUseBuiltinSCM = YES
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+2025-07-01 14:39:18.885 xcodebuild[82396:52240802] Writing error result bundle to /var/folders/c7/4l6z2z2d7fzdj7g_6q14py6m0000gp/T/ResultBundle_2025-01-07_14-39-0018.xcresult
+xcodebuild: error: 'DigitonePad.xcodeproj' does not exist.",
+      "timestamp": "2025-07-01T19:39:20Z"
+    },
+    "ios_build_ipad_pro_129": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Pro 12.9-inch",
+      "details": "    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project DigitonePad.xcodeproj -scheme DigitonePad -destination "platform=iOS Simulator,name=iPad Pro (12.9-inch) (6th generation),OS=17.2" build CODE_SIGNING_ALLOWED=NO
+
+User defaults from command line:
+    IDEPackageSupportUseBuiltinSCM = YES
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+2025-07-01 14:39:21.746 xcodebuild[83242:52243516] Writing error result bundle to /var/folders/c7/4l6z2z2d7fzdj7g_6q14py6m0000gp/T/ResultBundle_2025-01-07_14-39-0021.xcresult
+xcodebuild: error: 'DigitonePad.xcodeproj' does not exist.",
+      "timestamp": "2025-07-01T19:39:22Z"
+    },
+    "ios_build_ipad_air": {
+      "status": "failed",
+      "message": "iOS build failed for iPad Air",
+      "details": "    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project DigitonePad.xcodeproj -scheme DigitonePad -destination "platform=iOS Simulator,name=iPad Air (5th generation),OS=17.2" build CODE_SIGNING_ALLOWED=NO
+
+User defaults from command line:
+    IDEPackageSupportUseBuiltinSCM = YES
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+2025-07-01 14:39:24.064 xcodebuild[83334:52243815] Writing error result bundle to /var/folders/c7/4l6z2z2d7fzdj7g_6q14py6m0000gp/T/ResultBundle_2025-01-07_14-39-0024.xcresult
+xcodebuild: error: 'DigitonePad.xcodeproj' does not exist.",
+      "timestamp": "2025-07-01T19:39:25Z"
+    },
+    "ios_build_ipad_mini": {
+      "status": "failed",
+      "message": "iOS build failed for iPad mini",
+      "details": "    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project DigitonePad.xcodeproj -scheme DigitonePad -destination "platform=iOS Simulator,name=iPad mini (6th generation),OS=17.2" build CODE_SIGNING_ALLOWED=NO
+
+User defaults from command line:
+    IDEPackageSupportUseBuiltinSCM = YES
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+2025-07-01 14:39:26.337 xcodebuild[83433:52244058] Writing error result bundle to /var/folders/c7/4l6z2z2d7fzdj7g_6q14py6m0000gp/T/ResultBundle_2025-01-07_14-39-0026.xcresult
+xcodebuild: error: 'DigitonePad.xcodeproj' does not exist.",
+      "timestamp": "2025-07-01T19:39:27Z"
+    },
+    "dependency_resolution": {
+      "status": "passed",
+      "message": "All package dependencies resolved",
+      "details": "No dependency conflicts detected",
+      "timestamp": "2025-07-01T19:39:27Z"
+    },
+    "build_warnings": {
+      "status": "failed",
+      "message": "92 build warnings detected",
+      "details": "Excessive warnings indicate potential issues",
+      "timestamp": "2025-07-01T19:39:28Z"
+    }
+  },
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 1,
+    "failed_tests": 7,
+    "warnings": 0
+  }
+}

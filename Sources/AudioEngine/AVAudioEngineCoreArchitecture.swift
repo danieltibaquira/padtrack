@@ -510,10 +510,33 @@ public final class AVAudioEngineCoreArchitecture: @unchecked Sendable {
 #if os(iOS)
         let sessionConfig = config.audioSession
 
+        // Convert string options to CategoryOptions
+        var categoryOptions: AVAudioSession.CategoryOptions = []
+        for optionString in sessionConfig.options {
+            switch optionString {
+            case "defaultToSpeaker":
+                categoryOptions.insert(.defaultToSpeaker)
+            case "allowBluetooth":
+                categoryOptions.insert(.allowBluetooth)
+            case "allowBluetoothA2DP":
+                categoryOptions.insert(.allowBluetoothA2DP)
+            case "allowAirPlay":
+                categoryOptions.insert(.allowAirPlay)
+            case "mixWithOthers":
+                categoryOptions.insert(.mixWithOthers)
+            case "duckOthers":
+                categoryOptions.insert(.duckOthers)
+            case "interruptSpokenAudioAndMixWithOthers":
+                categoryOptions.insert(.interruptSpokenAudioAndMixWithOthers)
+            default:
+                break
+            }
+        }
+
         try audioSession.setCategory(
             AVAudioSession.Category(rawValue: sessionConfig.category),
             mode: AVAudioSession.Mode(rawValue: sessionConfig.mode),
-            options: AVAudioSession.CategoryOptions(sessionConfig.options.map { AVAudioSession.CategoryOptions(rawValue: $0) })
+            options: categoryOptions
         )
 
         try audioSession.setPreferredSampleRate(sessionConfig.sampleRate)
@@ -549,8 +572,12 @@ public final class AVAudioEngineCoreArchitecture: @unchecked Sendable {
 
     private func setupEngineCallbacks() {
 #if os(iOS)
-        // Configuration change callback
-        engine.configurationChangeBlock = { [weak self] in
+        // Configuration change handling via notifications
+        NotificationCenter.default.addObserver(
+            forName: .AVAudioEngineConfigurationChange,
+            object: engine,
+            queue: .main
+        ) { [weak self] _ in
             self?.handleConfigurationChange()
         }
 

@@ -1,5 +1,6 @@
 import Foundation
 import CoreData
+import DataModel
 
 @objc(Pattern)
 public class Pattern: NSManagedObject {

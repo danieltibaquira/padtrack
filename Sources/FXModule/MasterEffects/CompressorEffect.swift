@@ -75,7 +75,7 @@ public class CompressorEffect: FXProcessor, ObservableObject, @unchecked Sendabl
     
     private var sampleRate: Double = 44100.0
     private var envelopeFollower: EnvelopeFollower
-    private var lookaheadBuffer: DelayBuffer
+    private var lookaheadBuffer: LookaheadBuffer
     private var gainReductionHistory: [Float] = []
     
     // Compressor curve parameters
@@ -96,8 +96,8 @@ public class CompressorEffect: FXProcessor, ObservableObject, @unchecked Sendabl
     // MARK: - Initialization
     
     public init() {
-        self.envelopeFollower = EnvelopeFollower()
-        self.lookaheadBuffer = DelayBuffer(maxDelay: 0.01, sampleRate: sampleRate)
+        self.envelopeFollower = EnvelopeFollower(sampleRate: 44100.0)
+        self.lookaheadBuffer = LookaheadBuffer(maxDelay: 0.01, sampleRate: 44100.0)
 
         super.init(name: "Master Compressor")
 
@@ -153,15 +153,15 @@ public class CompressorEffect: FXProcessor, ObservableObject, @unchecked Sendabl
             let gainReductionAmount = calculateGainReduction(peakLevel)
             
             // Apply envelope following
-            let smoothedGainReduction = envelopeFollower.process(gainReductionAmount)
+            let smoothedGainReduction = envelopeFollower.process(gainReductionAmount, channel: 0)
             
             // Apply compression
-            let compressionGain = linearToDb(smoothedGainReduction)
+            let compressionGain = Float(linearToDb(smoothedGainReduction))
             let makeupGainLinear = dbToLinear(makeupGain)
-            
+
             buffer.samples[leftIndex] = delayedLeft * smoothedGainReduction * makeupGainLinear
             buffer.samples[rightIndex] = delayedRight * smoothedGainReduction * makeupGainLinear
-            
+
             // Update gain reduction meter
             gainReduction = max(gainReduction * 0.99, -compressionGain)
         }
@@ -179,14 +179,14 @@ public class CompressorEffect: FXProcessor, ObservableObject, @unchecked Sendabl
             let gainReductionAmount = calculateGainReduction(inputLevel)
             
             // Apply envelope following
-            let smoothedGainReduction = envelopeFollower.process(gainReductionAmount)
+            let smoothedGainReduction = envelopeFollower.process(gainReductionAmount, channel: 1)
             
             // Apply compression and makeup gain
             let makeupGainLinear = dbToLinear(makeupGain)
             buffer.samples[i] = delayedInput * smoothedGainReduction * makeupGainLinear
             
             // Update gain reduction meter
-            let compressionGain = linearToDb(smoothedGainReduction)
+            let compressionGain = Float(linearToDb(smoothedGainReduction))
             gainReduction = max(gainReduction * 0.99, -compressionGain)
         }
     }
@@ -347,84 +347,4 @@ public class CompressorEffect: FXProcessor, ObservableObject, @unchecked Sendabl
 
 // MARK: - Supporting Classes
 
-/// Envelope follower for smooth gain reduction
-private class EnvelopeFollower {
-    private var envelope: Float = 1.0
-    private var attackCoeff: Float = 0.0
-    private var releaseCoeff: Float = 0.0
-    
-    func process(_ input: Float) -> Float {
-        let targetGain = input
-        
-        if targetGain < envelope {
-            // Attack (gain reduction increasing)
-            envelope = targetGain + (envelope - targetGain) * attackCoeff
-        } else {
-            // Release (gain reduction decreasing)
-            envelope = targetGain + (envelope - targetGain) * releaseCoeff
-        }
-        
-        return envelope
-    }
-    
-    func setCoefficients(attack: Float, release: Float) {
-        attackCoeff = attack
-        releaseCoeff = release
-    }
-    
-    func reset() {
-        envelope = 1.0
-    }
-}
 
-/// Delay buffer for lookahead processing
-private class DelayBuffer {
-    private var buffers: [[Float]] = []
-    private var writeIndex: Int = 0
-    private var delayInSamples: Int = 0
-    private var sampleRate: Double
-    
-    init(maxDelay: Float, sampleRate: Double) {
-        self.sampleRate = sampleRate
-        let maxSamples = Int(maxDelay * Float(sampleRate))
-        
-        // Initialize buffers for stereo
-        buffers = [
-            Array(repeating: 0.0, count: maxSamples),
-            Array(repeating: 0.0, count: maxSamples)
-        ]
-    }
-    
-    func process(_ input: Float, channel: Int) -> Float {
-        guard channel < buffers.count else { return input }
-        
-        buffers[channel][writeIndex] = input
-        
-        let readIndex = (writeIndex - delayInSamples + buffers[channel].count) % buffers[channel].count
-        let output = buffers[channel][readIndex]
-        
-        if channel == buffers.count - 1 {
-            writeIndex = (writeIndex + 1) % buffers[0].count
-        }
-        
-        return output
-    }
-    
-    func setDelay(_ delaySamples: Float) {
-        delayInSamples = Int(delaySamples)
-        delayInSamples = max(0, min(delayInSamples, buffers[0].count - 1))
-    }
-    
-    func setSampleRate(_ sampleRate: Double) {
-        self.sampleRate = sampleRate
-    }
-    
-    func reset() {
-        for i in 0..<buffers.count {
-            for j in 0..<buffers[i].count {
-                buffers[i][j] = 0.0
-            }
-        }
-        writeIndex = 0
-    }
-}

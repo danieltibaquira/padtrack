@@ -7,9 +7,12 @@
 
 import Foundation
 import CoreMIDI
-import MIDIModule
 import MachineProtocols
 import QuartzCore
+
+#if canImport(MIDIModule)
+import MIDIModule
+#endif
 
 /// MIDI input handler specifically designed for FM DRUM voice machine
 public final class FMDrumMIDIHandler: @unchecked Sendable {

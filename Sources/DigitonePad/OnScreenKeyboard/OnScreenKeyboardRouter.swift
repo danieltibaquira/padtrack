@@ -13,8 +13,7 @@ class OnScreenKeyboardRouter: OnScreenKeyboardRouterProtocol {
         let router = OnScreenKeyboardRouter()
         
         // Wire up VIPER components
-        view.presenter = presenter
-        presenter.view = view
+        // Note: view gets presenter via @EnvironmentObject
         presenter.interactor = interactor
         presenter.router = router
         interactor.presenter = presenter
@@ -70,8 +69,7 @@ extension OnScreenKeyboardRouter {
         let view = OnScreenKeyboardView()
         
         // Wire up VIPER components
-        view.presenter = presenter
-        presenter.view = view
+        // Note: view gets presenter via @EnvironmentObject
         presenter.interactor = interactor
         presenter.router = router
         presenter.delegate = delegate
@@ -96,8 +94,7 @@ extension OnScreenKeyboardRouter {
         let view = OnScreenKeyboardView()
         
         // Wire up VIPER components
-        view.presenter = presenter
-        presenter.view = view
+        // Note: view gets presenter via @EnvironmentObject
         presenter.interactor = interactor
         presenter.router = router
         presenter.delegate = delegate

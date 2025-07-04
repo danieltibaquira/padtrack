@@ -90,7 +90,7 @@ struct MasterEffectsView: View {
         case .compressor:
             CompressorControlsView(compressor: masterEffects.compressor)
         case .overdrive:
-            OverdriveControlsView(overdrive: masterEffects.overdrive)
+            MasterOverdriveControlsView(overdrive: masterEffects.overdrive)
         case .limiter:
             LimiterControlsView(limiter: masterEffects.limiter)
         }
@@ -267,7 +267,7 @@ struct CompressorControlsView: View {
     }
 }
 
-struct OverdriveControlsView: View {
+struct MasterOverdriveControlsView: View {
     @ObservedObject var overdrive: MasterOverdriveEffect
     
     var body: some View {
@@ -403,7 +403,7 @@ struct LimiterControlsView: View {
             
             HStack {
                 Toggle("ENABLED", isOn: $limiter.isEnabled)
-                    .toggleStyle(DigitonePadToggleStyle())
+                    .toggleStyle(SwitchToggleStyle())
                 
                 Spacer()
                 
@@ -433,8 +433,12 @@ struct ParameterKnobView: View {
                 .foregroundColor(.secondary)
             
             DigitonePadKnob(
-                value: $value,
-                range: range,
+                value: Binding(
+                    get: { Double(value) },
+                    set: { value = Float($0) }
+                ),
+                range: Double(range.lowerBound)...Double(range.upperBound),
+                label: title,
                 theme: .darkHardware
             )
             .frame(width: 50, height: 50)

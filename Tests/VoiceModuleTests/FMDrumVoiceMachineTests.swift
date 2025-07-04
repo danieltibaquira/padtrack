@@ -144,13 +144,13 @@ final class FMDrumVoiceMachineTests: XCTestCase {
     func testParameterUpdates() throws {
         // Test parameter updates through the parameter manager
         try drumMachine.parameters.updateParameter(id: "body_tone", value: 0.8)
-        XCTAssertEqual(drumMachine.parameters.getParameterValue(id: "body_tone"), 0.8, accuracy: 0.001)
-        
+        XCTAssertEqual(drumMachine.parameters.getParameterValue(id: "body_tone") ?? 0.0, 0.8, accuracy: 0.001)
+
         try drumMachine.parameters.updateParameter(id: "noise_level", value: 0.6)
-        XCTAssertEqual(drumMachine.parameters.getParameterValue(id: "noise_level"), 0.6, accuracy: 0.001)
-        
+        XCTAssertEqual(drumMachine.parameters.getParameterValue(id: "noise_level") ?? 0.0, 0.6, accuracy: 0.001)
+
         try drumMachine.parameters.updateParameter(id: "wavefold_amount", value: 0.4)
-        XCTAssertEqual(drumMachine.parameters.getParameterValue(id: "wavefold_amount"), 0.4, accuracy: 0.001)
+        XCTAssertEqual(drumMachine.parameters.getParameterValue(id: "wavefold_amount") ?? 0.0, 0.4, accuracy: 0.001)
     }
     
     // MARK: - Performance Tests

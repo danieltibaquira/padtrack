@@ -2,74 +2,7 @@ import Foundation
 import Accelerate
 import MachineProtocols
 
-// MARK: - Missing Type Placeholders
-
-private class BiquadFilter {
-    private var sampleRate: Double
-    
-    init(sampleRate: Double) {
-        self.sampleRate = sampleRate
-    }
-    
-    func process(_ sample: Float, channel: Int) -> Float {
-        // Simple placeholder - just return input
-        return sample
-    }
-    
-    func reset() {
-        // Placeholder implementation
-    }
-    
-    func setHighShelf(frequency: Float, gain: Float, q: Float, sampleRate: Double = 44100.0) {
-        // Placeholder implementation
-    }
-    
-    func setHighPass(frequency: Float, q: Float, sampleRate: Double = 44100.0) {
-        // Placeholder implementation
-    }
-    
-    func setLowShelf(frequency: Float, gain: Float, q: Float, sampleRate: Double = 44100.0) {
-        // Placeholder implementation
-    }
-}
-
-private class DCBlocker {
-    private var sampleRate: Double
-    private var lastInput: Float = 0.0
-    private var lastOutput: Float = 0.0
-    
-    init(sampleRate: Double) {
-        self.sampleRate = sampleRate
-    }
-    
-    func process(_ sample: Float, channel: Int) -> Float {
-        // Simple placeholder - just return input
-        return sample
-    }
-    
-    func reset() {
-        lastInput = 0.0
-        lastOutput = 0.0
-    }
-}
-
-private class HarmonicGenerator {
-    init() {}
-    
-    func process(_ sample: Float, channel: Int) -> Float {
-        // Simple placeholder - return a small harmonic component
-        return sample * 0.1
-    }
-    
-    func getHarmonicLevel() -> Float {
-        // Placeholder implementation
-        return 0.0
-    }
-    
-    func reset() {
-        // Placeholder implementation
-    }
-}
+// MARK: - Import utilities from MasterFXUtilities
 
 /// Enhanced overdrive effect specifically designed for master bus processing
 public class MasterOverdriveEffect: FXProcessor, ObservableObject, @unchecked Sendable {
@@ -178,7 +111,7 @@ public class MasterOverdriveEffect: FXProcessor, ObservableObject, @unchecked Se
         self.deEmphasisFilter = BiquadFilter(sampleRate: sampleRate)
         self.highPassFilter = BiquadFilter(sampleRate: sampleRate)
         self.dcBlocker = DCBlocker(sampleRate: sampleRate)
-        self.harmonicGenerator = HarmonicGenerator()
+        self.harmonicGenerator = HarmonicGenerator(sampleRate: sampleRate)
 
         super.init(name: "Master Overdrive")
 
@@ -325,8 +258,7 @@ public class MasterOverdriveEffect: FXProcessor, ObservableObject, @unchecked Se
         preEmphasisFilter.setHighShelf(
             frequency: Float(frequency),
             gain: gain,
-            q: 0.7,
-            sampleRate: Double(sampleRate)
+            q: 0.7
         )
     }
     
@@ -338,8 +270,7 @@ public class MasterOverdriveEffect: FXProcessor, ObservableObject, @unchecked Se
         deEmphasisFilter.setHighShelf(
             frequency: Float(frequency),
             gain: gain,
-            q: 0.7,
-            sampleRate: Double(sampleRate)
+            q: 0.7
         )
     }
     
@@ -349,8 +280,7 @@ public class MasterOverdriveEffect: FXProcessor, ObservableObject, @unchecked Se
         
         highPassFilter.setHighPass(
             frequency: Float(frequency),
-            q: 0.7,
-            sampleRate: Double(sampleRate)
+            q: 0.7
         )
     }
     

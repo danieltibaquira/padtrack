@@ -97,7 +97,7 @@ class OnScreenKeyboardPresenter: OnScreenKeyboardPresenterProtocol, ObservableOb
     
     func keyboardLayoutChanged(_ layout: KeyboardLayout) {
         keyboardLayout = layout
-        interactor?.updateKeyboardLayout(layout)
+        // The interactor will be updated through the presenter's published properties
     }
     
     // MARK: - Interactor Response Handlers
@@ -109,7 +109,7 @@ class OnScreenKeyboardPresenter: OnScreenKeyboardPresenterProtocol, ObservableOb
         }
     }
     
-    func keyReleased(_ key: KeyboardKey) {
+    func keyReleasedByInteractor(_ key: KeyboardKey) {
         // This is called by the interactor after processing
         DispatchQueue.main.async { [weak self] in
             self?.pressedKeys.remove(key)
@@ -267,7 +267,8 @@ class OnScreenKeyboardPresenter: OnScreenKeyboardPresenterProtocol, ObservableOb
         if let scale = preset.scale {
             interactor?.setScale(scale)
         }
-        interactor?.updateKeyboardLayout(preset.layout)
+        // Update keyboard layout through the presenter method
+        keyboardLayoutChanged(preset.layout)
         
         // Update view
         view?.updateOctave(preset.octave)

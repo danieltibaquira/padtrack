@@ -205,7 +205,7 @@ public enum SidechainSource: String, CaseIterable, Codable {
 
 
 
-public enum OutputFormat: String, CaseIterable, Codable {
+public enum OutputFormat: String, CaseIterable, Codable, Sendable {
     case float32 = "float32"
     case int24 = "int24"
     case int16 = "int16"
@@ -219,7 +219,7 @@ public enum OutputFormat: String, CaseIterable, Codable {
     }
 }
 
-public enum MasterEffectType: String, CaseIterable, Codable {
+public enum MasterEffectType: String, CaseIterable, Codable, Sendable {
     case eq = "eq"
     case compressor = "compressor"
     case overdrive = "overdrive"
@@ -267,7 +267,7 @@ public struct MasterChainConfig: Codable, Sendable {
     public var outputFormat: OutputFormat = .float32
 }
 
-public enum MasterDitherType: String, CaseIterable, Codable {
+public enum MasterDitherType: String, CaseIterable, Codable, Sendable {
     case none = "none"
     case triangular = "triangular"
     case shaped = "shaped"
@@ -427,7 +427,7 @@ public final class MasterFXProcessor: @unchecked Sendable {
         
         performanceMonitor.endTiming(samplesProcessed: totalSamples)
         
-        return MachineProtocols.AudioBuffer(
+        return AudioEngine.AudioBuffer(
             data: outputData,
             frameCount: frameCount,
             channelCount: channelCount,

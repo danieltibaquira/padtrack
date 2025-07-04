@@ -14,7 +14,7 @@ public typealias TimeSignature = MachineProtocols.TimeSignature
 // MARK: - Sequencer Clock
 
 /// High-precision clock for sequencer timing
-public final class SequencerClock: @unchecked Sendable {
+public final class BasicSequencerClock: @unchecked Sendable {
     private let queue = DispatchQueue(label: "com.digitonepad.sequencer.clock",
                                      qos: .userInteractive)
     private var timer: DispatchSourceTimer?
@@ -186,7 +186,7 @@ public final class Sequencer: @unchecked Sendable {
     public static let shared = Sequencer()
 
     // Core components
-    private let clock: SequencerClock
+    private let clock: BasicSequencerClock
     private var patterns: [Int: Pattern] = [:]
     private var activePatterns: Set<Int> = []
 
@@ -200,7 +200,7 @@ public final class Sequencer: @unchecked Sendable {
     private var cancellables = Set<AnyCancellable>()
 
     private init() {
-        self.clock = SequencerClock()
+        self.clock = BasicSequencerClock()
         setupEventHandling()
     }
 

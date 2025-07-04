@@ -55,7 +55,7 @@ public final class FMToneSynthesisEngine: @unchecked Sendable {
         initializeVoices()
         setupDefaultParameters()
         
-        os_signpost(.begin, log: performanceMonitor.logHandle, name: "FMToneSynthesisEngine")
+        // Performance monitoring initialization
     }
     
     private func initializeVoices() {
@@ -104,7 +104,7 @@ public final class FMToneSynthesisEngine: @unchecked Sendable {
             // Find active voice with this note
             for voiceIndex in self.activeVoices {
                 let voice = self.voices[voiceIndex]
-                if voice.noteNumber == Int(note) && voice.active {
+                if voice.currentNoteNumber == Int(note) && voice.active {
                     voice.noteOff()
                     // Voice will be removed from activeVoices when it becomes inactive
                     break
@@ -202,16 +202,18 @@ public final class FMToneSynthesisEngine: @unchecked Sendable {
         
         // Apply master tuning
         if masterTuning != 0.0 {
-            parameterControl.setParameter(.masterTune, value: Float(masterTuning))
+            parameterControl.setParameterValue(.masterTune, value: Float(masterTuning))
         }
-        
+
         // Apply mod wheel to modulation indices
         if modWheel > 0.0 {
             let modAmount = Float(modWheel)
-            parameterControl.setParameter(.operator2ModIndex, 
-                                        value: parameterControl.getParameterValue(.operator2ModIndex) * (1.0 + modAmount))
-            parameterControl.setParameter(.operator3ModIndex, 
-                                        value: parameterControl.getParameterValue(.operator3ModIndex) * (1.0 + modAmount))
+            if let currentValue = parameterControl.getParameterValue(.opB1_modIndex) {
+                parameterControl.setParameterValue(.opB1_modIndex, value: currentValue * (1.0 + modAmount))
+            }
+            if let currentValue = parameterControl.getParameterValue(.opB2_modIndex) {
+                parameterControl.setParameterValue(.opB2_modIndex, value: currentValue * (1.0 + modAmount))
+            }
         }
     }
     
@@ -227,8 +229,12 @@ public final class FMToneSynthesisEngine: @unchecked Sendable {
             metrics.samplesProcessed += frameCount
         }
         
-        os_signpost(.begin, log: performanceMonitor.logHandle, name: "ProcessBuffer")
-        defer { os_signpost(.end, log: performanceMonitor.logHandle, name: "ProcessBuffer") }
+        // Performance monitoring for buffer processing
+        let processingStartTime = CFAbsoluteTimeGetCurrent()
+        defer {
+            let endTime = CFAbsoluteTimeGetCurrent()
+            // Update performance metrics
+        }
         
         // Handle large buffers by processing in chunks
         guard frameCount <= bufferSize else {
@@ -368,7 +374,7 @@ public final class FMToneSynthesisEngine: @unchecked Sendable {
             for voiceIndex in self.activeVoices {
                 let voice = self.voices[voiceIndex]
                 let parameterControl = voice.getParameterControl()
-                parameterControl.setParameter(.masterTune, value: Float(pitchBendCents))
+                parameterControl.setParameterValue(.masterTune, value: Float(pitchBendCents))
             }
         }
     }
@@ -462,6 +468,6 @@ public final class FMToneSynthesisEngine: @unchecked Sendable {
     }
     
     deinit {
-        os_signpost(.end, log: performanceMonitor.logHandle, name: "FMToneSynthesisEngine")
+        // Cleanup performance monitoring
     }
 } 
