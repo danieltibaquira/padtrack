@@ -157,13 +157,15 @@ public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked S
         let mixGroup = ParameterGroup(
             id: "mix",
             name: "Mix",
-            parameters: ["wetLevel", "dryLevel", "inputGain", "outputGain"]
+            category: .mixer,
+            parameterIds: ["wetLevel", "dryLevel", "inputGain", "outputGain"]
         )
-        
+
         let processingGroup = ParameterGroup(
             id: "processing",
             name: "Processing",
-            parameters: ["intensity", "rate", "feedback", "modDepth"]
+            category: .effects,
+            parameterIds: ["intensity", "rate", "feedback", "modDepth"]
         )
         
         return [mixGroup, processingGroup]
@@ -179,15 +181,11 @@ public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked S
         return 0.0
     }
 
-    public func setTempoSync(bpm: Double, timeSignature: TimeSignature) {
+    public func setTempoSync(bpm: Double, timeSignature: MachineProtocols.TimeSignature) {
         // Store tempo sync information
-        do {
-            try parameters.updateParameter(id: "bpm", value: Float(bpm))
-            try parameters.updateParameter(id: "timeSignatureNumerator", value: Float(timeSignature.numerator))
-            try parameters.updateParameter(id: "timeSignatureDenominator", value: Float(timeSignature.denominator))
-        } catch {
-            // Ignore parameter errors
-        }
+        parameters.updateParameter(id: "bpm", value: Float(bpm))
+        parameters.updateParameter(id: "timeSignatureNumerator", value: Float(timeSignature.numerator))
+        parameters.updateParameter(id: "timeSignatureDenominator", value: Float(timeSignature.denominator))
     }
 
     public func modulateEffect(intensity: Float, rate: Float, feedback: Float) {
@@ -197,11 +195,7 @@ public class FXProcessor: FXProcessorProtocol, SerializableMachine, @unchecked S
     }
 
     public func setEffectParameter(id: String, value: Float, smoothTime: Float) {
-        do {
-            try parameters.updateParameter(id: id, value: value)
-        } catch {
-            // Ignore parameter errors
-        }
+        parameters.updateParameter(id: id, value: value)
     }
 
     public func triggerAction(_ action: String, value: Float) {

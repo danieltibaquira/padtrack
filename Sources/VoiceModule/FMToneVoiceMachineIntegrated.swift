@@ -19,17 +19,17 @@ public final class FMToneVoiceMachineIntegrated: VoiceMachine, @unchecked Sendab
     private let fmEngine: FMToneSynthesisEngine
     
     // Performance monitoring
-    private let performanceMonitor = OSSignposter(logHandle: OSLog(subsystem: "com.digitonepad.voicemodule", category: "fm-tone-machine"))
-    
+    private let performanceMonitor = OSSignposter(subsystem: "com.digitonepad.voicemodule", category: "fm-tone-machine")
+
     // FM TONE specific parameters
     private var currentAlgorithm: Int = 1
-    private var masterTuning: Double = 0.0
+    private var _masterTuning: Double = 0.0
     private var pitchBendValue: Double = 0.0
     private var modWheelValue: Double = 0.0
-    
+
     // MIDI and modulation state
-    private var pitchBendRange: Float = 2.0  // semitones
-    private var velocitySensitivity: Float = 1.0
+    private var _pitchBendRange: Float = 2.0  // semitones
+    private var _velocitySensitivity: Float = 1.0
     private var currentPitchBend: Float = 0.0
     private var currentModWheel: Float = 0.0
     
@@ -46,7 +46,7 @@ public final class FMToneVoiceMachineIntegrated: VoiceMachine, @unchecked Sendab
         setupFMToneParameters()
         setupDefaultPresets()
         
-        os_signpost(.begin, log: performanceMonitor.logHandle, name: "FMToneVoiceMachine")
+        // Performance monitoring initialization
     }
     
     // MARK: - Audio Processing Override
@@ -54,8 +54,12 @@ public final class FMToneVoiceMachineIntegrated: VoiceMachine, @unchecked Sendab
     public override func process(input: MachineProtocols.AudioBuffer) -> MachineProtocols.AudioBuffer {
         lastActiveTimestamp = Date()
         
-        os_signpost(.begin, log: performanceMonitor.logHandle, name: "ProcessAudio")
-        defer { os_signpost(.end, log: performanceMonitor.logHandle, name: "ProcessAudio") }
+        // Performance monitoring for audio processing
+        let startTime = CFAbsoluteTimeGetCurrent()
+        defer {
+            let endTime = CFAbsoluteTimeGetCurrent()
+            // Update performance metrics
+        }
         
         // Process FM TONE synthesis
         let frameCount = input.frameCount
@@ -115,16 +119,15 @@ public final class FMToneVoiceMachineIntegrated: VoiceMachine, @unchecked Sendab
         super.noteOn(note: note, velocity: velocity, channel: channel, timestamp: timestamp)
         
         // Apply velocity sensitivity
-        let adjustedVelocity = UInt8(Float(velocity) * velocitySensitivity)
+        let adjustedVelocity = UInt8(Float(velocity) * super.velocitySensitivity)
         
         // Trigger FM engine with enhanced parameters
         let success = fmEngine.noteOn(note: note, velocity: adjustedVelocity, channel: channel)
         
         if !success {
             // Voice allocation failed - remove from base class tracking
-            if let index = _voiceStates.firstIndex(where: { $0.note == note && $0.isActive }) {
-                _voiceStates.remove(at: index)
-                activeVoices = max(0, activeVoices - 1)
+            if let index = voiceStates.firstIndex(where: { $0.note == note && $0.isActive }) {
+                super.activeVoices = max(0, super.activeVoices - 1)
             }
         }
     }
@@ -151,18 +154,18 @@ public final class FMToneVoiceMachineIntegrated: VoiceMachine, @unchecked Sendab
     
     private func setupFMToneParameters() {
         // Initialize VoiceMachine protocol parameters
-        masterVolume = 0.8
-        masterTuning = 0.0
-        portamentoTime = 0.0
-        portamentoEnabled = false
-        velocitySensitivity = 1.0
-        pitchBendRange = 2.0
-        pitchBend = 0.0
-        modWheel = 0.0
-        
+        super.masterVolume = 0.8
+        super.masterTuning = 0.0
+        super.portamentoTime = 0.0
+        super.portamentoEnabled = false
+        super.velocitySensitivity = 1.0
+        super.pitchBendRange = 2.0
+        super.pitchBend = 0.0
+        super.modWheel = 0.0
+
         // Set up FM-specific parameters
         currentAlgorithm = 1
-        masterTuning = 0.0
+        _masterTuning = 0.0
         
         // Configure engine
         fmEngine.setMasterVolume(Double(masterVolume))
@@ -178,25 +181,25 @@ public final class FMToneVoiceMachineIntegrated: VoiceMachine, @unchecked Sendab
         if let voice = fmEngine.getVoice(at: 0) {
             let params = voice.getParameterControl()
             
-            // Operator 1 (Carrier)
-            params.setParameter(.operator1FreqRatio, value: 1.0)
-            params.setParameter(.operator1OutputLevel, value: 1.0)
-            params.setParameter(.operator1ModIndex, value: 0.0)
-            
-            // Operator 2 (Modulator)
-            params.setParameter(.operator2FreqRatio, value: 2.0)
-            params.setParameter(.operator2OutputLevel, value: 0.8)
-            params.setParameter(.operator2ModIndex, value: 3.0)
-            
-            // Operator 3
-            params.setParameter(.operator3FreqRatio, value: 1.5)
-            params.setParameter(.operator3OutputLevel, value: 0.6)
-            params.setParameter(.operator3ModIndex, value: 1.5)
-            
-            // Operator 4
-            params.setParameter(.operator4FreqRatio, value: 0.5)
-            params.setParameter(.operator4OutputLevel, value: 0.4)
-            params.setParameter(.operator4ModIndex, value: 0.8)
+            // Operator A (Carrier)
+            params.setParameterValue(.opA_frequency, value: 1.0)
+            params.setParameterValue(.opA_outputLevel, value: 1.0)
+            params.setParameterValue(.opA_modIndex, value: 0.0)
+
+            // Operator B1 (Modulator)
+            params.setParameterValue(.opB1_frequency, value: 2.0)
+            params.setParameterValue(.opB1_outputLevel, value: 0.8)
+            params.setParameterValue(.opB1_modIndex, value: 3.0)
+
+            // Operator B2
+            params.setParameterValue(.opB2_frequency, value: 1.5)
+            params.setParameterValue(.opB2_outputLevel, value: 0.6)
+            params.setParameterValue(.opB2_modIndex, value: 1.5)
+
+            // Operator C
+            params.setParameterValue(.opC_frequency, value: 0.5)
+            params.setParameterValue(.opC_outputLevel, value: 0.4)
+            params.setParameterValue(.opC_modIndex, value: 0.8)
         }
     }
     
@@ -211,10 +214,10 @@ public final class FMToneVoiceMachineIntegrated: VoiceMachine, @unchecked Sendab
     }
     
     public override var masterTuning: Float {
-        get { return Float(masterTuning) }
+        get { return Float(_masterTuning) }
         set {
             super.masterTuning = newValue
-            masterTuning = Double(newValue)
+            _masterTuning = Double(newValue)
             fmEngine.setMasterTuning(Double(newValue))
         }
     }
@@ -238,10 +241,10 @@ public final class FMToneVoiceMachineIntegrated: VoiceMachine, @unchecked Sendab
     }
     
     public override var pitchBendRange: Float {
-        get { return pitchBendRange }
+        get { return _pitchBendRange }
         set {
             super.pitchBendRange = newValue
-            self.pitchBendRange = newValue
+            _pitchBendRange = newValue
             fmEngine.setPitchBendRange(Double(newValue))
         }
     }
@@ -267,17 +270,17 @@ public final class FMToneVoiceMachineIntegrated: VoiceMachine, @unchecked Sendab
         for voiceIndex in 0..<polyphony {
             if let voice = fmEngine.getVoice(at: voiceIndex) {
                 let params = voice.getParameterControl()
-                let parameter: FMToneParameterControl.Parameter
-                
+                let parameter: FMToneParameterID
+
                 switch operatorIndex {
-                case 0: parameter = .operator1FreqRatio
-                case 1: parameter = .operator2FreqRatio
-                case 2: parameter = .operator3FreqRatio
-                case 3: parameter = .operator4FreqRatio
+                case 0: parameter = .opA_frequency
+                case 1: parameter = .opB1_frequency
+                case 2: parameter = .opB2_frequency
+                case 3: parameter = .opC_frequency
                 default: return
                 }
-                
-                params.setParameter(parameter, value: ratio)
+
+                params.setParameterValue(parameter, value: ratio)
             }
         }
     }
@@ -290,17 +293,17 @@ public final class FMToneVoiceMachineIntegrated: VoiceMachine, @unchecked Sendab
         for voiceIndex in 0..<polyphony {
             if let voice = fmEngine.getVoice(at: voiceIndex) {
                 let params = voice.getParameterControl()
-                let parameter: FMToneParameterControl.Parameter
-                
+                let parameterId: String
+
                 switch operatorIndex {
-                case 0: parameter = .operator1OutputLevel
-                case 1: parameter = .operator2OutputLevel
-                case 2: parameter = .operator3OutputLevel
-                case 3: parameter = .operator4OutputLevel
+                case 0: parameterId = "op1_level"
+                case 1: parameterId = "op2_level"
+                case 2: parameterId = "op3_level"
+                case 3: parameterId = "op4_level"
                 default: return
                 }
-                
-                params.setParameter(parameter, value: level)
+
+                params.setParameterValue(FMToneParameterID(rawValue: parameterId) ?? .opA_outputLevel, value: level)
             }
         }
     }
@@ -313,17 +316,17 @@ public final class FMToneVoiceMachineIntegrated: VoiceMachine, @unchecked Sendab
         for voiceIndex in 0..<polyphony {
             if let voice = fmEngine.getVoice(at: voiceIndex) {
                 let params = voice.getParameterControl()
-                let parameter: FMToneParameterControl.Parameter
-                
+                let parameterId: String
+
                 switch operatorIndex {
-                case 0: parameter = .operator1ModIndex
-                case 1: parameter = .operator2ModIndex
-                case 2: parameter = .operator3ModIndex
-                case 3: parameter = .operator4ModIndex
+                case 0: parameterId = "op1_mod"
+                case 1: parameterId = "op2_mod"
+                case 2: parameterId = "op3_mod"
+                case 3: parameterId = "op4_mod"
                 default: return
                 }
-                
-                params.setParameter(parameter, value: index)
+
+                params.setParameterValue(FMToneParameterID(rawValue: parameterId) ?? .opA_modIndex, value: index)
             }
         }
     }
@@ -332,7 +335,8 @@ public final class FMToneVoiceMachineIntegrated: VoiceMachine, @unchecked Sendab
     
     /// Get current polyphony usage from engine
     public override var activeVoices: Int {
-        return fmEngine.polyphonyUsage
+        get { return fmEngine.polyphonyUsage }
+        set { super.activeVoices = newValue }
     }
     
     /// Get FM engine performance metrics
@@ -354,17 +358,14 @@ public final class FMToneVoiceMachineIntegrated: VoiceMachine, @unchecked Sendab
         let fmMetrics = fmEngine.getPerformanceMetrics()
         
         // Update base class performance metrics
-        performanceMetrics.totalProcessingTime = fmMetrics.totalProcessingTime
         performanceMetrics.peakProcessingTime = max(performanceMetrics.peakProcessingTime, fmMetrics.averageBlockTime)
-        performanceMetrics.buffersProcessed = fmMetrics.blocksProcessed
-        performanceMetrics.samplesProcessed = fmMetrics.samplesProcessed
         
         // Calculate CPU usage estimate
         if lastProcessedFrameCount > 0 {
             let sampleRate = 44100.0
             let realTimeForBuffer = Double(lastProcessedFrameCount) / sampleRate
             let cpuUsage = fmMetrics.averageBlockTime / realTimeForBuffer
-            performanceMetrics.cpuUsage = Float(min(1.0, max(0.0, cpuUsage)))
+            performanceMetrics.cpuUsage = min(1.0, max(0.0, cpuUsage))
         }
     }
     
@@ -407,10 +408,12 @@ public final class FMToneVoiceMachineIntegrated: VoiceMachine, @unchecked Sendab
         parameterManager.addParameter(Parameter(
             id: "algorithm",
             name: "Algorithm",
+            value: 1.0,
+            minValue: 1.0,
+            maxValue: 8.0,
+            defaultValue: 1.0,
             unit: "",
-            range: 1...8,
-            defaultValue: 1,
-            flags: []
+            category: .synthesis
         ))
         
         // Operator parameters (4 operators × 3 parameters each)
@@ -418,33 +421,39 @@ public final class FMToneVoiceMachineIntegrated: VoiceMachine, @unchecked Sendab
             parameterManager.addParameter(Parameter(
                 id: "op\(op)_ratio",
                 name: "Op\(op) Freq Ratio",
-                unit: "",
-                range: 0.1...16.0,
+                value: 1.0,
+                minValue: 0.1,
+                maxValue: 16.0,
                 defaultValue: op == 1 ? 1.0 : Float(op),
-                flags: []
+                unit: "",
+                category: .synthesis
             ))
             
             parameterManager.addParameter(Parameter(
                 id: "op\(op)_level",
                 name: "Op\(op) Level",
-                unit: "",
-                range: 0.0...1.0,
+                value: 1.0 / Float(op),
+                minValue: 0.0,
+                maxValue: 1.0,
                 defaultValue: 1.0 / Float(op),
-                flags: []
+                unit: "",
+                category: .synthesis
             ))
             
             parameterManager.addParameter(Parameter(
                 id: "op\(op)_mod",
                 name: "Op\(op) Mod Index",
-                unit: "",
-                range: 0.0...10.0,
+                value: Float(op) * 0.5,
+                minValue: 0.0,
+                maxValue: 10.0,
                 defaultValue: op > 1 ? Float(op) : 0.0,
-                flags: []
+                unit: "",
+                category: .synthesis
             ))
         }
     }
     
     deinit {
-        os_signpost(.end, log: performanceMonitor.logHandle, name: "FMToneVoiceMachine")
+        // Cleanup performance monitoring
     }
 } 

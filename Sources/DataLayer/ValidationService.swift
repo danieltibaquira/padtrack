@@ -1,5 +1,6 @@
 import Foundation
 import CoreData
+import DataModel
 
 /// Centralized validation service for DataLayer entities
 public final class ValidationService: @unchecked Sendable {
@@ -18,12 +19,6 @@ public final class ValidationService: @unchecked Sendable {
     public func validateProject(_ project: Project) throws {
         try validateProjectName(project.name)
         try validateTimestamps(createdAt: project.createdAt, updatedAt: project.updatedAt)
-        try validateProjectTempo(project.tempo)
-        try validateProjectDescription(project.description)
-        try validateProjectVersion(project.version)
-        try validateProjectColorTheme(project.colorTheme)
-        try validateProjectMasterVolume(project.masterVolume)
-        try validateProjectSwingAmount(project.swingAmount)
     }
     
     /// Validates a pattern entity
@@ -33,10 +28,8 @@ public final class ValidationService: @unchecked Sendable {
         try validatePatternName(pattern.name)
         try validatePatternLength(pattern.length)
         try validatePatternTempo(pattern.tempo)
-        try validatePatternResolution(pattern.resolution)
-        try validatePatternTimeSignature(pattern.timeSignatureNumerator, pattern.timeSignatureDenominator)
         try validateTimestamps(createdAt: pattern.createdAt, updatedAt: pattern.updatedAt)
-        
+
         // Validate relationship
         guard pattern.project != nil else {
             throw ValidationError.relationshipConstraint("Pattern must belong to a project")
@@ -51,12 +44,6 @@ public final class ValidationService: @unchecked Sendable {
         try validateTrackIndex(track.trackIndex)
         try validateTrackVolume(track.volume)
         try validateTrackPan(track.pan)
-        try validateTrackPitch(track.pitch)
-        try validateTrackLength(track.length)
-        try validateTrackSendLevels(track.send1Level, track.send2Level)
-        try validateTrackMicroTiming(track.microTiming)
-        try validateTrackChance(track.chance)
-        try validateTrackRetrigCount(track.retrigCount)
         
         // Validate relationship
         guard track.pattern != nil else {
@@ -94,10 +81,10 @@ public final class ValidationService: @unchecked Sendable {
             throw ValidationError.relationshipConstraint("Trig must belong to a pattern")
         }
         
-        // Validate step is within track/pattern length
-        if let track = trig.track {
-            guard trig.step < track.length else {
-                throw ValidationError.invalidValue("Trig step \(trig.step) exceeds track length \(track.length)")
+        // Validate step is within pattern length
+        if let pattern = trig.pattern {
+            guard trig.step < pattern.length else {
+                throw ValidationError.invalidValue("Trig step \(trig.step) exceeds pattern length \(pattern.length)")
             }
         }
     }
@@ -107,10 +94,6 @@ public final class ValidationService: @unchecked Sendable {
     /// - Throws: ValidationError if validation fails
     public func validateKit(_ kit: Kit) throws {
         try validateKitName(kit.name)
-        try validateKitType(kit.kitType)
-        try validateKitDescription(kit.description)
-        try validateKitMasterVolume(kit.masterVolume)
-        try validateKitMasterTune(kit.masterTune)
         try validateTimestamps(createdAt: kit.createdAt, updatedAt: kit.updatedAt)
     }
     
@@ -120,15 +103,6 @@ public final class ValidationService: @unchecked Sendable {
     public func validatePreset(_ preset: Preset) throws {
         try validatePresetName(preset.name)
         try validatePresetCategory(preset.category)
-        try validatePresetMachineType(preset.machineType)
-        try validatePresetDescription(preset.description)
-        try validatePresetAuthor(preset.author)
-        try validatePresetVersion(preset.version)
-        try validatePresetTags(preset.tags)
-        try validatePresetRating(preset.rating)
-        try validatePresetUsageCount(preset.usageCount)
-        try validatePresetTempo(preset.tempo)
-        try validatePresetKey(preset.key)
         try validateTimestamps(createdAt: preset.createdAt, updatedAt: preset.updatedAt)
     }
     
@@ -452,16 +426,7 @@ public final class ValidationService: @unchecked Sendable {
         }
     }
     
-    private func validatePresetMachineType(_ machineType: String?) throws {
-        guard let machineType = machineType, !machineType.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            throw ValidationError.invalidValue("Preset machine type cannot be empty")
-        }
-        
-        let validMachineTypes = ["FM TONE", "FM DRUM", "WAVETONE", "SWARMER", "FILTER", "FX"]
-        guard validMachineTypes.contains(machineType) else {
-            throw ValidationError.invalidValue("Invalid machine type: \(machineType)")
-        }
-    }
+
     
     private func validatePresetDescription(_ description: String?) throws {
         if let description = description {
@@ -623,8 +588,7 @@ public final class ValidationService: @unchecked Sendable {
         // Validate pattern track consistency
         try validatePatternTrackConsistency(in: context)
         
-        // Validate preset machine type consistency
-        try validatePresetMachineTypeConsistency(in: context)
+
     }
     
     private func validateProjectLimits(in context: NSManagedObjectContext) throws {
@@ -659,53 +623,5 @@ public final class ValidationService: @unchecked Sendable {
         }
     }
     
-    private func validatePresetMachineTypeConsistency(in context: NSManagedObjectContext) throws {
-        let presetRequest: NSFetchRequest<Preset> = Preset.fetchRequest()
-        let presets = try context.fetch(presetRequest)
-        
-        for preset in presets {
-            if let machineType = preset.machineType, let category = preset.category {
-                // Validate that machine type and category are compatible
-                let validMachineTypes = ["FM TONE", "FM DRUM", "WAVETONE", "SWARMER", "FILTER", "FX"]
-                guard validMachineTypes.contains(machineType) else {
-                    throw ValidationError.relationshipConstraint("Preset '\(preset.name ?? "")' has invalid machine type: \(machineType)")
-                }
-            }
-        }
-    }
-}
 
-// MARK: - Validation Errors
-
-public enum ValidationError: LocalizedError {
-    case invalidName(String)
-    case invalidValue(String)
-    case relationshipConstraint(String)
-    case businessRuleViolation(String)
-
-    public var errorDescription: String? {
-        switch self {
-        case .invalidName(let message):
-            return "Invalid name: \(message)"
-        case .invalidValue(let message):
-            return "Invalid value: \(message)"
-        case .relationshipConstraint(let message):
-            return "Relationship constraint: \(message)"
-        case .businessRuleViolation(let message):
-            return "Business rule violation: \(message)"
-        }
-    }
-    
-    public var recoverySuggestion: String? {
-        switch self {
-        case .invalidName:
-            return "Please provide a valid name following the specified format and length requirements."
-        case .invalidValue:
-            return "Please ensure the value is within the valid range and format."
-        case .relationshipConstraint:
-            return "Please ensure all required relationships are properly established."
-        case .businessRuleViolation:
-            return "Please review and correct the data to comply with business rules."
-        }
-    }
 }

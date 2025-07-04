@@ -15,8 +15,7 @@ import simd
 /// Comprehensive envelope generator system for WAVETONE Voice Machine
 /// Provides ADSR envelopes with advanced features including customizable curves,
 /// velocity sensitivity, loop modes, and key tracking
-@unchecked Sendable
-public final class WavetoneEnvelopeSystem {
+public final class WavetoneEnvelopeSystem: @unchecked Sendable {
     
     // MARK: - Envelope Phase
     public enum EnvelopePhase: CaseIterable {
@@ -436,8 +435,7 @@ public final class WavetoneEnvelopeSystem {
 }
 
 // MARK: - Multi-Envelope System
-@unchecked Sendable
-public final class WavetoneMultiEnvelopeSystem {
+public final class WavetoneMultiEnvelopeSystem: @unchecked Sendable {
     
     public enum EnvelopeDestination: CaseIterable {
         case amplitude

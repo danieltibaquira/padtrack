@@ -59,9 +59,17 @@ struct ScaleSelectorView: View {
                 }
             }
             .navigationTitle("Select Scale")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: {
+                    #if os(iOS)
+                    return .navigationBarTrailing
+                    #else
+                    return .cancellationAction
+                    #endif
+                }()) {
                     Button("Cancel") {
                         presentationMode.wrappedValue.dismiss()
                     }
@@ -188,9 +196,17 @@ struct ChordSelectorView: View {
             }
             .padding(.vertical, 20)
             .navigationTitle("Select Chord")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: {
+                    #if os(iOS)
+                    return .navigationBarTrailing
+                    #else
+                    return .cancellationAction
+                    #endif
+                }()) {
                     Button("Cancel") {
                         presentationMode.wrappedValue.dismiss()
                     }
@@ -301,9 +317,17 @@ struct KeyboardSettingsView: View {
                 }
             }
             .navigationTitle("Keyboard Settings")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: {
+                    #if os(iOS)
+                    return .navigationBarTrailing
+                    #else
+                    return .cancellationAction
+                    #endif
+                }()) {
                     Button("Cancel") {
                         presentationMode.wrappedValue.dismiss()
                     }

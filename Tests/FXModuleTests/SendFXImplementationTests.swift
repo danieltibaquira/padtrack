@@ -5,6 +5,7 @@
 
 import XCTest
 import MachineProtocols
+import AudioEngine
 @testable import FXModule
 
 final class SendFXImplementationTests: XCTestCase {
@@ -346,7 +347,7 @@ final class SendFXImplementationTests: XCTestCase {
         
         // Process silence and check for clean state
         let silentInputs = createTestTrackInputs(trackCount: 2, amplitude: 0.0)
-        let silentSendLevels = [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
+        let silentSendLevels: [[Float]] = [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
         
         let outputs = sendFX.process(trackInputs: silentInputs, sendLevels: silentSendLevels)
         
@@ -379,7 +380,7 @@ final class SendFXImplementationTests: XCTestCase {
                 }
             }
             
-            let buffer = MachineProtocols.AudioBuffer(
+            let buffer = AudioEngine.AudioBuffer(
                 data: inputData,
                 frameCount: bufferSize,
                 channelCount: channelCount,

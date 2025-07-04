@@ -207,7 +207,7 @@ public struct CoreDataValidation {
     }
     
     /// Validate relationship count is within bounds
-    static func validateRelationshipCount<T: NSManagedObject>(_ objects: NSSet?, relationshipName: String, min: Int = 0, max: Int = Int.max) throws {
+    static func validateRelationshipCount(_ objects: NSSet?, relationshipName: String, min: Int = 0, max: Int = Int.max) throws {
         let count = objects?.count ?? 0
         
         guard count >= min else {
@@ -329,6 +329,12 @@ public enum ValidationError: LocalizedError {
     
     // Data errors
     case binaryDataTooLarge(String, Int)
+
+    // General validation errors (for compatibility with ValidationService)
+    case invalidName(String)
+    case invalidValue(String)
+    case relationshipConstraint(String)
+    case businessRuleViolation(String)
     
     public var errorDescription: String? {
         switch self {
@@ -360,6 +366,14 @@ public enum ValidationError: LocalizedError {
             return "\(firstField) must be before or equal to \(secondField)"
         case .binaryDataTooLarge(let field, let maxSize):
             return "\(field) data size exceeds maximum allowed size of \(maxSize) bytes"
+        case .invalidName(let message):
+            return "Invalid name: \(message)"
+        case .invalidValue(let message):
+            return "Invalid value: \(message)"
+        case .relationshipConstraint(let message):
+            return "Relationship constraint: \(message)"
+        case .businessRuleViolation(let message):
+            return "Business rule violation: \(message)"
         }
     }
     
@@ -393,6 +407,14 @@ public enum ValidationError: LocalizedError {
             return "Please ensure dates are in the correct order"
         case .binaryDataTooLarge:
             return "Please reduce the size of the data or use external storage"
+        case .invalidName:
+            return "Please provide a valid name following the specified format and length requirements."
+        case .invalidValue:
+            return "Please ensure the value is within the valid range and format."
+        case .relationshipConstraint:
+            return "Please ensure all required relationships are properly established."
+        case .businessRuleViolation:
+            return "Please review and correct the data to comply with business rules."
         }
     }
 }

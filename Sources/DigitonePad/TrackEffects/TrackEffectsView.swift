@@ -71,10 +71,11 @@ struct TrackEffectsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { trackProcessor.inputGain },
-                            set: { trackProcessor.setInputGain($0) }
+                            get: { Double(trackProcessor.inputGain) },
+                            set: { trackProcessor.setInputGain(Float($0)) }
                         ),
                         range: -60...20,
+                        label: "INPUT",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)
@@ -91,10 +92,11 @@ struct TrackEffectsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { trackProcessor.outputGain },
-                            set: { trackProcessor.setOutputGain($0) }
+                            get: { Double(trackProcessor.outputGain) },
+                            set: { trackProcessor.setOutputGain(Float($0)) }
                         ),
                         range: -60...20,
+                        label: "OUTPUT",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)
@@ -111,10 +113,11 @@ struct TrackEffectsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { trackProcessor.pan },
-                            set: { trackProcessor.setPan($0) }
+                            get: { Double(trackProcessor.pan) },
+                            set: { trackProcessor.setPan(Float($0)) }
                         ),
                         range: -1...1,
+                        label: "PAN",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)
@@ -337,9 +340,11 @@ struct EffectSelectorView: View {
                 }
             }
             .navigationTitle("Add Effect")
+            #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .primaryAction) {
                     Button("Cancel") {
                         presentationMode.wrappedValue.dismiss()
                     }

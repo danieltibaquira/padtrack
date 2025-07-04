@@ -16,10 +16,10 @@ import MachineProtocols
 public struct TrackFXConfig: Codable {
     /// Bit reduction settings
     public var bitReduction: BitReductionConfig
-    
+
     /// Sample rate reduction settings
     public var sampleRateReduction: SampleRateReductionConfig
-    
+
     /// Overdrive settings
     public var overdrive: OverdriveConfig
     
@@ -36,19 +36,11 @@ public struct TrackFXConfig: Codable {
     }
 }
 
-/// Individual track effect types
-public enum TrackFXType: String, CaseIterable, Codable {
-    case bitReduction = "bitreduction"
-    case sampleRateReduction = "sampleratereduction"
+// Track FX effect types
+public enum TrackFXType: String, CaseIterable, Codable, Sendable {
+    case bitReduction = "bit_reduction"
+    case sampleRateReduction = "sample_rate_reduction"
     case overdrive = "overdrive"
-    
-    public var displayName: String {
-        switch self {
-        case .bitReduction: return "Bit Reduction"
-        case .sampleRateReduction: return "Sample Rate Reduction"
-        case .overdrive: return "Overdrive"
-        }
-    }
 }
 
 // MARK: - Bit Reduction Configuration
@@ -487,13 +479,13 @@ public final class OverdriveProcessor: @unchecked Sendable {
     
     private func transistorOverdrive(_ input: Float) -> Float {
         // Transistor-style hard clipping with soft knee
-        let threshold = 0.7
+        let threshold: Float = 0.7
         let x = input * 0.8
-        
+
         if abs(x) < threshold {
             return x
         } else {
-            let sign = x >= 0.0 ? 1.0 : -1.0
+            let sign: Float = x >= 0.0 ? 1.0 : -1.0
             let excess = abs(x) - threshold
             let compressed = threshold + excess / (1.0 + excess * 3.0)
             return sign * compressed
@@ -530,12 +522,12 @@ public final class OverdriveProcessor: @unchecked Sendable {
 
 /// Tone control filter for overdrive effect
 private final class ToneControlFilter {
-    private var lowShelf: BiquadFilter
-    private var highShelf: BiquadFilter
-    
+    private var lowShelf: TrackBiquadFilter
+    private var highShelf: TrackBiquadFilter
+
     init(sampleRate: Double) {
-        self.lowShelf = BiquadFilter(sampleRate: sampleRate)
-        self.highShelf = BiquadFilter(sampleRate: sampleRate)
+        self.lowShelf = TrackBiquadFilter(sampleRate: sampleRate)
+        self.highShelf = TrackBiquadFilter(sampleRate: sampleRate)
         setTone(0.0)  // Neutral tone
     }
     
@@ -557,7 +549,7 @@ private final class ToneControlFilter {
 // MARK: - Simple Biquad Filter
 
 /// Simple biquad filter for tone control
-private final class BiquadFilter {
+private final class TrackBiquadFilter {
     private var x1: Float = 0.0
     private var x2: Float = 0.0
     private var y1: Float = 0.0
@@ -653,9 +645,50 @@ public final class TrackFXProcessor: @unchecked Sendable {
     private let overdriveProcessor: OverdriveProcessor
     
     // MARK: - State
-    
+
     private let sampleRate: Double
-    private var isEnabled: Bool = true
+    public var isEnabled: Bool = true
+
+    // MARK: - FXProcessorProtocol Properties
+
+    public let id = UUID()
+    public var name: String = "Track FX"
+    public var isInitialized: Bool = false
+    public var status: MachineStatus = .uninitialized
+    public var lastActiveTimestamp: Date?
+    public var lastError: MachineError?
+    public var errorHandler: ((MachineError) -> Void)?
+    public var performanceMetrics: MachinePerformanceMetrics = MachinePerformanceMetrics()
+    public var parameters: ObservableParameterManager = ObservableParameterManager()
+
+    public var wetLevel: Float = 1.0
+    public var dryLevel: Float = 0.0
+    public var isBypassed: Bool = false
+    public var effectType: EffectType = .distortion
+    public var processingMode: EffectProcessingMode = .insert
+    public var quality: EffectQuality = .high
+    public var inputGain: Float = 0.0
+    public var outputGain: Float = 0.0
+    public var intensity: Float = 0.5
+    public var rate: Float = 1.0
+    public var feedback: Float = 0.0
+    public var modDepth: Float = 0.5
+    public var stereoWidth: Float = 1.0
+    public var latency: Int = 0
+    public var isProcessing: Bool = false
+    public var inputPeak: Float = 0.0
+    public var outputPeak: Float = 0.0
+
+    public var effectState: [String: Float] {
+        return [
+            "bitDepth": config.bitReduction.bitDepth,
+            "downsampleFactor": Float(config.sampleRateReduction.downsampleFactor),
+            "drive": config.overdrive.drive,
+            "tone": config.overdrive.tone,
+            "inputPeak": inputPeak,
+            "outputPeak": outputPeak
+        ]
+    }
     
     // MARK: - Initialization
     
@@ -746,13 +779,13 @@ public final class TrackFXProcessor: @unchecked Sendable {
         self.config.bitReduction = config
         bitReductionProcessor.config = config
     }
-    
+
     /// Update sample rate reduction settings
     public func setSampleRateReduction(_ config: SampleRateReductionConfig) {
         self.config.sampleRateReduction = config
         sampleRateReductionProcessor.config = config
     }
-    
+
     /// Update overdrive settings
     public func setOverdrive(_ config: OverdriveConfig) {
         self.config.overdrive = config
@@ -773,9 +806,9 @@ public final class TrackFXProcessor: @unchecked Sendable {
     }
 }
 
-// MARK: - FXMachine Protocol Conformance
+// MARK: - FXProcessorProtocol Conformance
 
-extension TrackFXProcessor: FXMachine {
+extension TrackFXProcessor: FXProcessorProtocol {
     
     public var machineType: String {
         return "TrackFX"
@@ -855,5 +888,123 @@ extension TrackFXProcessor: FXMachine {
         case 7: return config.globalBypass ? "BYPASS" : "ON"
         default: return ""
         }
+    }
+
+    // MARK: - MachineProtocol Implementation
+
+    public func initialize(configuration: MachineConfiguration) throws {
+        isInitialized = true
+        status = .ready
+    }
+
+    public func start() throws {
+        status = .running
+        isProcessing = true
+    }
+
+    public func stop() throws {
+        status = .ready
+        isProcessing = false
+    }
+
+    public func suspend() throws {
+        status = .suspended
+        isProcessing = false
+    }
+
+    public func resume() throws {
+        status = .running
+        isProcessing = true
+    }
+
+    public func reset() {
+        // Reset config to defaults
+        config = TrackFXConfig()
+        updateProcessors()
+    }
+
+    public func updateParameter(key: String, value: Any) throws {
+        // Implementation for parameter updates
+    }
+
+    public func validateParameters() throws -> Bool {
+        return true
+    }
+
+    public func healthCheck() -> MachineHealthStatus {
+        return .healthy
+    }
+
+    public func resetPerformanceCounters() {
+        performanceMetrics.reset()
+    }
+
+    public func getState() -> MachineState {
+        return MachineState(machineType: "TrackFX", parameters: [:])
+    }
+
+    public func setState(_ state: MachineState) {
+        // Implementation for state restoration
+    }
+
+    // MARK: - FXProcessorProtocol Implementation
+
+    public func resetEffectState() {
+        reset()
+    }
+
+    public func flushBuffers() {
+        resetEffectState()
+    }
+
+    public func loadEffectPreset(_ preset: EffectPreset) {
+        // Implementation for preset loading
+    }
+
+    public func saveEffectPreset(name: String) -> EffectPreset {
+        return EffectPreset(
+            name: name,
+            effectType: effectType,
+            parameters: [:],
+            processingMode: processingMode,
+            quality: quality,
+            wetLevel: wetLevel,
+            dryLevel: dryLevel
+        )
+    }
+
+    public func setupEffectParameters() {
+        // Implementation for parameter setup
+    }
+
+    public func getEffectParameterGroups() -> [ParameterGroup] {
+        return []
+    }
+
+    public func process(input: MachineProtocols.AudioBuffer) -> MachineProtocols.AudioBuffer {
+        // Convert to concrete type for processing
+        if let concreteInput = input as? AudioEngine.AudioBuffer {
+            processBuffer(
+                input: concreteInput.data,
+                output: concreteInput.data, // In-place processing for now
+                frameCount: concreteInput.frameCount
+            )
+            return concreteInput
+        } else {
+            // Fallback for other AudioBuffer types
+            return input
+        }
+    }
+
+    public func processSidechain(input: AudioEngine.AudioBuffer, sidechain: AudioEngine.AudioBuffer?) -> AudioEngine.AudioBuffer {
+        if let result = process(input: input) as? AudioEngine.AudioBuffer {
+            return result
+        } else {
+            return input
+        }
+    }
+
+    public func getTailTime() -> Double {
+        return 0.0
     }
 }

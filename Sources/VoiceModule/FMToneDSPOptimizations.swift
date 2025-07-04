@@ -9,6 +9,7 @@ import Foundation
 import Accelerate
 import simd
 import os.signpost
+import CoreAudio
 
 /// Comprehensive DSP optimization system for FM TONE synthesis
 public final class FMToneDSPOptimizations: @unchecked Sendable {
@@ -16,7 +17,7 @@ public final class FMToneDSPOptimizations: @unchecked Sendable {
     // MARK: - Performance Monitoring
     
     private let performanceLog = OSLog(subsystem: "com.digitonepad.voicemodule", category: "fm-tone-performance")
-    private let dspSignpost = OSSignposter(logHandle: performanceLog)
+    private lazy var dspSignpost = OSSignposter(logHandle: performanceLog)
     
     // Performance metrics
     public struct PerformanceMetrics {
@@ -151,9 +152,9 @@ public final class FMToneDSPOptimizations: @unchecked Sendable {
             numSamples: Int,
             performanceMetrics: inout PerformanceMetrics
         ) {
-            let startTime = CACurrentMediaTime()
+            let startTime = CFAbsoluteTimeGetCurrent()
             defer {
-                let endTime = CACurrentMediaTime()
+                let endTime = CFAbsoluteTimeGetCurrent()
                 performanceMetrics.totalProcessingTime += (endTime - startTime)
                 performanceMetrics.blocksProcessed += 1
                 performanceMetrics.samplesProcessed += numSamples
@@ -175,7 +176,7 @@ public final class FMToneDSPOptimizations: @unchecked Sendable {
             
             // Cache parameters to reduce memory access
             let modIndex = modulationIndex
-            let outLevel = outputLevel
+            var outLevel = outputLevel
             let fbAmount = feedbackAmount
             
             // Generate phase values using SIMD
@@ -186,7 +187,7 @@ public final class FMToneDSPOptimizations: @unchecked Sendable {
                 applyModulationSIMD(modulationBuffer: modBuffer, count: samplesToProcess, modIndex: modIndex)
             } else {
                 // Copy phase buffer
-                cblas_scopy(Int32(samplesToProcess), phaseBuffer, 1, modulatedPhaseBuffer, 1)
+                cblas_scopy(Int32(samplesToProcess), &phaseBuffer, 1, &modulatedPhaseBuffer, 1)
             }
             
             // Generate sine values using optimized table lookup
@@ -211,7 +212,7 @@ public final class FMToneDSPOptimizations: @unchecked Sendable {
             
             // Process at higher sample rate
             processBlockStandard(
-                outputBuffer: oversamplingBuffer,
+                outputBuffer: &oversamplingBuffer,
                 modulationBuffer: modulationBuffer,
                 numSamples: oversampledSamples
             )
@@ -228,7 +229,7 @@ public final class FMToneDSPOptimizations: @unchecked Sendable {
         // MARK: - Advanced SIMD Operations
         
         private func generatePhaseValues(count: Int) {
-            let phaseInc = Float(phaseIncrement)
+            var phaseInc = Float(phaseIncrement)
             var currentPhase = Float(phase)
             
             // Generate phase ramp using vDSP
@@ -250,11 +251,14 @@ public final class FMToneDSPOptimizations: @unchecked Sendable {
         private func applyModulationSIMD(modulationBuffer: UnsafePointer<Float>, count: Int, modIndex: Float) {
             // Scale modulation: mod * modIndex * tableSize
             var tableSize = Float(Self.tableSize)
-            vDSP_vsmul(modulationBuffer, 1, &modIndex, tempBuffer1, 1, vDSP_Length(count))
-            vDSP_vsmul(tempBuffer1, 1, &tableSize, tempBuffer1, 1, vDSP_Length(count))
-            
+            var modIndexVar = modIndex
+            vDSP_vsmul(modulationBuffer, 1, &modIndexVar, &tempBuffer1, 1, vDSP_Length(count))
+            vDSP_vsmul(&tempBuffer1, 1, &tableSize, &tempBuffer2, 1, vDSP_Length(count))
+            // Copy result back to tempBuffer1
+            cblas_scopy(Int32(count), &tempBuffer2, 1, &tempBuffer1, 1)
+
             // Add to phase: phase + modulation
-            vDSP_vadd(phaseBuffer, 1, tempBuffer1, 1, modulatedPhaseBuffer, 1, vDSP_Length(count))
+            vDSP_vadd(&phaseBuffer, 1, &tempBuffer1, 1, &modulatedPhaseBuffer, 1, vDSP_Length(count))
             
             // Wrap modulated phases
             for i in 0..<count {
@@ -468,14 +472,14 @@ public final class FMToneDSPOptimizations: @unchecked Sendable {
             
             // Actual benchmark
             for _ in 0..<iterations {
-                let startTime = CACurrentMediaTime()
+                let startTime = CFAbsoluteTimeGetCurrent()
                 `operator`.processBlockOptimized(
                     outputBuffer: outputBuffer,
                     modulationBuffer: testModulation,
                     numSamples: blockSize,
                     performanceMetrics: &metrics
                 )
-                let endTime = CACurrentMediaTime()
+                let endTime = CFAbsoluteTimeGetCurrent()
                 times.append(endTime - startTime)
             }
             

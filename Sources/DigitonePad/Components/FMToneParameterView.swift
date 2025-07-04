@@ -7,6 +7,10 @@ import SwiftUI
 import UIComponents
 import VoiceModule
 
+#if canImport(UIKit)
+import UIKit
+#endif
+
 /// FM TONE specific parameter view with 4-page navigation
 public struct FMToneParameterView: View {
     @ObservedObject private var layoutState: MainLayoutState
@@ -318,23 +322,23 @@ struct FMToneParameterCard: View {
                             )
                             .frame(width: geometry.size.width * CGFloat(layoutState.parameterValues[index]), height: 8)
                     }
+                    .contentShape(Rectangle())
+                    .gesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { value in
+                                if !isDragging {
+                                    isDragging = true
+                                    lastDragValue = value.location.x
+                                }
+
+                                updateParameterValue(dragLocation: value.location.x, geometryWidth: geometry.size.width)
+                            }
+                            .onEnded { _ in
+                                isDragging = false
+                            }
+                    )
                 }
                 .frame(height: 8)
-                .contentShape(Rectangle())
-                .gesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged { value in
-                            if !isDragging {
-                                isDragging = true
-                                lastDragValue = value.location.x
-                            }
-                            
-                            updateParameterValue(dragLocation: value.location.x, geometryWidth: UIScreen.main.bounds.width * 0.2)
-                        }
-                        .onEnded { _ in
-                            isDragging = false
-                        }
-                )
             }
         }
         .padding(12)

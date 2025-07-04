@@ -7,33 +7,8 @@ import SwiftUI
 import UIComponents
 import Combine
 
-// MARK: - Temporary AppState Definition
-// TODO: Move this back to DigitonePadTypes.swift once AppShell issues are resolved
-// TEST COMMENT TO VERIFY BUILD IS USING THIS FILE
-
-public final class AppState: ObservableObject {
-    public static let shared = AppState()
-
-    @Published public var currentProject: String? // Simplified for now
-    @Published public var isProjectSelected: Bool = false
-    @Published public var showProjectManagement: Bool = false
-
-    private init() {
-        // Simple initialization
-        isProjectSelected = false
-        showProjectManagement = false
-    }
-
-    public func selectProject(_ projectName: String) {
-        currentProject = projectName
-        showProjectManagement = false
-        isProjectSelected = true
-    }
-
-    public func showProjectSelection() {
-        showProjectManagement = true
-    }
-}
+// Import AppState from DigitonePadTypes
+// AppState is now properly defined in DigitonePadTypes.swift
 
 /// Main application layout view that mimics the Digitone hardware interface
 public struct MainLayoutView: View {

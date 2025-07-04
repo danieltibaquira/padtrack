@@ -25,7 +25,20 @@ struct MasterEffectsView: View {
         .padding()
         .background(Color.black)
         .sheet(isPresented: $showingPresets) {
-            MasterEffectsPresetsView(masterEffects: masterEffects)
+            // TODO: Implement MasterEffectsPresetsView
+            VStack {
+                Text("Master Effects Presets")
+                    .font(.headline)
+                    .padding()
+
+                Text("Preset management coming soon...")
+                    .foregroundColor(.secondary)
+
+                Button("Close") {
+                    showingPresets = false
+                }
+                .padding()
+            }
         }
     }
     
@@ -90,9 +103,12 @@ struct MasterEffectsView: View {
         case .compressor:
             CompressorControlsView(compressor: masterEffects.compressor)
         case .overdrive:
-            OverdriveControlsView(overdrive: masterEffects.overdrive)
+            MasterOverdriveControlsView(overdrive: masterEffects.overdrive)
         case .limiter:
             LimiterControlsView(limiter: masterEffects.limiter)
+        case .eq:
+            Text("EQ Controls - Coming Soon")
+                .foregroundColor(.gray)
         }
     }
     
@@ -165,10 +181,11 @@ struct MasterEffectsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { masterEffects.masterGain },
-                            set: { masterEffects.masterGain = $0 }
+                            get: { Double(masterEffects.masterGain) },
+                            set: { masterEffects.masterGain = Float($0) }
                         ),
                         range: -20...20,
+                        label: "Master",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)
@@ -188,7 +205,7 @@ struct MasterEffectsView: View {
     
     private func dbString(from linear: Float) -> String {
         let db = 20 * log10(max(linear, 1e-6))
-        return "\(db, specifier: "%.1f") dB"
+        return String(format: "%.1f dB", db)
     }
 }
 
@@ -267,7 +284,7 @@ struct CompressorControlsView: View {
     }
 }
 
-struct OverdriveControlsView: View {
+struct MasterOverdriveControlsView: View {
     @ObservedObject var overdrive: MasterOverdriveEffect
     
     var body: some View {
@@ -403,7 +420,7 @@ struct LimiterControlsView: View {
             
             HStack {
                 Toggle("ENABLED", isOn: $limiter.isEnabled)
-                    .toggleStyle(DigitonePadToggleStyle())
+                    .toggleStyle(SwitchToggleStyle())
                 
                 Spacer()
                 
@@ -433,8 +450,12 @@ struct ParameterKnobView: View {
                 .foregroundColor(.secondary)
             
             DigitonePadKnob(
-                value: $value,
-                range: range,
+                value: Binding(
+                    get: { Double(value) },
+                    set: { value = Float($0) }
+                ),
+                range: Double(range.lowerBound)...Double(range.upperBound),
+                label: title,
                 theme: .darkHardware
             )
             .frame(width: 50, height: 50)

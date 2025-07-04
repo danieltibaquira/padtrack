@@ -20,12 +20,14 @@ protocol FMToneParameterPresenterProtocol: AnyObject {
     var view: FMToneParameterViewProtocol? { get set }
     var interactor: FMToneParameterInteractorProtocol? { get set }
     var router: FMToneParameterRouterProtocol? { get set }
-    
+
     func viewDidLoad()
     func pageChanged(to page: Int)
     func parameterChanged(at index: Int, value: Double)
     func resetParametersToDefault()
     func loadPreset(preset: FMTonePreset)
+    func showError(_ error: Error)
+    func updateParameterDisplay(at index: Int, formattedValue: String)
 }
 
 /// Interactor Protocol - Defines what the Interactor can do

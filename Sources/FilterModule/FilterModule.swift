@@ -203,13 +203,15 @@ public class FilterMachine: FilterMachineProtocol, SerializableMachine, @uncheck
         let coreGroup = ParameterGroup(
             id: "core",
             name: "Core Filter",
-            parameters: ["cutoff", "resonance", "filterType", "drive"]
+            category: .filter,
+            parameterIds: ["cutoff", "resonance", "filterType", "drive"]
         )
-        
+
         let modulationGroup = ParameterGroup(
             id: "modulation",
             name: "Modulation",
-            parameters: ["keyTracking", "velocitySensitivity", "envelopeAmount", "lfoAmount", "modulationAmount"]
+            category: .filter,
+            parameterIds: ["keyTracking", "velocitySensitivity", "envelopeAmount", "lfoAmount", "modulationAmount"]
         )
         
         return [coreGroup, modulationGroup]

@@ -1,5 +1,4 @@
 import XCTest
-@testable import TestUtilities
 
 /// Tests for code coverage utilities and analysis
 final class CoverageUtilitiesTests: DigitonePadTestCase {

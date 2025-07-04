@@ -16,10 +16,10 @@ class ProjectManagementInteractor: ProjectManagementInteractorProtocol, @uncheck
     
     // MARK: - Project Management
     
-    func getAllProjects() {
+    func fetchProjects() {
         Task { [weak self] in
             do {
-                let projects = try await self?.dataLayerManager.fetchAllProjects() ?? []
+                let projects = try self?.dataLayerManager.projectRepository.fetch() ?? []
                 await MainActor.run {
                     self?.presenter?.projectsFetchSucceeded(projects)
                 }
@@ -41,7 +41,8 @@ class ProjectManagementInteractor: ProjectManagementInteractorProtocol, @uncheck
             }
             
             do {
-                let project = try await self?.dataLayerManager.createProject(name: name)
+                let project = self?.dataLayerManager.projectRepository.createProject(name: name)
+                try self?.dataLayerManager.save()
                 await MainActor.run {
                     if let project = project {
                         self?.presenter?.projectCreationSucceeded(project)
@@ -55,10 +56,55 @@ class ProjectManagementInteractor: ProjectManagementInteractorProtocol, @uncheck
         }
     }
     
+    func deleteProject(id: UUID) {
+        Task { [weak self] in
+            do {
+                let projects = try self?.dataLayerManager.projectRepository.fetch() ?? []
+                guard let project = projects.first(where: { $0.objectID.uriRepresentation().absoluteString.contains(id.uuidString) }) else {
+                    await MainActor.run {
+                        self?.presenter?.projectDeletionFailed(ProjectManagementError.projectNotFound)
+                    }
+                    return
+                }
+                try self?.dataLayerManager.projectRepository.delete(project)
+                await MainActor.run {
+                    self?.presenter?.projectDeletionSucceeded(project)
+                }
+            } catch {
+                await MainActor.run {
+                    self?.presenter?.projectDeletionFailed(error)
+                }
+            }
+        }
+    }
+
+    func loadProject(id: UUID) {
+        Task { [weak self] in
+            do {
+                let projects = try self?.dataLayerManager.projectRepository.fetch() ?? []
+                guard let project = projects.first(where: { $0.objectID.uriRepresentation().absoluteString.contains(id.uuidString) }) else {
+                    await MainActor.run {
+                        self?.presenter?.projectSelectionFailed(ProjectManagementError.projectNotFound)
+                    }
+                    return
+                }
+                // Store active project ID in UserDefaults for now
+                UserDefaults.standard.set(project.objectID.uriRepresentation().absoluteString, forKey: "ActiveProjectID")
+                await MainActor.run {
+                    self?.presenter?.projectSelectionSucceeded(project)
+                }
+            } catch {
+                await MainActor.run {
+                    self?.presenter?.projectSelectionFailed(error)
+                }
+            }
+        }
+    }
+
     func deleteProject(_ project: Project) {
         Task { [weak self] in
             do {
-                try await self?.dataLayerManager.deleteProject(project)
+                try self?.dataLayerManager.projectRepository.delete(project)
                 await MainActor.run {
                     self?.presenter?.projectDeletionSucceeded(project)
                 }
@@ -81,7 +127,7 @@ class ProjectManagementInteractor: ProjectManagementInteractorProtocol, @uncheck
             
             do {
                 project.name = newName
-                try await self?.dataLayerManager.saveContext()
+                try self?.dataLayerManager.save()
                 await MainActor.run {
                     self?.presenter?.projectUpdateSucceeded(project)
                 }
@@ -96,7 +142,8 @@ class ProjectManagementInteractor: ProjectManagementInteractorProtocol, @uncheck
     func selectProject(_ project: Project) {
         Task { [weak self] in
             do {
-                try await self?.dataLayerManager.setActiveProject(project)
+                // Store active project ID in UserDefaults for now
+                UserDefaults.standard.set(project.objectID.uriRepresentation().absoluteString, forKey: "ActiveProjectID")
                 await MainActor.run {
                     self?.presenter?.projectSelectionSucceeded(project)
                 }
@@ -107,64 +154,41 @@ class ProjectManagementInteractor: ProjectManagementInteractorProtocol, @uncheck
             }
         }
     }
-}
 
-// MARK: - DataLayerManager Extensions
+    // MARK: - Protocol Methods
 
-extension DataLayerManager {
-    
-    /// Convenience method to create a new project
-    func createProject(name: String) async throws -> Project {
-        let context = persistentContainer.viewContext
-        return try await context.perform {
-            let project = Project(context: context)
-            project.id = UUID()
-            project.name = name
-            project.createdAt = Date()
-            project.updatedAt = Date()
-            
-            try context.save()
-            return project
-        }
+    /// Load projects - alias for fetchProjects
+    func loadProjects() {
+        fetchProjects()
     }
-    
-    /// Convenience method to fetch all projects
-    func fetchAllProjects() async throws -> [Project] {
-        let context = persistentContainer.viewContext
-        return try await context.perform {
-            let request: NSFetchRequest<Project> = Project.fetchRequest()
-            request.sortDescriptors = [NSSortDescriptor(keyPath: \Project.updatedAt, ascending: false)]
-            return try context.fetch(request)
-        }
-    }
-    
-    /// Convenience method to delete a project
-    func deleteProject(_ project: Project) async throws {
-        let context = persistentContainer.viewContext
-        try await context.perform {
-            context.delete(project)
-            try context.save()
-        }
-    }
-    
-    /// Convenience method to set active project
-    func setActiveProject(_ project: Project) async throws {
-        // Implementation for setting active project
-        // This would involve storing the active project ID in UserDefaults
-        // or some other persistent storage mechanism
-        UserDefaults.standard.set(project.id?.uuidString, forKey: "ActiveProjectID")
-    }
-    
-    /// Save the managed object context
-    func saveContext() async throws {
-        let context = persistentContainer.viewContext
-        try await context.perform {
-            if context.hasChanges {
-                try context.save()
+
+    /// Select project by ID
+    func selectProject(id: UUID) {
+        Task {
+            do {
+                let projects = try self.dataLayerManager.projectRepository.fetch()
+                guard let project = projects.first(where: { $0.objectID.uriRepresentation().absoluteString.contains(id.uuidString) }) else {
+                    await MainActor.run {
+                        self.presenter?.projectSelectionFailed(ProjectManagementError.projectNotFound)
+                    }
+                    return
+                }
+
+                // Store active project ID in UserDefaults for now
+                UserDefaults.standard.set(project.objectID.uriRepresentation().absoluteString, forKey: "ActiveProjectID")
+                await MainActor.run {
+                    self.presenter?.projectSelectionSucceeded(project)
+                }
+            } catch {
+                await MainActor.run {
+                    self.presenter?.projectSelectionFailed(error)
+                }
             }
         }
     }
 }
+
+
 
 // MARK: - Presenter Protocol Extensions
 

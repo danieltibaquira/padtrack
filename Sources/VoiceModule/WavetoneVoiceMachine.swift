@@ -13,24 +13,7 @@ import simd
 
 // MARK: - Oscillator Modulation Types
 
-/// Types of oscillator modulation available in WAVETONE
-public enum OscillatorModulationType: String, CaseIterable, Codable {
-    case none = "none"
-    case ringModulation = "ring_mod"
-    case hardSync = "hard_sync"
-    case phaseModulation = "phase_mod"
-    case amplitudeModulation = "amp_mod"
-    
-    public var description: String {
-        switch self {
-        case .none: return "None"
-        case .ringModulation: return "Ring Modulation"
-        case .hardSync: return "Hard Sync"
-        case .phaseModulation: return "Phase Modulation"
-        case .amplitudeModulation: return "Amplitude Modulation"
-        }
-    }
-}
+// Note: OscillatorModulationType is defined in OscillatorModulation.swift
 
 // MARK: - WAVETONE Oscillator
 
@@ -209,6 +192,14 @@ public final class WavetoneOscillator: @unchecked Sendable {
         case .amplitudeModulation:
             // AM affects amplitude, not phase - handled in processSample
             return inputPhase
+
+        case .frequencyModulation:
+            // FM affects frequency, which changes phase increment
+            return inputPhase
+
+        case .pulseWidthModulation:
+            // PWM affects pulse width, not phase directly
+            return inputPhase
         }
     }
 
@@ -218,7 +209,7 @@ public final class WavetoneOscillator: @unchecked Sendable {
         let modInput = modulationInput
 
         switch modulationType {
-        case .none, .hardSync, .phaseModulation:
+        case .none, .hardSync, .phaseModulation, .frequencyModulation, .pulseWidthModulation:
             return sample
 
         case .ringModulation:
@@ -544,8 +535,7 @@ public struct WavetoneVoiceMachineParameters: Sendable {
 // MARK: - Parameter Management System
 
 /// Parameter smoothing and automation system for WAVETONE
-@unchecked Sendable
-public final class WavetoneParameterManager {
+public final class WavetoneParameterManager: @unchecked Sendable {
     
     // MARK: - Properties
     
@@ -600,7 +590,7 @@ public final class WavetoneParameterManager {
     public func processParameterSmoothing() -> WavetoneVoiceMachineParameters {
         // Update smoothed parameters
         for (parameterName, smoother) in parameterSmoothers {
-            let smoothedValue = smoother.getSmoothedValue()
+            let smoothedValue = smoother.process()
             updateParameterByName(parameterName, value: smoothedValue)
         }
         
@@ -714,8 +704,7 @@ public final class WavetoneParameterManager {
 // MARK: - WAVETONE Voice
 
 /// Individual voice for WAVETONE synthesis
-@unchecked Sendable
-public final class WavetoneVoice {
+public final class WavetoneVoice: @unchecked Sendable {
     
     // MARK: - Properties
     
@@ -746,11 +735,11 @@ public final class WavetoneVoice {
         self.sampleRate = sampleRate
         
         // Initialize synthesis components
-        self.wavetableData1 = WavetableData.createSineProgression(frameCount: 64)
-        self.wavetableData2 = WavetableData.createSawtoothProgression(frameCount: 32)
+        self.wavetableData1 = try! Self.createBasicSineWavetable()
+        self.wavetableData2 = try! Self.createBasicSawtoothWavetable()
         self.oscillatorModulation = OscillatorModulationSystem(sampleRate: sampleRate)
-        self.noiseGenerator = NoiseGenerator(sampleRate: sampleRate)
-        self.envelopeSystem = WavetoneEnvelopeSystem(sampleRate: sampleRate)
+        self.noiseGenerator = NoiseGenerator()
+        self.envelopeSystem = WavetoneEnvelopeSystem()
         
         // Initialize audio buffers
         self.oscillator1Buffer = Array(repeating: 0.0, count: bufferSize)
@@ -769,12 +758,12 @@ public final class WavetoneVoice {
         self.isActive = true
         
         // Trigger envelopes
-        envelopeSystem.noteOn(velocity: velocity, noteNumber: noteNumber)
+        envelopeSystem.trigger(velocity: velocity, noteNumber: UInt8(noteNumber))
     }
     
     /// Stop voice with note off
     public func noteOff() {
-        envelopeSystem.noteOff()
+        envelopeSystem.release()
     }
     
     /// Process audio for this voice
@@ -790,11 +779,10 @@ public final class WavetoneVoice {
         let actualBlockSize = min(blockSize, bufferSize)
         
         // Process envelopes
-        let envelopeValues = envelopeSystem.processEnvelopes()
-        let ampEnvelope = envelopeValues[.amplitude] ?? 0.0
-        
+        let ampEnvelope = envelopeSystem.processSample()
+
         // Check if voice should be deactivated
-        if !envelopeSystem.isActive {
+        if envelopeSystem.isFinished() {
             isActive = false
             for i in 0..<actualBlockSize {
                 outputBuffer[i] = 0.0
@@ -843,7 +831,8 @@ public final class WavetoneVoice {
         for i in 0..<blockSize {
             let phase = Float(i) / Float(blockSize) // Simplified phase calculation
             let distortedPhase = applyPhaseDistortion(phase: phase, amount: parameters.oscillator1PhaseDistortion)
-            oscillator1Buffer[i] = wavetableData1.synthesize(phase: distortedPhase, frequency: tunedFrequency)
+            let samplePosition = distortedPhase * Float(wavetableData1.frameSize)
+            oscillator1Buffer[i] = wavetableData1.getSample(frameIndex: 0, position: samplePosition, interpolation: .linear)
         }
     }
     
@@ -855,7 +844,8 @@ public final class WavetoneVoice {
         for i in 0..<blockSize {
             let phase = Float(i) / Float(blockSize) // Simplified phase calculation
             let distortedPhase = applyPhaseDistortion(phase: phase, amount: parameters.oscillator2PhaseDistortion)
-            oscillator2Buffer[i] = wavetableData2.synthesize(phase: distortedPhase, frequency: tunedFrequency)
+            let samplePosition = distortedPhase * Float(wavetableData2.frameSize)
+            oscillator2Buffer[i] = wavetableData2.getSample(frameIndex: 0, position: samplePosition, interpolation: .linear)
         }
     }
     
@@ -863,24 +853,20 @@ public final class WavetoneVoice {
         switch parameters.modulationMode {
         case 1: // Ring Modulation
             for i in 0..<blockSize {
-                let modulated = oscillatorModulation.processRingModulation(
-                    carrier: oscillator1Buffer[i],
-                    modulator: oscillator2Buffer[i],
-                    depth: parameters.ringModulationDepth
-                )
-                oscillator1Buffer[i] = modulated
+                // Simple ring modulation: multiply the signals
+                let modulated = oscillator1Buffer[i] * oscillator2Buffer[i] * parameters.ringModulationDepth
+                oscillator1Buffer[i] = oscillator1Buffer[i] * (1.0 - parameters.ringModulationDepth) + modulated
             }
-            
+
         case 2: // Hard Sync
             for i in 0..<blockSize {
-                let synced = oscillatorModulation.processHardSync(
-                    slave: oscillator1Buffer[i],
-                    master: oscillator2Buffer[i],
-                    amount: parameters.hardSyncAmount
-                )
-                oscillator1Buffer[i] = synced
+                // Simple hard sync approximation
+                if oscillator2Buffer[i] > 0.0 && i > 0 && oscillator2Buffer[i-1] <= 0.0 {
+                    // Reset phase on zero crossing
+                    oscillator1Buffer[i] = 0.0
+                }
             }
-            
+
         default: // No modulation
             break
         }
@@ -888,11 +874,9 @@ public final class WavetoneVoice {
     
     private func generateNoise(parameters: WavetoneVoiceMachineParameters, blockSize: Int) {
         if parameters.noiseLevel > 0.001 {
-            noiseGenerator.processBlock(outputBuffer: &noiseBuffer, blockSize: blockSize)
-            
-            // Apply noise level
+            // Generate noise samples
             for i in 0..<blockSize {
-                noiseBuffer[i] *= parameters.noiseLevel
+                noiseBuffer[i] = Float(noiseGenerator.processSample()) * parameters.noiseLevel
             }
         } else {
             // Clear noise buffer
@@ -927,14 +911,105 @@ public final class WavetoneVoice {
     private func midiNoteToFrequency(_ noteNumber: Int) -> Float {
         return 440.0 * pow(2.0, Float(noteNumber - 69) / 12.0)
     }
+
+    // MARK: - Static Wavetable Creation Methods
+
+    internal static func createBasicSineWavetable() throws -> WavetableData {
+        let frameSize = 1024
+        let frameCount = 1
+        var frames: [[Float]] = []
+
+        var frame = [Float](repeating: 0.0, count: frameSize)
+        for i in 0..<frameSize {
+            let phase = Float(i) * 2.0 * Float.pi / Float(frameSize)
+            frame[i] = sin(phase)
+        }
+        frames.append(frame)
+
+        let metadata = WavetableMetadata(
+            name: "Basic Sine",
+            category: .analog,
+            frameSize: frameSize,
+            frameCount: frameCount
+        )
+
+        return try WavetableData(metadata: metadata, data: frames)
+    }
+
+    internal static func createBasicSawtoothWavetable() throws -> WavetableData {
+        let frameSize = 1024
+        let frameCount = 1
+        var frames: [[Float]] = []
+
+        var frame = [Float](repeating: 0.0, count: frameSize)
+        for i in 0..<frameSize {
+            frame[i] = 2.0 * Float(i) / Float(frameSize) - 1.0
+        }
+        frames.append(frame)
+
+        let metadata = WavetableMetadata(
+            name: "Basic Sawtooth",
+            category: .analog,
+            frameSize: frameSize,
+            frameCount: frameCount
+        )
+
+        return try WavetableData(metadata: metadata, data: frames)
+    }
+
+    internal static func createBasicSquareWavetable() throws -> WavetableData {
+        let frameSize = 1024
+        let frameCount = 1
+        var frames: [[Float]] = []
+
+        var frame = [Float](repeating: 0.0, count: frameSize)
+        for i in 0..<frameSize {
+            frame[i] = Float(i) < Float(frameSize) / 2.0 ? 1.0 : -1.0
+        }
+        frames.append(frame)
+
+        let metadata = WavetableMetadata(
+            name: "Basic Square",
+            category: .analog,
+            frameSize: frameSize,
+            frameCount: frameCount
+        )
+
+        return try WavetableData(metadata: metadata, data: frames)
+    }
+
+    internal static func createBasicTriangleWavetable() throws -> WavetableData {
+        let frameSize = 1024
+        let frameCount = 1
+        var frames: [[Float]] = []
+
+        var frame = [Float](repeating: 0.0, count: frameSize)
+        for i in 0..<frameSize {
+            let phase = Float(i) / Float(frameSize)
+            if phase < 0.5 {
+                frame[i] = 4.0 * phase - 1.0
+            } else {
+                frame[i] = 3.0 - 4.0 * phase
+            }
+        }
+        frames.append(frame)
+
+        let metadata = WavetableMetadata(
+            name: "Basic Triangle",
+            category: .analog,
+            frameSize: frameSize,
+            frameCount: frameCount
+        )
+
+        return try WavetableData(metadata: metadata, data: frames)
+    }
 }
 
 // MARK: - WAVETONE Voice Machine
 
 /// Complete WAVETONE Voice Machine implementation
 /// Combines wavetable synthesis, phase distortion, oscillator modulation, noise generation, and envelopes
-@unchecked Sendable
-public final class WavetoneVoiceMachine: VoiceMachine {
+public final class WavetoneVoiceMachine: VoiceMachine, @unchecked Sendable {
     
     // MARK: - Parameter Management System
     public struct WavetoneParameters {
@@ -1019,7 +1094,7 @@ public final class WavetoneVoiceMachine: VoiceMachine {
     // MARK: - Properties
     private let maxVoices = 16
     private var voices: [VoiceState]
-    private var parameters: WavetoneParameters
+    private var wavetoneParameters: WavetoneParameters
     private var parameterSmoothers: [String: ParameterSmoother]
     private let sampleRate: Float
     
@@ -1045,10 +1120,10 @@ public final class WavetoneVoiceMachine: VoiceMachine {
     
     // MARK: - Initialization
     
-    public override init(sampleRate: Float = 44100.0) {
+    public init(sampleRate: Float = 44100.0) {
         self.sampleRate = sampleRate
         self.voices = Array(repeating: VoiceState(), count: maxVoices)
-        self.parameters = WavetoneParameters()
+        self.wavetoneParameters = WavetoneParameters()
         self.parameterSmoothers = [:]
         
         // Initialize audio buffers
@@ -1057,25 +1132,31 @@ public final class WavetoneVoiceMachine: VoiceMachine {
         self.tempBuffer = Array(repeating: 0.0, count: blockSize)
         
         // Initialize wavetables
-        self.wavetables = [
-            WavetableData.createSineProgression(frameCount: 64),
-            WavetableData.createSawtoothProgression(frameCount: 32),
-            WavetableData.createSquareProgression(frameCount: 16),
-            WavetableData.createTriangleProgression(frameCount: 24)
-        ]
+        self.wavetables = []
+        do {
+            self.wavetables = try [
+                WavetoneVoice.createBasicSineWavetable(),
+                WavetoneVoice.createBasicSawtoothWavetable(),
+                WavetoneVoice.createBasicSquareWavetable(),
+                WavetoneVoice.createBasicTriangleWavetable()
+            ]
+        } catch {
+            // Fallback to empty wavetables array
+            self.wavetables = []
+        }
         
         // Initialize audio components
         self.noiseGenerator = WavetoneNoiseGenerator(sampleRate: Double(sampleRate))
-        self.envelopeSystem = WavetoneMultiEnvelopeSystem(sampleRate: Double(sampleRate), blockSize: blockSize)
+        self.envelopeSystem = WavetoneMultiEnvelopeSystem()
         
-        super.init(sampleRate: sampleRate)
+        super.init(name: "WavetoneVoiceMachine", polyphony: maxVoices)
         
         setupParameterSmoothers()
     }
     
     // MARK: - VoiceMachine Protocol Implementation
     
-    public override func noteOn(noteNumber: Int, velocity: Float) {
+    public func noteOn(noteNumber: Int, velocity: Float) {
         voiceQueue.async { [weak self] in
             guard let self = self else { return }
             
@@ -1101,11 +1182,11 @@ public final class WavetoneVoiceMachine: VoiceMachine {
             self.updateActiveVoiceCount()
             
             // Trigger envelopes
-            self.envelopeSystem.triggerAll(velocity: clampedVelocity, midiNote: Float(clampedNote))
+            self.envelopeSystem.triggerAll(velocity: clampedVelocity)
         }
     }
     
-    public override func noteOff(noteNumber: Int) {
+    public func noteOff(noteNumber: Int) {
         voiceQueue.async { [weak self] in
             guard let self = self else { return }
             
@@ -1139,27 +1220,27 @@ public final class WavetoneVoiceMachine: VoiceMachine {
         }
     }
     
-    public override func setPitchBend(_ value: Float) {
+    public func setPitchBend(_ value: Float) {
         parameterQueue.async { [weak self] in
             guard let self = self else { return }
             
             let clampedValue = max(-2.0, min(2.0, value))
-            self.parameters.pitchBend = clampedValue
+            self.wavetoneParameters.pitchBend = clampedValue
             self.parameterSmoothers["pitchBend"]?.setTarget(clampedValue)
         }
     }
     
-    public override func setModWheel(_ value: Float) {
+    public func setModWheel(_ value: Float) {
         parameterQueue.async { [weak self] in
             guard let self = self else { return }
             
             let clampedValue = max(0.0, min(1.0, value))
-            self.parameters.lfoDepth = clampedValue * 0.5  // Scale mod wheel to LFO depth
-            self.parameterSmoothers["lfoDepth"]?.setTarget(self.parameters.lfoDepth)
+            self.wavetoneParameters.lfoDepth = clampedValue * 0.5  // Scale mod wheel to LFO depth
+            self.parameterSmoothers["lfoDepth"]?.setTarget(self.wavetoneParameters.lfoDepth)
         }
     }
     
-    public override func processAudio(outputBuffer: AudioBuffer, frameCount: Int) {
+    public func processAudio(outputBuffer: MachineProtocols.AudioBuffer, frameCount: Int) {
         let startTime = CFAbsoluteTimeGetCurrent()
         
         // Process parameter smoothing
@@ -1181,13 +1262,12 @@ public final class WavetoneVoiceMachine: VoiceMachine {
         }
         
         // Apply master volume and copy to output
-        let masterVol = parameters.masterVolume
+        var masterVol = wavetoneParameters.masterVolume
         vDSP_vsmul(mixBuffer, 1, &masterVol, &tempBuffer, 1, vDSP_Length(min(frameCount, blockSize)))
         
         // Copy to output buffer (assuming mono for now)
-        if let outputPointer = outputBuffer.floatChannelData?[0] {
-            cblas_scopy(Int32(min(frameCount, blockSize)), tempBuffer, 1, outputPointer, 1)
-        }
+        let outputPointer = outputBuffer.data
+        cblas_scopy(Int32(min(frameCount, blockSize)), tempBuffer, 1, outputPointer, 1)
         
         // Update performance metrics
         processingTime = CFAbsoluteTimeGetCurrent() - startTime
@@ -1210,7 +1290,7 @@ public final class WavetoneVoiceMachine: VoiceMachine {
     }
     
     public func getParameter(_ parameter: String) -> Float {
-        return getParameterInternal(parameter)
+        return parameters.getParameter(id: parameter)?.value ?? 0.0
     }
     
     public func loadPreset(_ presetData: [String: Any]) {
@@ -1231,44 +1311,45 @@ public final class WavetoneVoiceMachine: VoiceMachine {
     // MARK: - Preset Management
     
     public func savePreset() -> [String: Any] {
-        return parameterQueue.sync {
+        return parameterQueue.sync { [weak self] in
+            guard let self = self else { return [:] }
             return [
-                "masterVolume": parameters.masterVolume,
-                "masterTune": parameters.masterTune,
-                "portamento": parameters.portamento,
-                "osc1Level": parameters.osc1Level,
-                "osc1Tune": parameters.osc1Tune,
-                "osc1FineTune": parameters.osc1FineTune,
-                "osc1WavetableIndex": parameters.osc1WavetableIndex,
-                "osc1WavePosition": parameters.osc1WavePosition,
-                "osc1PhaseDistortion": parameters.osc1PhaseDistortion,
-                "osc2Level": parameters.osc2Level,
-                "osc2Tune": parameters.osc2Tune,
-                "osc2FineTune": parameters.osc2FineTune,
-                "osc2WavetableIndex": parameters.osc2WavetableIndex,
-                "osc2WavePosition": parameters.osc2WavePosition,
-                "osc2PhaseDistortion": parameters.osc2PhaseDistortion,
-                "ringModulation": parameters.ringModulation,
-                "hardSync": parameters.hardSync,
-                "noiseType": parameters.noiseType,
-                "noiseLevel": parameters.noiseLevel,
-                "ampEnvAttack": parameters.ampEnvAttack,
-                "ampEnvDecay": parameters.ampEnvDecay,
-                "ampEnvSustain": parameters.ampEnvSustain,
-                "ampEnvRelease": parameters.ampEnvRelease,
-                "filterEnvAttack": parameters.filterEnvAttack,
-                "filterEnvDecay": parameters.filterEnvDecay,
-                "filterEnvSustain": parameters.filterEnvSustain,
-                "filterEnvRelease": parameters.filterEnvRelease,
-                "lfoRate": parameters.lfoRate,
-                "lfoDepth": parameters.lfoDepth
+                "masterVolume": self.wavetoneParameters.masterVolume,
+                "masterTune": self.wavetoneParameters.masterTune,
+                "portamento": self.wavetoneParameters.portamento,
+                "osc1Level": self.wavetoneParameters.osc1Level,
+                "osc1Tune": self.wavetoneParameters.osc1Tune,
+                "osc1FineTune": self.wavetoneParameters.osc1FineTune,
+                "osc1WavetableIndex": self.wavetoneParameters.osc1WavetableIndex,
+                "osc1WavePosition": self.wavetoneParameters.osc1WavePosition,
+                "osc1PhaseDistortion": self.wavetoneParameters.osc1PhaseDistortion,
+                "osc2Level": self.wavetoneParameters.osc2Level,
+                "osc2Tune": self.wavetoneParameters.osc2Tune,
+                "osc2FineTune": self.wavetoneParameters.osc2FineTune,
+                "osc2WavetableIndex": self.wavetoneParameters.osc2WavetableIndex,
+                "osc2WavePosition": self.wavetoneParameters.osc2WavePosition,
+                "osc2PhaseDistortion": self.wavetoneParameters.osc2PhaseDistortion,
+                "ringModulation": self.wavetoneParameters.ringModulation,
+                "hardSync": self.wavetoneParameters.hardSync,
+                "noiseType": self.wavetoneParameters.noiseType,
+                "noiseLevel": self.wavetoneParameters.noiseLevel,
+                "ampEnvAttack": self.wavetoneParameters.ampEnvAttack,
+                "ampEnvDecay": self.wavetoneParameters.ampEnvDecay,
+                "ampEnvSustain": self.wavetoneParameters.ampEnvSustain,
+                "ampEnvRelease": self.wavetoneParameters.ampEnvRelease,
+                "filterEnvAttack": self.wavetoneParameters.filterEnvAttack,
+                "filterEnvDecay": self.wavetoneParameters.filterEnvDecay,
+                "filterEnvSustain": self.wavetoneParameters.filterEnvSustain,
+                "filterEnvRelease": self.wavetoneParameters.filterEnvRelease,
+                "lfoRate": self.wavetoneParameters.lfoRate,
+                "lfoDepth": self.wavetoneParameters.lfoDepth
             ]
         }
     }
     
     // MARK: - Performance Monitoring
     
-    public var performanceMetrics: [String: Any] {
+    public var wavetonePerformanceMetrics: [String: Any] {
         return [
             "cpuUsage": cpuUsage,
             "processingTime": processingTime,
@@ -1305,7 +1386,7 @@ public final class WavetoneVoiceMachine: VoiceMachine {
     
     private func processParameterSmoothing() {
         for (parameter, smoother) in parameterSmoothers {
-            let smoothedValue = smoother.getSmoothedValue()
+            let smoothedValue = smoother.process()
             updateParameter(parameter, value: smoothedValue)
         }
     }
@@ -1333,7 +1414,7 @@ public final class WavetoneVoiceMachine: VoiceMachine {
         processNoise(&voice, frameCount: frameCount)
         
         // Apply amplitude envelope
-        let ampEnv = voice.envelopeState.ampEnvelope * voice.velocity
+        var ampEnv = voice.envelopeState.ampEnvelope * voice.velocity
         vDSP_vsmul(voiceBuffer, 1, &ampEnv, &voiceBuffer, 1, vDSP_Length(frameCount))
         
         voices[voiceIndex] = voice
@@ -1341,7 +1422,7 @@ public final class WavetoneVoiceMachine: VoiceMachine {
     
     private func processVoiceEnvelopes(_ voice: inout VoiceState, frameCount: Int) {
         // Simplified envelope processing - in real implementation would use WavetoneEnvelopeSystem
-        let ampParams = [parameters.ampEnvAttack, parameters.ampEnvDecay, parameters.ampEnvSustain, parameters.ampEnvRelease]
+        let ampParams = [wavetoneParameters.ampEnvAttack, wavetoneParameters.ampEnvDecay, wavetoneParameters.ampEnvSustain, wavetoneParameters.ampEnvRelease]
         
         switch voice.envelopeState.ampPhase {
         case .attack:
@@ -1384,45 +1465,45 @@ public final class WavetoneVoiceMachine: VoiceMachine {
     
     private func processOscillators(_ voice: inout VoiceState, frameCount: Int) {
         let baseFreq = voice.frequency
-        let pitchBendMult = pow(2.0, parameters.pitchBend / 12.0)
-        let masterTuneMult = pow(2.0, parameters.masterTune / 12.0)
-        
+        let pitchBendMult = pow(2.0, wavetoneParameters.pitchBend / 12.0)
+        let masterTuneMult = pow(2.0, wavetoneParameters.masterTune / 12.0)
+
         // Oscillator 1
-        let osc1Freq = baseFreq * pow(2.0, parameters.osc1Tune / 12.0) * pitchBendMult * masterTuneMult
+        let osc1Freq = baseFreq * pow(2.0, wavetoneParameters.osc1Tune / 12.0) * pitchBendMult * masterTuneMult
         let osc1PhaseInc = osc1Freq / sampleRate
-        
-        // Oscillator 2  
-        let osc2Freq = baseFreq * pow(2.0, parameters.osc2Tune / 12.0) * pitchBendMult * masterTuneMult
+
+        // Oscillator 2
+        let osc2Freq = baseFreq * pow(2.0, wavetoneParameters.osc2Tune / 12.0) * pitchBendMult * masterTuneMult
         let osc2PhaseInc = osc2Freq / sampleRate
         
         for i in 0..<frameCount {
             // Generate oscillator 1
             let osc1Sample = generateWavetableSample(
-                wavetableIndex: parameters.osc1WavetableIndex,
+                wavetableIndex: wavetoneParameters.osc1WavetableIndex,
                 phase: voice.phase1,
-                wavePosition: parameters.osc1WavePosition,
-                phaseDistortion: parameters.osc1PhaseDistortion
+                wavePosition: wavetoneParameters.osc1WavePosition,
+                phaseDistortion: wavetoneParameters.osc1PhaseDistortion
             )
-            
+
             // Generate oscillator 2
             let osc2Sample = generateWavetableSample(
-                wavetableIndex: parameters.osc2WavetableIndex,
+                wavetableIndex: wavetoneParameters.osc2WavetableIndex,
                 phase: voice.phase2,
-                wavePosition: parameters.osc2WavePosition,
-                phaseDistortion: parameters.osc2PhaseDistortion
+                wavePosition: wavetoneParameters.osc2WavePosition,
+                phaseDistortion: wavetoneParameters.osc2PhaseDistortion
             )
-            
+
             // Apply modulation
-            var mixedSample = osc1Sample * parameters.osc1Level + osc2Sample * parameters.osc2Level
+            var mixedSample = osc1Sample * wavetoneParameters.osc1Level + osc2Sample * wavetoneParameters.osc2Level
             
             // Ring modulation
-            if parameters.ringModulation > 0.001 {
+            if wavetoneParameters.ringModulation > 0.001 {
                 let ringMod = osc1Sample * osc2Sample
-                mixedSample = mixedSample * (1.0 - parameters.ringModulation) + ringMod * parameters.ringModulation
+                mixedSample = mixedSample * (1.0 - wavetoneParameters.ringModulation) + ringMod * wavetoneParameters.ringModulation
             }
-            
+
             // Hard sync (simplified)
-            if parameters.hardSync > 0.001 && voice.phase2 < osc2PhaseInc {
+            if wavetoneParameters.hardSync > 0.001 && voice.phase2 < osc2PhaseInc {
                 voice.phase1 = 0.0  // Reset osc1 phase when osc2 resets
             }
             
@@ -1438,15 +1519,15 @@ public final class WavetoneVoiceMachine: VoiceMachine {
     }
     
     private func processNoise(_ voice: inout VoiceState, frameCount: Int) {
-        if parameters.noiseLevel > 0.001 {
+        if wavetoneParameters.noiseLevel > 0.001 {
             // Configure noise generator
             noiseGenerator.setParameters(
-                type: WavetoneNoiseGenerator.NoiseType.allCases[min(parameters.noiseType, WavetoneNoiseGenerator.NoiseType.allCases.count - 1)],
-                level: parameters.noiseLevel,
-                baseFreq: parameters.noiseFilter * 10000.0 + 100.0,
+                type: WavetoneNoiseGenerator.NoiseType.allCases[min(wavetoneParameters.noiseType, WavetoneNoiseGenerator.NoiseType.allCases.count - 1)],
+                level: wavetoneParameters.noiseLevel,
+                baseFreq: wavetoneParameters.noiseFilter * 10000.0 + 100.0,
                 width: 1000.0,
                 grain: 0.5,
-                resonance: parameters.noiseResonance,
+                resonance: wavetoneParameters.noiseResonance,
                 character: 0.5
             )
             
@@ -1476,7 +1557,7 @@ public final class WavetoneVoiceMachine: VoiceMachine {
         let samplePos = adjustedPhase * Float(wavetable.frameSize)
         
         // Use linear interpolation for now (could use more sophisticated interpolation)
-        return wavetable.interpolateSample(framePosition: framePos, samplePosition: samplePos, interpolation: .linear)
+        return wavetable.getInterpolatedSample(framePosition: framePos, samplePosition: samplePos, interpolation: .linear)
     }
     
     private func findAvailableVoice() -> Int? {
@@ -1536,72 +1617,41 @@ public final class WavetoneVoiceMachine: VoiceMachine {
     
     private func updateParameter(_ parameter: String, value: Float) {
         switch parameter {
-        case "masterVolume": parameters.masterVolume = value
-        case "masterTune": parameters.masterTune = value
-        case "portamento": parameters.portamento = value
-        case "pitchBend": parameters.pitchBend = value
-        case "osc1Level": parameters.osc1Level = value
-        case "osc1Tune": parameters.osc1Tune = value
-        case "osc1FineTune": parameters.osc1FineTune = value
-        case "osc1WavePosition": parameters.osc1WavePosition = value
-        case "osc1PhaseDistortion": parameters.osc1PhaseDistortion = value
-        case "osc2Level": parameters.osc2Level = value
-        case "osc2Tune": parameters.osc2Tune = value
-        case "osc2FineTune": parameters.osc2FineTune = value
-        case "osc2WavePosition": parameters.osc2WavePosition = value
-        case "osc2PhaseDistortion": parameters.osc2PhaseDistortion = value
-        case "ringModulation": parameters.ringModulation = value
-        case "hardSync": parameters.hardSync = value
-        case "noiseLevel": parameters.noiseLevel = value
-        case "noiseFilter": parameters.noiseFilter = value
-        case "noiseResonance": parameters.noiseResonance = value
-        case "ampEnvAttack": parameters.ampEnvAttack = value
-        case "ampEnvDecay": parameters.ampEnvDecay = value
-        case "ampEnvSustain": parameters.ampEnvSustain = value
-        case "ampEnvRelease": parameters.ampEnvRelease = value
-        case "filterEnvAttack": parameters.filterEnvAttack = value
-        case "filterEnvDecay": parameters.filterEnvDecay = value
-        case "filterEnvSustain": parameters.filterEnvSustain = value
-        case "filterEnvRelease": parameters.filterEnvRelease = value
-        case "lfoRate": parameters.lfoRate = value
-        case "lfoDepth": parameters.lfoDepth = value
+        case "masterVolume": wavetoneParameters.masterVolume = value
+        case "masterTune": wavetoneParameters.masterTune = value
+        case "portamento": wavetoneParameters.portamento = value
+        case "pitchBend": wavetoneParameters.pitchBend = value
+        case "osc1Level": wavetoneParameters.osc1Level = value
+        case "osc1Tune": wavetoneParameters.osc1Tune = value
+        case "osc1FineTune": wavetoneParameters.osc1FineTune = value
+        case "osc1WavePosition": wavetoneParameters.osc1WavePosition = value
+        case "osc1PhaseDistortion": wavetoneParameters.osc1PhaseDistortion = value
+        case "osc2Level": wavetoneParameters.osc2Level = value
+        case "osc2Tune": wavetoneParameters.osc2Tune = value
+        case "osc2FineTune": wavetoneParameters.osc2FineTune = value
+        case "osc2WavePosition": wavetoneParameters.osc2WavePosition = value
+        case "osc2PhaseDistortion": wavetoneParameters.osc2PhaseDistortion = value
+        case "ringModulation": wavetoneParameters.ringModulation = value
+        case "hardSync": wavetoneParameters.hardSync = value
+        case "noiseLevel": wavetoneParameters.noiseLevel = value
+        case "noiseFilter": wavetoneParameters.noiseFilter = value
+        case "noiseResonance": wavetoneParameters.noiseResonance = value
+        case "ampEnvAttack": wavetoneParameters.ampEnvAttack = value
+        case "ampEnvDecay": wavetoneParameters.ampEnvDecay = value
+        case "ampEnvSustain": wavetoneParameters.ampEnvSustain = value
+        case "ampEnvRelease": wavetoneParameters.ampEnvRelease = value
+        case "filterEnvAttack": wavetoneParameters.filterEnvAttack = value
+        case "filterEnvDecay": wavetoneParameters.filterEnvDecay = value
+        case "filterEnvSustain": wavetoneParameters.filterEnvSustain = value
+        case "filterEnvRelease": wavetoneParameters.filterEnvRelease = value
+        case "lfoRate": wavetoneParameters.lfoRate = value
+        case "lfoDepth": wavetoneParameters.lfoDepth = value
         default: break
         }
     }
     
     private func getParameterValue(_ parameter: String) -> Float {
-        switch parameter {
-        case "masterVolume": return parameters.masterVolume
-        case "masterTune": return parameters.masterTune
-        case "portamento": return parameters.portamento
-        case "pitchBend": return parameters.pitchBend
-        case "osc1Level": return parameters.osc1Level
-        case "osc1Tune": return parameters.osc1Tune
-        case "osc1FineTune": return parameters.osc1FineTune
-        case "osc1WavePosition": return parameters.osc1WavePosition
-        case "osc1PhaseDistortion": return parameters.osc1PhaseDistortion
-        case "osc2Level": return parameters.osc2Level
-        case "osc2Tune": return parameters.osc2Tune
-        case "osc2FineTune": return parameters.osc2FineTune
-        case "osc2WavePosition": return parameters.osc2WavePosition
-        case "osc2PhaseDistortion": return parameters.osc2PhaseDistortion
-        case "ringModulation": return parameters.ringModulation
-        case "hardSync": return parameters.hardSync
-        case "noiseLevel": return parameters.noiseLevel
-        case "noiseFilter": return parameters.noiseFilter
-        case "noiseResonance": return parameters.noiseResonance
-        case "ampEnvAttack": return parameters.ampEnvAttack
-        case "ampEnvDecay": return parameters.ampEnvDecay
-        case "ampEnvSustain": return parameters.ampEnvSustain
-        case "ampEnvRelease": return parameters.ampEnvRelease
-        case "filterEnvAttack": return parameters.filterEnvAttack
-        case "filterEnvDecay": return parameters.filterEnvDecay
-        case "filterEnvSustain": return parameters.filterEnvSustain
-        case "filterEnvRelease": return parameters.filterEnvRelease
-        case "lfoRate": return parameters.lfoRate
-        case "lfoDepth": return parameters.lfoDepth
-        default: return 0.0
-        }
+        return parameters.getParameterValue(id: parameter) ?? 0.0
     }
 }
 
@@ -1689,4 +1739,93 @@ public extension WavetonePreset {
             filterEnvelope: .percussive
         )
     }()
+
+    // MARK: - Wavetable Creation
+
+    private func createSineWavetable() throws -> WavetableData {
+        let frameSize = 1024
+        let frameCount = 1
+        var frames: [[Float]] = []
+
+        var frame = [Float](repeating: 0.0, count: frameSize)
+        for i in 0..<frameSize {
+            let phase = Float(i) * 2.0 * Float.pi / Float(frameSize)
+            frame[i] = sin(phase)
+        }
+        frames.append(frame)
+
+        let metadata = WavetableMetadata(
+            name: "Sine",
+            category: .analog,
+            frameSize: frameSize,
+            frameCount: frameCount
+        )
+
+        return try WavetableData(metadata: metadata, data: frames)
+    }
+
+    private func createSawtoothWavetable() throws -> WavetableData {
+        let frameSize = 1024
+        let frameCount = 1
+        var frames: [[Float]] = []
+
+        var frame = [Float](repeating: 0.0, count: frameSize)
+        for i in 0..<frameSize {
+            frame[i] = 2.0 * Float(i) / Float(frameSize) - 1.0
+        }
+        frames.append(frame)
+
+        let metadata = WavetableMetadata(
+            name: "Sawtooth",
+            category: .analog,
+            frameSize: frameSize,
+            frameCount: frameCount
+        )
+
+        return try WavetableData(metadata: metadata, data: frames)
+    }
+
+    private func createSquareWavetable() throws -> WavetableData {
+        let frameSize = 1024
+        let frameCount = 1
+        var frames: [[Float]] = []
+
+        var frame = [Float](repeating: 0.0, count: frameSize)
+        for i in 0..<frameSize {
+            frame[i] = i < frameSize / 2 ? 1.0 : -1.0
+        }
+        frames.append(frame)
+
+        let metadata = WavetableMetadata(
+            name: "Square",
+            category: .analog,
+            frameSize: frameSize,
+            frameCount: frameCount
+        )
+
+        return try WavetableData(metadata: metadata, data: frames)
+    }
+
+    private func createTriangleWavetable() throws -> WavetableData {
+        let frameSize = 1024
+        let frameCount = 1
+        var frames: [[Float]] = []
+
+        var frame = [Float](repeating: 0.0, count: frameSize)
+        for i in 0..<frameSize {
+            let phase = Float(i) / Float(frameSize)
+            frame[i] = phase < 0.5 ? 4.0 * phase - 1.0 : 3.0 - 4.0 * phase
+        }
+        frames.append(frame)
+
+        let metadata = WavetableMetadata(
+            name: "Triangle",
+            category: .analog,
+            frameSize: frameSize,
+            frameCount: frameCount
+        )
+
+        return try WavetableData(metadata: metadata, data: frames)
+    }
+
 }

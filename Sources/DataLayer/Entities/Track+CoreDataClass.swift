@@ -1,5 +1,6 @@
 import Foundation
 import CoreData
+import DataModel
 
 @objc(Track)
 public class Track: NSManagedObject {
@@ -25,10 +26,8 @@ public class Track: NSManagedObject {
             volume = 0.8 // Default volume
         }
         pan = 0.0 // Center pan
-        pitch = 0.0 // No pitch offset
-        length = 16 // Default length
         isMuted = false
-        isSoloed = false
+        isSolo = false
     }
 
     public override func willSave() {
@@ -54,20 +53,6 @@ public class Track: NSManagedObject {
             try validateVolume(value.pointee as? NSNumber)
         case "pan":
             try validatePan(value.pointee as? NSNumber)
-        case "pitch":
-            try validatePitch(value.pointee as? NSNumber)
-        case "length":
-            try validateLength(value.pointee as? NSNumber)
-        case "send1Level":
-            try validateSendLevel(value.pointee as? NSNumber, sendName: "Send 1")
-        case "send2Level":
-            try validateSendLevel(value.pointee as? NSNumber, sendName: "Send 2")
-        case "microTiming":
-            try validateMicroTiming(value.pointee as? NSNumber)
-        case "chance":
-            try validateChance(value.pointee as? NSNumber)
-        case "retrigCount":
-            try validateRetrigCount(value.pointee as? NSNumber)
         default:
             break
         }
@@ -123,65 +108,7 @@ public class Track: NSManagedObject {
         }
     }
 
-    private func validatePitch(_ pitch: NSNumber?) throws {
-        guard let pitch = pitch?.floatValue else {
-            throw ValidationError.invalidValue("Track pitch must be specified")
-        }
 
-        guard pitch >= -24.0 && pitch <= 24.0 else {
-            throw ValidationError.invalidValue("Track pitch must be between -24.0 and 24.0 semitones")
-        }
-    }
-
-    private func validateLength(_ length: NSNumber?) throws {
-        guard let length = length?.int16Value else {
-            throw ValidationError.invalidValue("Track length must be specified")
-        }
-
-        guard length >= 1 && length <= 128 else {
-            throw ValidationError.invalidValue("Track length must be between 1 and 128 steps")
-        }
-    }
-
-    private func validateSendLevel(_ sendLevel: NSNumber?, sendName: String) throws {
-        guard let sendLevel = sendLevel?.floatValue else {
-            throw ValidationError.invalidValue("\(sendName) level must be specified")
-        }
-
-        guard sendLevel >= 0.0 && sendLevel <= 1.0 else {
-            throw ValidationError.invalidValue("\(sendName) level must be between 0.0 and 1.0")
-        }
-    }
-
-    private func validateMicroTiming(_ microTiming: NSNumber?) throws {
-        guard let microTiming = microTiming?.floatValue else {
-            throw ValidationError.invalidValue("Track micro timing must be specified")
-        }
-
-        guard microTiming >= -50.0 && microTiming <= 50.0 else {
-            throw ValidationError.invalidValue("Track micro timing must be between -50.0 and 50.0 milliseconds")
-        }
-    }
-
-    private func validateChance(_ chance: NSNumber?) throws {
-        guard let chance = chance?.int16Value else {
-            throw ValidationError.invalidValue("Track chance must be specified")
-        }
-
-        guard chance >= 0 && chance <= 100 else {
-            throw ValidationError.invalidValue("Track chance must be between 0 and 100 percent")
-        }
-    }
-
-    private func validateRetrigCount(_ retrigCount: NSNumber?) throws {
-        guard let retrigCount = retrigCount?.int16Value else {
-            throw ValidationError.invalidValue("Track retrig count must be specified")
-        }
-
-        guard retrigCount >= 0 && retrigCount <= 8 else {
-            throw ValidationError.invalidValue("Track retrig count must be between 0 and 8")
-        }
-    }
 
     private func validateRelationships() throws {
         guard pattern != nil else {
@@ -237,6 +164,6 @@ public class Track: NSManagedObject {
 
     /// Toggles solo state
     public func toggleSolo() {
-        isSoloed.toggle()
+        isSolo.toggle()
     }
 }

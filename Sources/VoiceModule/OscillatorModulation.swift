@@ -295,9 +295,11 @@ public final class RingModulationEngine: @unchecked Sendable {
             var coeff: Float
             
             if abs(n) < 0.001 {
-                coeff = 2.0 * cutoff
+                coeff = 2.0 * Float(cutoff)
             } else {
-                coeff = sin(2.0 * Float.pi * cutoff * n) / (Float.pi * n)
+                let numerator = sin(2.0 * Float.pi * Float(cutoff) * n)
+                let denominator = Float.pi * n
+                coeff = numerator / denominator
             }
             
             // Apply Hamming window

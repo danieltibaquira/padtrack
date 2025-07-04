@@ -212,8 +212,7 @@ public final class SwarmerVoiceMachine: VoiceMachine, @unchecked Sendable {
         }
         
         // Initialize envelope system
-        let envelopeConfig = WavetoneEnvelopeSystem.createPresetConfiguration(type: .pad)
-        self.envelopeSystem = WavetoneEnvelopeSystem(configuration: envelopeConfig, sampleRate: sampleRate)
+        self.envelopeSystem = WavetoneEnvelopeSystem()
         
         super.init(name: name, polyphony: polyphony)
         
@@ -251,7 +250,7 @@ public final class SwarmerVoiceMachine: VoiceMachine, @unchecked Sendable {
         }
         
         // Trigger envelopes
-        envelopeSystem.noteOn(velocity: velocityScale, noteNumber: Int(note))
+        envelopeSystem.trigger(velocity: velocityScale, noteNumber: note)
         
         super.noteOn(note: note, velocity: velocity, channel: channel, timestamp: timestamp)
     }
@@ -259,7 +258,7 @@ public final class SwarmerVoiceMachine: VoiceMachine, @unchecked Sendable {
     public override func noteOff(note: UInt8, velocity: UInt8, channel: UInt8, timestamp: UInt64?) {
         if note == currentNote {
             isNoteActive = false
-            envelopeSystem.noteOff()
+            envelopeSystem.release()
         }
         
         super.noteOff(note: note, velocity: velocity, channel: channel, timestamp: timestamp)
@@ -293,8 +292,11 @@ public final class SwarmerVoiceMachine: VoiceMachine, @unchecked Sendable {
         
         guard isNoteActive else {
             // Return silent buffer
-            return MachineProtocols.AudioBuffer(
-                data: outputBuffer,
+            let totalSamples = frameCount * channelCount
+            let silentData = UnsafeMutablePointer<Float>.allocate(capacity: totalSamples)
+            silentData.initialize(repeating: 0.0, count: totalSamples)
+            return AudioEngine.AudioBuffer(
+                data: silentData,
                 frameCount: frameCount,
                 channelCount: channelCount,
                 sampleRate: input.sampleRate
@@ -312,8 +314,13 @@ public final class SwarmerVoiceMachine: VoiceMachine, @unchecked Sendable {
             }
         }
         
-        return MachineProtocols.AudioBuffer(
-            data: outputBuffer,
+        // Convert array to pointer
+        let totalSamples = frameCount * channelCount
+        let bufferPointer = UnsafeMutablePointer<Float>.allocate(capacity: totalSamples)
+        bufferPointer.initialize(from: outputBuffer, count: totalSamples)
+
+        return AudioEngine.AudioBuffer(
+            data: bufferPointer,
             frameCount: frameCount,
             channelCount: channelCount,
             sampleRate: input.sampleRate
@@ -324,7 +331,7 @@ public final class SwarmerVoiceMachine: VoiceMachine, @unchecked Sendable {
     
     private func processAudioBlock(frameCount: Int) {
         // Get envelope values
-        let envelopeValues = envelopeSystem.processEnvelopes()
+        let ampEnvelope = envelopeSystem.processSample()
         
         // Get parameter values
         let mainOctave = parameters.getParameterValue(id: "main_octave") ?? 0.0
@@ -359,7 +366,7 @@ public final class SwarmerVoiceMachine: VoiceMachine, @unchecked Sendable {
             sample += swarmSample * swarmMix
             
             // Apply envelope
-            sample *= envelopeValues.amplitude
+            sample *= ampEnvelope
             
             // Store sample
             tempBuffer[i] = sample * 0.5  // Scale down to prevent clipping

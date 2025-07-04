@@ -18,10 +18,11 @@ struct BitReductionControlsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { effect.bitDepth },
-                            set: { effect.bitDepth = $0 }
+                            get: { Double(effect.bitDepth) },
+                            set: { effect.bitDepth = Float($0) }
                         ),
                         range: 1...16,
+                        label: "BIT DEPTH",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)
@@ -39,10 +40,11 @@ struct BitReductionControlsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { effect.ditherAmount },
-                            set: { effect.ditherAmount = $0 }
+                            get: { Double(effect.ditherAmount) },
+                            set: { effect.ditherAmount = Float($0) }
                         ),
                         range: 0...1,
+                        label: "DITHER",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)
@@ -60,13 +62,14 @@ struct BitReductionControlsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { effect.wetLevel },
-                            set: { 
-                                effect.wetLevel = $0
-                                effect.dryLevel = 1.0 - $0
+                            get: { Double(effect.wetLevel) },
+                            set: {
+                                effect.wetLevel = Float($0)
+                                effect.dryLevel = Float(1.0 - $0)
                             }
                         ),
                         range: 0...1,
+                        label: "WET/DRY",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)
@@ -136,10 +139,11 @@ struct SampleRateReductionControlsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { effect.targetSampleRate },
-                            set: { effect.targetSampleRate = $0 }
+                            get: { Double(effect.targetSampleRate) },
+                            set: { effect.targetSampleRate = Float($0) }
                         ),
                         range: 100...48000,
+                        label: "SAMPLE RATE",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)
@@ -157,10 +161,11 @@ struct SampleRateReductionControlsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { effect.filterCutoffRatio },
-                            set: { effect.filterCutoffRatio = $0 }
+                            get: { Double(effect.filterCutoffRatio) },
+                            set: { effect.filterCutoffRatio = Float($0) }
                         ),
                         range: 0.1...0.5,
+                        label: "FILTER",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)
@@ -178,13 +183,14 @@ struct SampleRateReductionControlsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { effect.wetLevel },
-                            set: { 
-                                effect.wetLevel = $0
-                                effect.dryLevel = 1.0 - $0
+                            get: { Double(effect.wetLevel) },
+                            set: {
+                                effect.wetLevel = Float($0)
+                                effect.dryLevel = Float(1.0 - $0)
                             }
                         ),
                         range: 0...1,
+                        label: "WET/DRY",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)
@@ -252,10 +258,11 @@ struct OverdriveControlsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { effect.driveAmount },
-                            set: { effect.driveAmount = $0 }
+                            get: { Double(effect.driveAmount) },
+                            set: { effect.driveAmount = Float($0) }
                         ),
                         range: 0...10,
+                        label: "DRIVE",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)
@@ -273,10 +280,11 @@ struct OverdriveControlsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { effect.outputLevel },
-                            set: { effect.outputLevel = $0 }
+                            get: { Double(effect.outputLevel) },
+                            set: { effect.outputLevel = Float($0) }
                         ),
                         range: -20...20,
+                        label: "LEVEL",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)
@@ -294,10 +302,11 @@ struct OverdriveControlsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { effect.tone },
-                            set: { effect.tone = $0 }
+                            get: { Double(effect.tone) },
+                            set: { effect.tone = Float($0) }
                         ),
                         range: 0...1,
+                        label: "TONE",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)
@@ -315,10 +324,11 @@ struct OverdriveControlsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { effect.asymmetry },
-                            set: { effect.asymmetry = $0 }
+                            get: { Double(effect.asymmetry) },
+                            set: { effect.asymmetry = Float($0) }
                         ),
                         range: -1...1,
+                        label: "ASYM",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)
@@ -391,13 +401,14 @@ struct GenericEffectControlsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { effect.wetLevel },
-                            set: { 
-                                effect.wetLevel = $0
-                                effect.dryLevel = 1.0 - $0
+                            get: { Double(effect.wetLevel) },
+                            set: {
+                                effect.wetLevel = Float($0)
+                                effect.dryLevel = Float(1.0 - $0)
                             }
                         ),
                         range: 0...1,
+                        label: "WET",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)
@@ -415,10 +426,11 @@ struct GenericEffectControlsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { effect.inputGain },
-                            set: { effect.inputGain = $0 }
+                            get: { Double(effect.inputGain) },
+                            set: { effect.inputGain = Float($0) }
                         ),
                         range: -20...20,
+                        label: "GAIN",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)
@@ -436,10 +448,11 @@ struct GenericEffectControlsView: View {
                     
                     DigitonePadKnob(
                         value: Binding(
-                            get: { effect.outputGain },
-                            set: { effect.outputGain = $0 }
+                            get: { Double(effect.outputGain) },
+                            set: { effect.outputGain = Float($0) }
                         ),
                         range: -20...20,
+                        label: "OUTPUT",
                         theme: .darkHardware
                     )
                     .frame(width: 60, height: 60)

@@ -1,5 +1,6 @@
 import Foundation
 import CoreData
+import DataModel
 
 @objc(Project)
 public class Project: NSManagedObject {
@@ -11,6 +12,7 @@ public class Project: NSManagedObject {
 
         // Set default values
         let now = Date()
+        id = UUID()
         createdAt = now
         updatedAt = now
 

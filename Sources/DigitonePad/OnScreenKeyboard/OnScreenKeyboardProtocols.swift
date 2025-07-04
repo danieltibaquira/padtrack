@@ -122,7 +122,7 @@ enum KeyType {
 }
 
 /// Key position on the keyboard
-struct KeyPosition {
+struct KeyPosition: Hashable, Equatable {
     let x: CGFloat
     let y: CGFloat
     let width: CGFloat
@@ -140,7 +140,7 @@ enum OctaveDirection {
 }
 
 /// Musical scales
-enum MusicalScale: String, CaseIterable {
+enum MusicalScale: String, CaseIterable, Codable {
     case chromatic = "Chromatic"
     case major = "Major"
     case minor = "Minor"
@@ -200,7 +200,7 @@ enum ChordType: String, CaseIterable {
 }
 
 /// Keyboard layout configuration
-struct KeyboardLayout {
+struct KeyboardLayout: Equatable {
     let octaveRange: ClosedRange<Int>
     let whiteKeyWidth: CGFloat
     let whiteKeyHeight: CGFloat

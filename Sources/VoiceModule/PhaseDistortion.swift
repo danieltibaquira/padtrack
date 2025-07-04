@@ -285,7 +285,7 @@ public class PhaseDistortionEngine {
             
         case .compress:
             // Phase compression/expansion
-            let center = 0.5
+            let center: Float = 0.5
             let compression = curve * 2.0
             let distance = normalizedPhase - center
             let compressedDistance = distance * compression
@@ -346,7 +346,7 @@ public class PhaseDistortionProcessor {
     /// - Returns: Synthesized sample
     public func synthesize(wavetable: WavetableData, phase: Float, frequency: Float) -> Float {
         let distortedPhase = engine.distortPhase(phase, frequency: frequency)
-        return wavetable.interpolateSample(at: distortedPhase, frame: 0)
+        return wavetable.getInterpolatedSample(framePosition: 0.0, samplePosition: distortedPhase * Float(wavetable.frameSize), interpolation: .linear)
     }
     
     /// Batch synthesis for multiple samples
@@ -362,7 +362,7 @@ public class PhaseDistortionProcessor {
         engine.distortPhases(phases, frequency: frequency, output: &distortedPhases)
         
         for i in 0..<phases.count {
-            output[i] = wavetable.interpolateSample(at: distortedPhases[i], frame: 0)
+            output[i] = wavetable.getInterpolatedSample(framePosition: 0.0, samplePosition: distortedPhases[i] * Float(wavetable.frameSize), interpolation: .linear)
         }
     }
 }
@@ -380,7 +380,7 @@ extension WavetableData {
     /// - Returns: Synthesized sample with phase distortion
     public func synthesizeWithPhaseDistortion(phase: Float, frame: Int, distortion: PhaseDistortionEngine, frequency: Float) -> Float {
         let distortedPhase = distortion.distortPhase(phase, frequency: frequency)
-        return interpolateSample(at: distortedPhase, frame: frame)
+        return self.getInterpolatedSample(framePosition: Float(frame), samplePosition: distortedPhase * Float(self.frameSize), interpolation: .linear)
     }
     
     /// Batch synthesis with phase distortion
@@ -395,7 +395,7 @@ extension WavetableData {
         distortion.distortPhases(phases, frequency: frequency, output: &distortedPhases)
         
         for i in 0..<phases.count {
-            output[i] = interpolateSample(at: distortedPhases[i], frame: frame)
+            output[i] = self.getInterpolatedSample(framePosition: Float(frame), samplePosition: distortedPhases[i] * Float(self.frameSize), interpolation: .linear)
         }
     }
 } 

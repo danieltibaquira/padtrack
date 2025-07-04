@@ -4,8 +4,6 @@ import AVFoundation
 @testable import MachineProtocols
 
 // Import test utilities and mocks
-import TestUtilities
-import MockObjects
 
 final class AudioEngineTests: XCTestCase {
 

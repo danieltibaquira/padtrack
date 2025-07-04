@@ -9,28 +9,28 @@ import Accelerate
 // MARK: - Envelope Follower
 
 /// Envelope follower for dynamic processing
-internal final class EnvelopeFollower: @unchecked Sendable {
+public final class EnvelopeFollower: @unchecked Sendable {
     
     private let sampleRate: Double
     private var attackCoeff: Float = 0.0
     private var releaseCoeff: Float = 0.0
     private var envelope: [Float] = [0.0, 0.0] // Stereo state
     
-    init(sampleRate: Double) {
+    public init(sampleRate: Double) {
         self.sampleRate = sampleRate
         setAttack(5.0)
         setRelease(100.0)
     }
     
-    func setAttack(_ attackMs: Float) {
+    public func setAttack(_ attackMs: Float) {
         attackCoeff = exp(-1.0 / (attackMs * 0.001 * Float(sampleRate)))
     }
     
-    func setRelease(_ releaseMs: Float) {
+    public func setRelease(_ releaseMs: Float) {
         releaseCoeff = exp(-1.0 / (releaseMs * 0.001 * Float(sampleRate)))
     }
     
-    func process(_ input: Float, channel: Int) -> Float {
+    public func process(_ input: Float, channel: Int) -> Float {
         let channelIndex = min(channel, 1)
         let target = input
         let current = envelope[channelIndex]
@@ -41,33 +41,43 @@ internal final class EnvelopeFollower: @unchecked Sendable {
         return envelope[channelIndex]
     }
     
-    func reset() {
+    public func reset() {
         envelope = [0.0, 0.0]
+    }
+
+    public func setCoefficients(attack: Float, release: Float) {
+        setAttack(attack)
+        setRelease(release)
     }
 }
 
 // MARK: - Lookahead Buffer
 
 /// Lookahead delay buffer for dynamics processing
-internal final class LookaheadBuffer: @unchecked Sendable {
+public final class LookaheadBuffer: @unchecked Sendable {
     
     private var buffers: [[Float]]
     private var writeIndex: Int = 0
     private var delayInSamples: Int = 0
     private let sampleRate: Double
     
-    init(maxDelay: Float, sampleRate: Double) {
+    public init(maxDelay: Float, sampleRate: Double) {
         self.sampleRate = sampleRate
         let maxSamples = Int(maxDelay * Float(sampleRate))
         self.buffers = [[Float](repeating: 0.0, count: maxSamples), [Float](repeating: 0.0, count: maxSamples)]
     }
     
-    func setDelay(_ delayMs: Float) {
+    public func setDelay(_ delayMs: Float) {
         delayInSamples = Int(delayMs * 0.001 * Float(sampleRate))
         delayInSamples = max(0, min(delayInSamples, buffers[0].count - 1))
     }
+
+    public func setSampleRate(_ sampleRate: Double) {
+        // For this simple implementation, we don't need to do anything
+        // In a full implementation, you might need to resize buffers
+    }
     
-    func process(_ input: Float, channel: Int) -> Float {
+    public func process(_ input: Float, channel: Int) -> Float {
         let channelIndex = min(channel, 1)
         
         buffers[channelIndex][writeIndex] = input
@@ -81,8 +91,8 @@ internal final class LookaheadBuffer: @unchecked Sendable {
         
         return output
     }
-    
-    func reset() {
+
+    public func reset() {
         for i in 0..<buffers.count {
             for j in 0..<buffers[i].count {
                 buffers[i][j] = 0.0
@@ -95,7 +105,7 @@ internal final class LookaheadBuffer: @unchecked Sendable {
 // MARK: - Biquad Filter
 
 /// High-quality biquad filter for EQ and tone shaping
-internal final class BiquadFilter: @unchecked Sendable {
+public final class BiquadFilter: @unchecked Sendable {
     
     private let sampleRate: Double
     private var b0: Float = 1.0, b1: Float = 0.0, b2: Float = 0.0
@@ -103,11 +113,11 @@ internal final class BiquadFilter: @unchecked Sendable {
     private var x1: [Float] = [0.0, 0.0], x2: [Float] = [0.0, 0.0]
     private var y1: [Float] = [0.0, 0.0], y2: [Float] = [0.0, 0.0]
     
-    init(sampleRate: Double) {
+    public init(sampleRate: Double) {
         self.sampleRate = sampleRate
     }
     
-    func setLowShelf(frequency: Float, gain: Float, q: Float) {
+    public func setLowShelf(frequency: Float, gain: Float, q: Float) {
         let omega = 2.0 * Float.pi * frequency / Float(sampleRate)
         let s = sin(omega)
         let c = cos(omega)
@@ -126,7 +136,7 @@ internal final class BiquadFilter: @unchecked Sendable {
         b2 /= a0
     }
     
-    func setHighShelf(frequency: Float, gain: Float, q: Float) {
+    public func setHighShelf(frequency: Float, gain: Float, q: Float) {
         let omega = 2.0 * Float.pi * frequency / Float(sampleRate)
         let s = sin(omega)
         let c = cos(omega)
@@ -163,8 +173,33 @@ internal final class BiquadFilter: @unchecked Sendable {
         b1 /= a0
         b2 /= a0
     }
-    
-    func process(_ input: Float, channel: Int) -> Float {
+
+    public func setHighPass(frequency: Float, q: Float) {
+        let omega = 2.0 * Float.pi * frequency / Float(sampleRate)
+        let s = sin(omega)
+        let c = cos(omega)
+        let alpha = s / (2.0 * q)
+
+        b0 = (1 + c) / 2
+        b1 = -(1 + c)
+        b2 = (1 + c) / 2
+        let a0 = 1 + alpha
+        a1 = -2 * c / a0
+        a2 = (1 - alpha) / a0
+
+        b0 /= a0
+        b1 /= a0
+        b2 /= a0
+    }
+
+    public func reset() {
+        x1 = [0.0, 0.0]
+        x2 = [0.0, 0.0]
+        y1 = [0.0, 0.0]
+        y2 = [0.0, 0.0]
+    }
+
+    public func process(_ input: Float, channel: Int) -> Float {
         let channelIndex = min(channel, 1)
         
         let output = b0 * input + b1 * x1[channelIndex] + b2 * x2[channelIndex] - a1 * y1[channelIndex] - a2 * y2[channelIndex]
@@ -176,29 +211,22 @@ internal final class BiquadFilter: @unchecked Sendable {
         
         return output
     }
-    
-    func reset() {
-        x1 = [0.0, 0.0]
-        x2 = [0.0, 0.0]
-        y1 = [0.0, 0.0]
-        y2 = [0.0, 0.0]
-    }
 }
 
 // MARK: - DC Blocker
 
 /// High-pass filter for DC blocking
-internal final class DCBlocker: @unchecked Sendable {
+public final class DCBlocker: @unchecked Sendable {
     
     private var x1: [Float] = [0.0, 0.0]
     private var y1: [Float] = [0.0, 0.0]
     private let coefficient: Float = 0.995
     
-    init(sampleRate: Double) {
+    public init(sampleRate: Double) {
         // Coefficient is sample rate independent for DC blocking
     }
     
-    func process(_ input: Float, channel: Int) -> Float {
+    public func process(_ input: Float, channel: Int) -> Float {
         let channelIndex = min(channel, 1)
         
         let output = input - x1[channelIndex] + coefficient * y1[channelIndex]
@@ -209,7 +237,7 @@ internal final class DCBlocker: @unchecked Sendable {
         return output
     }
     
-    func reset() {
+    public func reset() {
         x1 = [0.0, 0.0]
         y1 = [0.0, 0.0]
     }
@@ -262,7 +290,7 @@ internal final class SaturationProcessor: @unchecked Sendable {
         if abs(input) <= threshold {
             return input
         } else {
-            let sign = input > 0 ? 1.0 : -1.0
+            let sign: Float = input > 0 ? 1.0 : -1.0
             let excess = abs(input) - threshold
             return sign * (threshold + excess / (1.0 + excess))
         }
@@ -289,20 +317,20 @@ internal final class SaturationProcessor: @unchecked Sendable {
 // MARK: - Harmonic Generator
 
 /// Harmonic enhancement processor
-internal final class HarmonicGenerator: @unchecked Sendable {
+public final class HarmonicGenerator: @unchecked Sendable {
     
     private var amount: Float = 0.0
     private var delayLine: [Float] = [0.0, 0.0]
     
-    init(sampleRate: Double) {
+    public init(sampleRate: Double) {
         // Initialize harmonic generator
     }
     
-    func setAmount(_ amount: Float) {
+    public func setAmount(_ amount: Float) {
         self.amount = max(0.0, min(1.0, amount))
     }
     
-    func process(_ input: Float, channel: Int) -> Float {
+    public func process(_ input: Float, channel: Int) -> Float {
         let channelIndex = min(channel, 1)
         
         // Generate second harmonic
@@ -318,9 +346,59 @@ internal final class HarmonicGenerator: @unchecked Sendable {
         
         return harmonics * amount
     }
-    
-    func reset() {
+
+    public func getHarmonicLevel() -> Float {
+        return amount
+    }
+
+    public func reset() {
         delayLine = [0.0, 0.0]
+    }
+}
+
+// MARK: - True Peak Detection Classes
+
+/// True peak detector using oversampling
+public final class TruePeakDetector: @unchecked Sendable {
+    private var oversampleBuffer: [Float] = []
+    private let oversampleFactor = 4
+
+    public init() {}
+
+    public func detectTruePeak(_ input: Float) -> Float {
+        // Simple true peak estimation
+        // In a full implementation, this would use proper oversampling
+        return input * 1.05 // Conservative estimate of potential inter-sample peaks
+    }
+
+    public func reset() {
+        oversampleBuffer.removeAll()
+    }
+}
+
+/// Simple oversampling filter
+public final class OversamplingFilter: @unchecked Sendable {
+    private var delayLine: [Float] = Array(repeating: 0.0, count: 64)
+    private var writeIndex: Int = 0
+
+    public init() {}
+
+    public func setupAntiAliasingFilter(cutoff: Float, sampleRate: Float) {
+        // Setup would configure filter coefficients
+        // Simplified for this implementation
+    }
+
+    public func process(_ buffer: inout [Float]) {
+        // Simple low-pass filtering
+        // In a full implementation, this would be a proper anti-aliasing filter
+        for i in 1..<buffer.count {
+            buffer[i] = buffer[i] * 0.8 + buffer[i-1] * 0.2
+        }
+    }
+
+    public func reset() {
+        delayLine = Array(repeating: 0.0, count: delayLine.count)
+        writeIndex = 0
     }
 }
 
@@ -366,7 +444,12 @@ internal final class DitherGenerator: @unchecked Sendable {
             return generateShapedDither()
         }
     }
-    
+
+    func reset() {
+        // Reset any internal state if needed
+        // For now, this is a no-op since we use stateless random generation
+    }
+
     private func generateShapedDither() -> Float {
         // Simple noise shaping dither
         return Float.random(in: -1...1) * 0.5

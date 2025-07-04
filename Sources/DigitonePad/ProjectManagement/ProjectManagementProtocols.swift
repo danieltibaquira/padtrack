@@ -32,11 +32,13 @@ protocol ProjectManagementPresenterProtocol: AnyObject {
 /// Interactor Protocol - Defines what the Interactor can do
 protocol ProjectManagementInteractorProtocol: AnyObject {
     var presenter: ProjectManagementPresenterProtocol? { get set }
-    
+
     func fetchProjects()
     func createProject(name: String)
     func deleteProject(id: UUID)
     func loadProject(id: UUID)
+    func loadProjects()
+    func selectProject(id: UUID)
 }
 
 /// Router Protocol - Defines what the Router can do

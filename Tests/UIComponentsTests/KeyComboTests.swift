@@ -3,7 +3,6 @@ import XCTest
 @testable import MachineProtocols
 
 // Import test utilities
-import TestUtilities
 
 /// Tests for Key Combo System core logic
 final class KeyComboTests: DigitonePadTestCase {
