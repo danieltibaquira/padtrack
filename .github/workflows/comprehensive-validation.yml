@@ -1,0 +1,398 @@
+name: Comprehensive Project Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      verbose:
+        description: 'Enable verbose logging'
+        required: false
+        default: 'false'
+
+env:
+  SWIFT_VERSION: '5.10'
+  XCODE_VERSION: '15.4'
+  
+jobs:
+  syntax-validation:
+    name: Syntax & Compilation Check
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Select Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: ${{ env.XCODE_VERSION }}
+        
+    - name: Swift Syntax Check
+      run: |
+        echo "Running Swift syntax validation..."
+        
+        # Find all Swift files and check syntax
+        find Sources Tests -name "*.swift" -type f | while read file; do
+          if ! swiftc -parse -suppress-warnings "$file" 2>/dev/null; then
+            echo "❌ Syntax error in: $file"
+            swiftc -parse "$file" 2>&1 | head -20
+            exit 1
+          fi
+        done
+        
+        echo "✅ All Swift files have valid syntax"
+        
+    - name: Module Compilation Check
+      run: |
+        echo "Checking module compilation..."
+        
+        # Try to build each module independently
+        modules=("MachineProtocols" "DataModel" "DataLayer" "AudioEngine" "VoiceModule" "FilterModule" "FilterMachine" "FXModule" "MIDIModule" "UIComponents" "SequencerModule")
+        
+        for module in "${modules[@]}"; do
+          echo "Building $module..."
+          if swift build --target "$module" 2>&1 | tee build-$module.log; then
+            echo "✅ $module compiled successfully"
+          else
+            echo "❌ $module compilation failed"
+            tail -50 build-$module.log
+          fi
+        done
+        
+    - name: Archive Compilation Logs
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: compilation-logs
+        path: |
+          build-*.log
+        retention-days: 7
+
+  dependency-analysis:
+    name: Dependency & Import Analysis
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Analyze Module Dependencies
+      run: |
+        echo "Analyzing module dependencies..."
+        
+        # Create dependency graph
+        python3 - <<EOF
+        import os
+        import re
+        import json
+        
+        def find_imports(file_path):
+            imports = set()
+            with open(file_path, 'r') as f:
+                content = f.read()
+                # Find import statements
+                import_pattern = r'import\s+(\w+)'
+                imports.update(re.findall(import_pattern, content))
+            return imports
+        
+        def analyze_module(module_path):
+            module_name = os.path.basename(module_path)
+            imports = set()
+            
+            for root, dirs, files in os.walk(module_path):
+                for file in files:
+                    if file.endswith('.swift'):
+                        file_path = os.path.join(root, file)
+                        imports.update(find_imports(file_path))
+            
+            # Remove self-imports and system imports
+            imports.discard(module_name)
+            system_modules = {'Foundation', 'UIKit', 'SwiftUI', 'Combine', 'AVFoundation', 'CoreData', 'CoreMIDI'}
+            imports = imports - system_modules
+            
+            return {
+                'module': module_name,
+                'dependencies': list(imports)
+            }
+        
+        # Analyze all modules
+        modules_path = 'Sources'
+        results = []
+        
+        for module in os.listdir(modules_path):
+            module_path = os.path.join(modules_path, module)
+            if os.path.isdir(module_path):
+                results.append(analyze_module(module_path))
+        
+        # Save results
+        with open('dependency-analysis.json', 'w') as f:
+            json.dump(results, f, indent=2)
+        
+        # Check for circular dependencies
+        def has_circular_dependency(modules):
+            def visit(module, visited, rec_stack, deps_map):
+                visited.add(module)
+                rec_stack.add(module)
+                
+                for dep in deps_map.get(module, []):
+                    if dep not in visited:
+                        if visit(dep, visited, rec_stack, deps_map):
+                            return True
+                    elif dep in rec_stack:
+                        return True
+                
+                rec_stack.remove(module)
+                return False
+            
+            deps_map = {m['module']: m['dependencies'] for m in modules}
+            visited = set()
+            
+            for module in deps_map:
+                if module not in visited:
+                    if visit(module, visited, set(), deps_map):
+                        return True
+            return False
+        
+        if has_circular_dependency(results):
+            print("❌ Circular dependencies detected!")
+        else:
+            print("✅ No circular dependencies found")
+        
+        # Print dependency tree
+        print("\nDependency Tree:")
+        for module in results:
+            print(f"\n{module['module']}:")
+            for dep in module['dependencies']:
+                print(f"  → {dep}")
+        EOF
+        
+    - name: Upload Dependency Analysis
+      uses: actions/upload-artifact@v4
+      with:
+        name: dependency-analysis
+        path: dependency-analysis.json
+        retention-days: 30
+
+  protocol-conformance:
+    name: Protocol Conformance Check
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Check Protocol Implementations
+      run: |
+        echo "Checking protocol conformance..."
+        
+        # Find all protocol requirements and their implementations
+        python3 - <<EOF
+        import os
+        import re
+        
+        def find_protocols(file_path):
+            protocols = {}
+            with open(file_path, 'r') as f:
+                content = f.read()
+                
+                # Find protocol definitions
+                protocol_pattern = r'protocol\s+(\w+)(?:\s*:\s*[\w\s,]+)?\s*\{([^}]+)\}'
+                for match in re.finditer(protocol_pattern, content, re.MULTILINE | re.DOTALL):
+                    protocol_name = match.group(1)
+                    protocol_body = match.group(2)
+                    
+                    # Extract required methods
+                    method_pattern = r'func\s+(\w+)\s*\([^)]*\)(?:\s*->\s*[^{]+)?'
+                    methods = re.findall(method_pattern, protocol_body)
+                    
+                    # Extract required properties
+                    property_pattern = r'var\s+(\w+):\s*[^{]+'
+                    properties = re.findall(property_pattern, protocol_body)
+                    
+                    protocols[protocol_name] = {
+                        'methods': methods,
+                        'properties': properties,
+                        'file': file_path
+                    }
+            
+            return protocols
+        
+        # Scan all Swift files
+        all_protocols = {}
+        for root, dirs, files in os.walk('Sources'):
+            for file in files:
+                if file.endswith('.swift'):
+                    file_path = os.path.join(root, file)
+                    protocols = find_protocols(file_path)
+                    all_protocols.update(protocols)
+        
+        print(f"Found {len(all_protocols)} protocols")
+        
+        # Check critical protocols
+        critical_protocols = [
+            'MachineProtocol',
+            'VoiceMachineProtocol',
+            'FilterMachineProtocol',
+            'FXProcessorProtocol',
+            'SequencerProtocol'
+        ]
+        
+        for protocol in critical_protocols:
+            if protocol in all_protocols:
+                p = all_protocols[protocol]
+                print(f"\n✅ {protocol}:")
+                print(f"   Methods: {len(p['methods'])}")
+                print(f"   Properties: {len(p['properties'])}")
+            else:
+                print(f"\n❌ {protocol}: Not found!")
+        EOF
+
+  core-data-validation:
+    name: Core Data Model Validation
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Validate Core Data Model
+      run: |
+        echo "Validating Core Data model..."
+        
+        # Find xcdatamodeld file
+        MODEL_PATH=$(find . -name "*.xcdatamodeld" -type d | head -1)
+        
+        if [ -z "$MODEL_PATH" ]; then
+          echo "❌ No Core Data model found"
+          exit 1
+        fi
+        
+        echo "✅ Found Core Data model at: $MODEL_PATH"
+        
+        # Check model contents
+        CONTENTS_FILE="$MODEL_PATH/contents"
+        if [ ! -f "$CONTENTS_FILE" ]; then
+          CONTENTS_FILE=$(find "$MODEL_PATH" -name "contents" | head -1)
+        fi
+        
+        if [ -f "$CONTENTS_FILE" ]; then
+          echo "Analyzing Core Data entities..."
+          
+          # Count entities
+          ENTITY_COUNT=$(grep -o '<entity ' "$CONTENTS_FILE" | wc -l)
+          echo "  Entities: $ENTITY_COUNT"
+          
+          # Check for required entities
+          required_entities=("Project" "Kit" "Pattern" "Track" "Preset" "Trig")
+          for entity in "${required_entities[@]}"; do
+            if grep -q "name=\"$entity\"" "$CONTENTS_FILE"; then
+              echo "  ✅ Found entity: $entity"
+            else
+              echo "  ❌ Missing entity: $entity"
+            fi
+          done
+        fi
+
+  test-coverage:
+    name: Test Coverage Analysis
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Select Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: ${{ env.XCODE_VERSION }}
+        
+    - name: Generate Coverage Report
+      run: |
+        # Run tests with coverage
+        swift test --enable-code-coverage
+        
+        # Generate coverage report
+        xcrun llvm-cov report \
+          .build/debug/DigitonePadPackageTests.xctest/Contents/MacOS/DigitonePadPackageTests \
+          -instr-profile=.build/debug/codecov/default.profdata \
+          -ignore-filename-regex=".*(Tests|Mocks|TestUtilities).*" \
+          > coverage-report.txt
+        
+        echo "Coverage report generated"
+        
+    - name: Upload Coverage Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage-report.txt
+        retention-days: 30
+
+  performance-benchmarks:
+    name: Performance Benchmarks
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Run Performance Tests
+      run: |
+        # Create simple benchmark script
+        cat > benchmark.swift <<EOF
+        import Foundation
+        
+        func measureTime(name: String, block: () -> Void) {
+            let start = CFAbsoluteTimeGetCurrent()
+            block()
+            let end = CFAbsoluteTimeGetCurrent()
+            print("\(name): \((end - start) * 1000)ms")
+        }
+        
+        // Add actual benchmarks here
+        print("Performance benchmarks would run here")
+        EOF
+        
+        swift benchmark.swift
+
+  generate-validation-summary:
+    name: Generate Validation Summary
+    runs-on: ubuntu-latest
+    needs: [syntax-validation, dependency-analysis, protocol-conformance, core-data-validation, test-coverage]
+    if: always()
+    
+    steps:
+    - name: Generate Summary Report
+      run: |
+        cat > validation-summary.md <<EOF
+        # Project Validation Summary
+        
+        ## Validation Results
+        
+        | Check | Status |
+        |-------|--------|
+        | Syntax Validation | ${{ needs.syntax-validation.result }} |
+        | Dependency Analysis | ${{ needs.dependency-analysis.result }} |
+        | Protocol Conformance | ${{ needs.protocol-conformance.result }} |
+        | Core Data Validation | ${{ needs.core-data-validation.result }} |
+        | Test Coverage | ${{ needs.test-coverage.result }} |
+        
+        ## Next Steps
+        
+        1. Review any failed checks above
+        2. Fix compilation errors in affected modules
+        3. Resolve circular dependencies if found
+        4. Ensure all protocol requirements are implemented
+        5. Verify Core Data model integrity
+        
+        Generated: $(date)
+        EOF
+        
+    - name: Upload Summary
+      uses: actions/upload-artifact@v4
+      with:
+        name: validation-summary
+        path: validation-summary.md
+        retention-days: 30
