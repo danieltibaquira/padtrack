@@ -1,11 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(gh issue view:*)",
-      "Bash(swift test:*)",
-      "Bash(swift build)",
-      "Bash(swift build:*)",
-      "Bash(swift validate_integration.swift:*)"
+      "Bash(git add:*)"
     ],
     "deny": []
   }
