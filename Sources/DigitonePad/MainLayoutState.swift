@@ -44,12 +44,24 @@ public class MainLayoutState: ObservableObject {
         return 60.0 / (currentBPM * 4) // 16th note duration
     }
     
+    // Parameter bridge for audio integration
+    public private(set) var parameterBridge = ParameterBridge()
+    public private(set) var voiceMachineManager = VoiceMachineManager()
+    public private(set) var sequencerBridge = SequencerBridge()
+    
     // MARK: - Initialization
     
     public init() {
         setupDefaultState()
         initializeFMToneParameters()
+<<<<<<< HEAD
         setupFMParameterBridge()
+=======
+        
+        // Connect parameter bridge and voice machine manager
+        parameterBridge.setVoiceMachineManager(voiceMachineManager)
+        sequencerBridge.setVoiceMachineManager(voiceMachineManager)
+>>>>>>> origin/main
     }
     
     // MARK: - FM TONE Mode Management
@@ -88,9 +100,11 @@ public class MainLayoutState: ObservableObject {
         
         if isPlaying {
             startPlayback()
+            sequencerBridge.start()
             updateDisplayText("PLAYING")
         } else {
             stopPlayback()
+            sequencerBridge.pause()
             updateDisplayText("PAUSED")
         }
     }
@@ -100,11 +114,13 @@ public class MainLayoutState: ObservableObject {
         isRecording = false
         currentStep = -1
         stopPlayback()
+        sequencerBridge.stop()
         updateDisplayText("STOPPED")
     }
     
     public func rewind() {
         currentStep = -1
+        sequencerBridge.stop()
         updateDisplayText("REWOUND")
     }
     
@@ -121,16 +137,22 @@ public class MainLayoutState: ObservableObject {
         } else {
             activeSteps.insert(step)
         }
+        
+        // Update sequencer bridge
+        sequencerBridge.toggleStep(step, track: selectedTrack)
+        
         updateDisplayText("STEP \(step + 1) \(activeSteps.contains(step) ? "ON" : "OFF")")
     }
     
     public func clearAllSteps() {
         activeSteps.removeAll()
+        sequencerBridge.clearPattern(for: selectedTrack)
         updateDisplayText("ALL STEPS CLEARED")
     }
     
     public func setAllSteps() {
         activeSteps = Set(0..<16)
+        sequencerBridge.fillPattern(for: selectedTrack)
         updateDisplayText("ALL STEPS SET")
     }
     
@@ -209,6 +231,45 @@ public class MainLayoutState: ObservableObject {
     
     public func updateOrientation(isLandscape: Bool) {
         self.isLandscape = isLandscape
+    }
+    
+    // MARK: - Parameter Control Integration
+    
+    /// Update parameter encoder value
+    public func updateEncoder(_ encoder: Int, delta: Double) {
+        guard encoder >= 0 && encoder < 8 else { return }
+        
+        // Update local parameter value
+        parameterValues[encoder] = max(0.0, min(1.0, parameterValues[encoder] + delta))
+        
+        // Update audio parameter through bridge
+        parameterBridge.updateEncoder(track: selectedTrack, encoder: encoder, delta: delta)
+        
+        // Update display
+        let parameterName = parameterLabels[encoder]
+        let parameterValue = Int(parameterValues[encoder] * 100)
+        updateDisplayText("\(parameterName): \(parameterValue)%")
+    }
+    
+    /// Set voice machine type for current track
+    public func setVoiceMachineType(_ type: VoiceMachineType) {
+        voiceMachineManager.setVoiceMachine(for: selectedTrack, type: type)
+        updateDisplayText("TRACK \(selectedTrack): \(type.rawValue)")
+    }
+    
+    /// Get current voice machine type for selected track
+    public func getCurrentVoiceMachineType() -> VoiceMachineType? {
+        return voiceMachineManager.getVoiceMachineType(for: selectedTrack)
+    }
+    
+    /// Trigger note for current track
+    public func triggerNote(_ note: Int, velocity: Int = 100) {
+        voiceMachineManager.triggerVoice(track: selectedTrack, note: note, velocity: velocity)
+    }
+    
+    /// Release note for current track
+    public func releaseNote(_ note: Int) {
+        voiceMachineManager.releaseVoice(track: selectedTrack, note: note)
     }
     
     // MARK: - Private Methods
