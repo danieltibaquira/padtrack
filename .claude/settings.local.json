@@ -32,7 +32,22 @@
       "Bash(gh repo view:*)",
       "Bash(gh issue list:*)",
       "Bash(gh issue edit:*)"
+      "Bash(git checkout:*)",
+      "Bash(mv:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(swift package:*)",
+      "Bash(gh issue view:*)",
+      "Bash(swift test:*)",
+      "Bash(swift build)",
+      "Bash(swift build:*)",
+      "Bash(swift validate_integration.swift:*)",
+      "Bash(task-master list:*)",
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(git fetch:*)",
+      "Bash(git merge:*)",
+      "Bash(git commit:*)"
     ],
     "deny": []
   }
-}

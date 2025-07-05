@@ -47,6 +47,8 @@ public enum SaturationCurve: String, CaseIterable, Codable {
     case cubic = "cubic"
     case asymmetric = "asymmetric"
     case tube = "tube"
+    case softClip = "softClip"
+    case polynomial = "polynomial"
     
     public var description: String {
         switch self {
@@ -55,6 +57,8 @@ public enum SaturationCurve: String, CaseIterable, Codable {
         case .cubic: return "Cubic"
         case .asymmetric: return "Asymmetric"
         case .tube: return "Tube"
+        case .softClip: return "Soft Clip"
+        case .polynomial: return "Polynomial"
         }
     }
 }
