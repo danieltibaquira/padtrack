@@ -40,8 +40,13 @@ fi
 
 # Performance metrics
 echo "⏱️  Build Performance:"
-echo "   Start Time: $CI_WORKFLOW_START_TIMESTAMP"
-echo "   Duration: $(( $(date +%s) - CI_WORKFLOW_START_TIMESTAMP )) seconds"
+echo "   Start Time: ${CI_WORKFLOW_START_TIMESTAMP:-'not available'}"
+if [[ -n "$CI_WORKFLOW_START_TIMESTAMP" ]]; then
+    duration=$(( $(date +%s) - CI_WORKFLOW_START_TIMESTAMP ))
+    echo "   Duration: $duration seconds"
+else
+    echo "   Duration: not available"
+fi
 
 # Success notification
 echo "🚀 Build ready for TestFlight distribution!"

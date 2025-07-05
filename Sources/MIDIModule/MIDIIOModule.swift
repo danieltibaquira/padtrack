@@ -361,7 +361,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
     /// Initialize the MIDI I/O module
     public func initialize() throws {
-        ioQueue.sync {
+        try ioQueue.sync {
             guard !isInitialized else { return }
 
             // Create MIDI client
@@ -409,7 +409,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
     /// Start the MIDI I/O module
     public func start() throws {
-        ioQueue.sync {
+        try ioQueue.sync {
             guard isInitialized && !isRunning else {
                 throw MIDIIOError.invalidState("Module not ready to start")
             }
@@ -496,7 +496,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
     /// Connect to an input device
     public func connectInputDevice(_ device: EnhancedMIDIDevice) throws {
-        deviceQueue.sync {
+        try deviceQueue.sync {
             guard device.capabilities.supportsInput else {
                 throw MIDIIOError.deviceError("Device does not support input")
             }
@@ -522,7 +522,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
     /// Connect to an output device
     public func connectOutputDevice(_ device: EnhancedMIDIDevice) throws {
-        deviceQueue.sync {
+        try deviceQueue.sync {
             guard device.capabilities.supportsOutput else {
                 throw MIDIIOError.deviceError("Device does not support output")
             }
@@ -541,7 +541,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
     /// Disconnect an input device
     public func disconnectInputDevice(_ device: EnhancedMIDIDevice) throws {
-        deviceQueue.sync {
+        try deviceQueue.sync {
             let source = MIDIGetSource(Int(device.uniqueID))
             let status = MIDIPortDisconnectSource(inputPort, source)
 
@@ -585,7 +585,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
     /// Send MIDI message to specific device
     public func sendMessage(_ message: MIDIMessage, to device: EnhancedMIDIDevice) throws {
-        ioQueue.sync {
+        try ioQueue.sync {
             guard isRunning else {
                 throw MIDIIOError.invalidState("Module not running")
             }
