@@ -361,7 +361,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
     /// Initialize the MIDI I/O module
     public func initialize() throws {
-        try ioQueue.sync {
+        ioQueue.sync {
             guard !isInitialized else { return }
 
             // Create MIDI client
@@ -409,7 +409,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
     /// Start the MIDI I/O module
     public func start() throws {
-        try ioQueue.sync {
+        ioQueue.sync {
             guard isInitialized && !isRunning else {
                 throw MIDIIOError.invalidState("Module not ready to start")
             }
@@ -443,7 +443,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
     public func reset() throws {
         stop()
 
-        try ioQueue.sync {
+        ioQueue.sync {
             // Reset all components
             routingEngine.reset()
             messageProcessor.reset()
@@ -467,7 +467,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
     /// Discover available MIDI devices
     public func discoverDevices() throws {
-        try deviceQueue.sync {
+        deviceQueue.sync {
             var discoveredDevices: [EnhancedMIDIDevice] = []
 
             // Discover input devices
@@ -496,7 +496,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
     /// Connect to an input device
     public func connectInputDevice(_ device: EnhancedMIDIDevice) throws {
-        try deviceQueue.sync {
+        deviceQueue.sync {
             guard device.capabilities.supportsInput else {
                 throw MIDIIOError.deviceError("Device does not support input")
             }
@@ -522,7 +522,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
     /// Connect to an output device
     public func connectOutputDevice(_ device: EnhancedMIDIDevice) throws {
-        try deviceQueue.sync {
+        deviceQueue.sync {
             guard device.capabilities.supportsOutput else {
                 throw MIDIIOError.deviceError("Device does not support output")
             }
@@ -541,7 +541,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
     /// Disconnect an input device
     public func disconnectInputDevice(_ device: EnhancedMIDIDevice) throws {
-        try deviceQueue.sync {
+        deviceQueue.sync {
             let source = MIDIGetSource(Int(device.uniqueID))
             let status = MIDIPortDisconnectSource(inputPort, source)
 
@@ -558,7 +558,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
     /// Disconnect an output device
     public func disconnectOutputDevice(_ device: EnhancedMIDIDevice) throws {
-        try deviceQueue.sync {
+        deviceQueue.sync {
             DispatchQueue.main.async {
                 self.connectedOutputDevices.removeAll { $0.id == device.id }
                 self.deviceDisconnectedHandler?(device)
@@ -585,7 +585,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
     /// Send MIDI message to specific device
     public func sendMessage(_ message: MIDIMessage, to device: EnhancedMIDIDevice) throws {
-        try ioQueue.sync {
+        ioQueue.sync {
             guard isRunning else {
                 throw MIDIIOError.invalidState("Module not running")
             }
@@ -793,7 +793,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
         // Prepare MIDI data
         let statusByte = message.type.rawValue | (message.channel & 0x0F)
-        var midiData: [UInt8] = [statusByte, message.data1, message.data2]
+        let midiData: [UInt8]
 
         // Adjust data length based on message type
         switch message.type {
@@ -802,7 +802,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
         case .timingClock, .start, .continue, .stop:
             midiData = [statusByte]
         default:
-            break
+            midiData = [statusByte, message.data1, message.data2]
         }
 
         // Send packet

@@ -516,47 +516,4 @@ public struct ResonanceInfo: Codable {
         self.selfOscillating = selfOscillating
         self.dampingFactor = dampingFactor
     }
-}
-
-/// Configuration for the Multi-Mode Filter Machine
-public struct MultiModeFilterConfig {
-    public var defaultFilterType: FilterType = .lowpass
-    public var baseFilterType: FilterType = .lowpass
-    public var targetFilterType: FilterType = .highpass
-    public var morphingMode: FilterMorphingMode = .lpBpHp
-    public var maxResonance: Float = 0.99
-    public var selfOscillationThreshold: Float = 0.95
-    public var enableKeyboardTracking: Bool = true
-    public var enableParameterSmoothing: Bool = true
-    public var enablePerformanceOptimization: Bool = true
-    
-    public init() {}
-}
-
-/// Current filter parameters
-public struct FilterParameters {
-    public var cutoff: Float = 1000.0           // Hz
-    public var resonance: Float = 0.1           // 0.0 - 1.0
-    public var morphPosition: Float = 0.0       // 0.0 - 1.0
-    public var keyboardTracking: Float = 0.0    // -1.0 - 1.0
-    public var drive: Float = 1.0               // 0.0 - 2.0
-    
-    public init() {}
-}
-
-/// Comprehensive filter status information
-public struct FilterStatus {
-    public let isActive: Bool
-    public let currentCoefficients: BiquadCoefficients
-    public let parameters: FilterParameters
-    public let performanceMetrics: FilterPerformanceMetrics
-    public let resonanceInfo: ResonanceInfo
-    public let trackingInfo: TrackingInfo
-}
-
-/// Filter response data for visualization
-public struct FilterResponse {
-    public let frequency: Float
-    public let magnitude: Float
-    public let phase: Float
 } 

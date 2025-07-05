@@ -10,7 +10,7 @@ import SwiftUI
 
 #if canImport(UIKit)
 /// View Controller that handles MIDI user interface
-public final class MIDIViewController: UIViewController, MIDIViewProtocol {
+public final class MIDIViewController: UIViewController, @preconcurrency MIDIViewProtocol {
     public var presenter: MIDIPresenterProtocol?
     
     // MARK: - UI Components

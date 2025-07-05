@@ -5,6 +5,7 @@
 
 import Foundation
 import CoreAudio
+import QuartzCore
 import MachineProtocols
 
 /// MIDI sequencer for external hardware control
@@ -16,7 +17,7 @@ public final class MIDISequencer: @unchecked Sendable {
     
     private let lock = NSLock()
     private var tracks: [MIDITrack] = []
-    private var outputs: [String: MIDIOutputPort] = []
+    private var outputs: [String: MIDIOutputPort] = [:]
     private var defaultOutput: MIDIOutputPort?
     
     // Playback state
@@ -193,7 +194,7 @@ public final class MIDISequencer: @unchecked Sendable {
     }
     
     /// Continue playback from current position
-    public func continue() {
+    public func `continue`() {
         lock.lock()
         defer { lock.unlock() }
         
