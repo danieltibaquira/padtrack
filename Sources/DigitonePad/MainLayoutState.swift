@@ -33,6 +33,9 @@ public class MainLayoutState: ObservableObject {
     @Published public var isFMToneMode: Bool = false
     @Published public var fmToneParameterValues: [String: Double] = [:]
     
+    // FM Parameter Bridge for real-time audio integration
+    public private(set) var fmParameterBridge: FMParameterBridge?
+    
     // MARK: - Private Properties
     
     private var playbackTimer: Timer?
@@ -46,6 +49,7 @@ public class MainLayoutState: ObservableObject {
     public init() {
         setupDefaultState()
         initializeFMToneParameters()
+        setupFMParameterBridge()
     }
     
     // MARK: - FM TONE Mode Management
@@ -63,6 +67,12 @@ public class MainLayoutState: ObservableObject {
     
     public func updateFMToneParameter(key: String, value: Double) {
         fmToneParameterValues[key] = value
+        
+        // Update parameter bridge for real-time audio integration
+        if let parameterID = mapStringToParameterID(key) {
+            fmParameterBridge?.updateParameter(parameterID, value: value)
+        }
+        
         // Trigger UI update
         objectWillChange.send()
     }
@@ -249,26 +259,30 @@ public class MainLayoutState: ObservableObject {
         switch page {
         case 1:
             // Page 1 - Core FM: ALGO, RATIO C/A/B, HARM, DTUN, FDBK, MIX
+            // Matches Elektron Digitone hardware specification exactly
             parameterLabels = ["ALGO", "RATIO C", "RATIO A", "RATIO B", "HARM", "DTUN", "FDBK", "MIX"]
             updateFMToneParameterValues(page: 1)
             
         case 2:
             // Page 2 - Modulator Levels & Envelopes: ATK, DEC, END, LEV for operators A and B
+            // Provides envelope control for both modulator operators
             parameterLabels = ["ATK A", "DEC A", "END A", "LEV A", "ATK B", "DEC B", "END B", "LEV B"]
             updateFMToneParameterValues(page: 2)
             
         case 3:
             // Page 3 - Envelope Behavior: delay, trig mode, phase reset controls
+            // Advanced envelope and trigger controls following Digitone specification
             parameterLabels = ["DELAY", "TRIG", "PHASE", "RES A", "RES B", "DTUN", "HARM", "KEY TRK"]
             updateFMToneParameterValues(page: 3)
             
         case 4:
             // Page 4 - Offsets & Key Tracking: fine-tuning for operator ratios and keyboard tracking
+            // Precise control over tuning, scaling, and keyboard response
             parameterLabels = ["OFS A", "OFS B", "KEY TRK", "VEL SEN", "SCALE", "ROOT", "TUNE", "FINE"]
             updateFMToneParameterValues(page: 4)
             
         default:
-            // Default to standard parameter labels for pages 5-8
+            // Default to standard parameter labels for pages 5-8 (future expansion)
             updateParameterLabelsForPage(page)
         }
     }
@@ -276,51 +290,55 @@ public class MainLayoutState: ObservableObject {
     private func updateFMToneParameterValues(page: Int) {
         switch page {
         case 1:
+            // Page 1 - Core FM Parameters (normalized to 0.0-1.0 for UI)
             parameterValues = [
-                fmToneParameterValues["algorithm"]! / 4.0, // Scale 1-4 to 0-1
-                fmToneParameterValues["operator4_ratio"]! / 32.0, // Carrier ratio
-                fmToneParameterValues["operator1_ratio"]! / 32.0, // Operator A ratio
-                fmToneParameterValues["operator2_ratio"]! / 32.0, // Operator B ratio
-                fmToneParameterValues["harmony"]!,
-                fmToneParameterValues["detune"]!,
-                fmToneParameterValues["feedback"]!,
-                fmToneParameterValues["mix"]!
+                (fmToneParameterValues["algorithm"] ?? 1.0) / 8.0,           // ALGO: 1-8 -> 0.0-1.0
+                (fmToneParameterValues["operator4_ratio"] ?? 1.0) / 32.0,    // RATIO C: 0.5-32.0 -> 0.0-1.0
+                (fmToneParameterValues["operator1_ratio"] ?? 1.0) / 32.0,    // RATIO A: 0.5-32.0 -> 0.0-1.0
+                (fmToneParameterValues["operator2_ratio"] ?? 1.0) / 32.0,    // RATIO B: 0.5-32.0 -> 0.0-1.0
+                fmToneParameterValues["harmony"] ?? 0.0,                     // HARM: 0.0-1.0
+                (fmToneParameterValues["detune"] ?? 0.0 + 64.0) / 128.0,     // DTUN: -64 to +63 -> 0.0-1.0
+                fmToneParameterValues["feedback"] ?? 0.0,                    // FDBK: 0.0-1.0
+                fmToneParameterValues["mix"] ?? 0.5                          // MIX: 0.0-1.0
             ]
             
         case 2:
+            // Page 2 - Modulator Levels & Envelopes (normalized)
             parameterValues = [
-                fmToneParameterValues["attack"]!,
-                fmToneParameterValues["decay"]!,
-                fmToneParameterValues["end"]!,
-                fmToneParameterValues["operator1_envelope_level"]!,
-                fmToneParameterValues["attack"]!, // Operator B uses same envelope for now
-                fmToneParameterValues["decay"]!,
-                fmToneParameterValues["end"]!,
-                fmToneParameterValues["operator2_envelope_level"]!
+                fmToneParameterValues["attack"] ?? 0.1,                      // ATK A: 0.0-1.0
+                fmToneParameterValues["decay"] ?? 0.3,                       // DEC A: 0.0-1.0
+                fmToneParameterValues["end"] ?? 0.5,                         // END A: 0.0-1.0
+                fmToneParameterValues["operator1_envelope_level"] ?? 1.0,    // LEV A: 0.0-1.0
+                fmToneParameterValues["attack"] ?? 0.1,                      // ATK B: 0.0-1.0 (can be independent)
+                fmToneParameterValues["decay"] ?? 0.3,                       // DEC B: 0.0-1.0 (can be independent)
+                fmToneParameterValues["end"] ?? 0.5,                         // END B: 0.0-1.0 (can be independent)
+                fmToneParameterValues["operator2_envelope_level"] ?? 0.8     // LEV B: 0.0-1.0
             ]
             
         case 3:
+            // Page 3 - Envelope Behavior Controls (normalized)
             parameterValues = [
-                fmToneParameterValues["delay"]!,
-                fmToneParameterValues["trig_mode"]!,
-                fmToneParameterValues["phase_reset"]!,
-                0.0, // Reserved for future use
-                0.0, // Reserved for future use
-                fmToneParameterValues["detune"]!,
-                fmToneParameterValues["harmony"]!,
-                fmToneParameterValues["key_tracking"]!
+                fmToneParameterValues["delay"] ?? 0.0,                       // DELAY: 0.0-1.0
+                fmToneParameterValues["trig_mode"] ?? 0.0,                    // TRIG: 0.0-1.0 (discrete)
+                fmToneParameterValues["phase_reset"] ?? 0.0,                 // PHASE: 0.0-1.0 (discrete)
+                0.0,                                                         // RES A: reserved for future
+                0.0,                                                         // RES B: reserved for future
+                (fmToneParameterValues["detune"] ?? 0.0 + 64.0) / 128.0,     // DTUN: -64 to +63 -> 0.0-1.0
+                fmToneParameterValues["harmony"] ?? 0.0,                     // HARM: 0.0-1.0
+                fmToneParameterValues["key_tracking"] ?? 0.5                 // KEY TRK: 0.0-1.0
             ]
             
         case 4:
+            // Page 4 - Offsets & Key Tracking (normalized)
             parameterValues = [
-                fmToneParameterValues["operator1_offset"]!,
-                fmToneParameterValues["operator2_offset"]!,
-                fmToneParameterValues["key_tracking"]!,
-                0.5, // Velocity sensitivity placeholder
-                0.0, // Scale placeholder
-                0.0, // Root placeholder
-                0.5, // Tune placeholder
-                0.0  // Fine placeholder
+                (fmToneParameterValues["operator1_offset"] ?? 0.0 + 100.0) / 200.0,  // OFS A: -100 to +100 -> 0.0-1.0
+                (fmToneParameterValues["operator2_offset"] ?? 0.0 + 100.0) / 200.0,  // OFS B: -100 to +100 -> 0.0-1.0
+                fmToneParameterValues["key_tracking"] ?? 0.5,                        // KEY TRK: 0.0-1.0
+                fmToneParameterValues["velocity_sensitivity"] ?? 0.5,                // VEL SEN: 0.0-1.0
+                (fmToneParameterValues["scale"] ?? 0.0) / 11.0,                      // SCALE: 0-11 -> 0.0-1.0
+                (fmToneParameterValues["root"] ?? 0.0) / 11.0,                       // ROOT: 0-11 -> 0.0-1.0
+                (fmToneParameterValues["tune"] ?? 0.0 + 24.0) / 48.0,                // TUNE: -24 to +24 -> 0.0-1.0
+                (fmToneParameterValues["fine"] ?? 0.0 + 100.0) / 200.0               // FINE: -100 to +100 -> 0.0-1.0
             ]
             
         default:
@@ -402,6 +420,148 @@ public class MainLayoutState: ObservableObject {
         // Update parameter labels based on current page
         // This would typically load different parameter sets
         updateDisplayText("PAGE \(page) LOADED")
+    }
+    
+    // MARK: - FM Parameter Bridge Setup
+    
+    private func setupFMParameterBridge() {
+        // Initialize the FM parameter bridge for real-time audio integration
+        fmParameterBridge = FMParameterBridge()
+        
+        // Setup performance monitoring callback
+        fmParameterBridge?.performanceCallback = { [weak self] updateTime in
+            if updateTime > 0.001 {
+                print("Warning: Parameter update took \(updateTime * 1000)ms")
+            }
+        }
+    }
+    
+    // MARK: - Parameter ID Mapping
+    
+    private func mapStringToParameterID(_ key: String) -> FMParameterID? {
+        switch key {
+        case "algorithm": return .algorithm
+        case "operator4_ratio": return .ratioC
+        case "operator1_ratio": return .ratioA
+        case "operator2_ratio": return .ratioB
+        case "harmony": return .harmony
+        case "detune": return .detune
+        case "feedback": return .feedback
+        case "mix": return .mix
+        case "attack": return .attackA
+        case "decay": return .decayA
+        case "end": return .endA
+        case "operator1_envelope_level": return .levelA
+        case "operator2_envelope_level": return .levelB
+        case "delay": return .delay
+        case "trig_mode": return .trigMode
+        case "phase_reset": return .phaseReset
+        case "key_tracking": return .keyTracking
+        case "operator1_offset": return .offsetA
+        case "operator2_offset": return .offsetB
+        case "velocity_sensitivity": return .velocitySensitivity
+        case "scale": return .scale
+        case "root": return .root
+        case "tune": return .tune
+        case "fine": return .fine
+        default: return nil
+        }
+    }
+    
+    // MARK: - Enhanced Parameter Methods
+    
+    /// Update a specific encoder value on the current FM page
+    public func updateEncoderValue(_ encoderIndex: Int, value: Double) {
+        guard isFMToneMode && encoderIndex < 8 else { return }
+        
+        // Update the parameter value in the UI
+        parameterValues[encoderIndex] = value
+        
+        // Map encoder index to parameter based on current page
+        if let parameterID = mapEncoderToParameterID(page: currentPage, encoder: encoderIndex) {
+            fmParameterBridge?.updateParameter(parameterID, value: value)
+            
+            // Also update the internal parameter storage
+            if let parameterKey = mapParameterIDToString(parameterID) {
+                updateFMToneParameter(key: parameterKey, value: value)
+            }
+        }
+    }
+    
+    private func mapEncoderToParameterID(page: Int, encoder: Int) -> FMParameterID? {
+        switch (page, encoder) {
+        // Page 1 - Core FM
+        case (1, 0): return .algorithm
+        case (1, 1): return .ratioC
+        case (1, 2): return .ratioA
+        case (1, 3): return .ratioB
+        case (1, 4): return .harmony
+        case (1, 5): return .detune
+        case (1, 6): return .feedback
+        case (1, 7): return .mix
+        
+        // Page 2 - Envelopes
+        case (2, 0): return .attackA
+        case (2, 1): return .decayA
+        case (2, 2): return .endA
+        case (2, 3): return .levelA
+        case (2, 4): return .attackB
+        case (2, 5): return .decayB
+        case (2, 6): return .endB
+        case (2, 7): return .levelB
+        
+        // Page 3 - Envelope Behavior
+        case (3, 0): return .delay
+        case (3, 1): return .trigMode
+        case (3, 2): return .phaseReset
+        case (3, 3): return .reserved1
+        case (3, 4): return .reserved2
+        case (3, 5): return .detune
+        case (3, 6): return .harmony
+        case (3, 7): return .keyTracking
+        
+        // Page 4 - Offsets & Key Tracking
+        case (4, 0): return .offsetA
+        case (4, 1): return .offsetB
+        case (4, 2): return .keyTracking
+        case (4, 3): return .velocitySensitivity
+        case (4, 4): return .scale
+        case (4, 5): return .root
+        case (4, 6): return .tune
+        case (4, 7): return .fine
+        
+        default: return nil
+        }
+    }
+    
+    private func mapParameterIDToString(_ parameterID: FMParameterID) -> String? {
+        switch parameterID {
+        case .algorithm: return "algorithm"
+        case .ratioC: return "operator4_ratio"
+        case .ratioA: return "operator1_ratio"
+        case .ratioB: return "operator2_ratio"
+        case .harmony: return "harmony"
+        case .detune: return "detune"
+        case .feedback: return "feedback"
+        case .mix: return "mix"
+        case .attackA: return "attack"
+        case .decayA: return "decay"
+        case .endA: return "end"
+        case .levelA: return "operator1_envelope_level"
+        case .levelB: return "operator2_envelope_level"
+        case .delay: return "delay"
+        case .trigMode: return "trig_mode"
+        case .phaseReset: return "phase_reset"
+        case .keyTracking: return "key_tracking"
+        case .offsetA: return "operator1_offset"
+        case .offsetB: return "operator2_offset"
+        case .velocitySensitivity: return "velocity_sensitivity"
+        case .scale: return "scale"
+        case .root: return "root"
+        case .tune: return "tune"
+        case .fine: return "fine"
+        default: return nil
+        }
     }
 }
 

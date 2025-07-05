@@ -241,7 +241,79 @@ struct EnhancedParameterEncoder: View {
     
     private var formattedValue: String {
         let value = layoutState.parameterValues[index]
-        return String(format: "%.2f", value)
+        
+        // Format based on FM TONE mode and current page/encoder
+        if layoutState.isFMToneMode {
+            return formatFMParameterValue(page: layoutState.currentPage, encoder: index, value: value)
+        } else {
+            return String(format: "%.2f", value)
+        }
+    }
+    
+    private func formatFMParameterValue(page: Int, encoder: Int, value: Double) -> String {
+        switch (page, encoder) {
+        // Page 1 - Core FM Parameters
+        case (1, 0): // Algorithm
+            let algoNumber = Int(value * 7) + 1
+            return "\(algoNumber)"
+        case (1, 1), (1, 2), (1, 3): // Ratios C/A/B
+            let ratioValue = 0.5 + value * 31.5
+            return String(format: "%.1f", ratioValue)
+        case (1, 4): // Harmony
+            let harmonyValue = Int(value * 127)
+            return "\(harmonyValue)"
+        case (1, 5): // Detune
+            let detuneValue = Int((value - 0.5) * 127) // -64 to +63
+            return detuneValue >= 0 ? "+\(detuneValue)" : "\(detuneValue)"
+        case (1, 6), (1, 7): // Feedback, Mix
+            let percentage = Int(value * 100)
+            return "\(percentage)%"
+            
+        // Page 2 - Envelope parameters
+        case (2, 0), (2, 1), (2, 4), (2, 5): // Attack, Decay times
+            let timeValue = value * 10.0 // 0-10 seconds
+            return String(format: "%.2fs", timeValue)
+        case (2, 2), (2, 6): // End levels
+            let percentage = Int(value * 100)
+            return "\(percentage)%"
+        case (2, 3), (2, 7): // Operator levels
+            let level = Int(value * 127)
+            return "\(level)"
+            
+        // Page 3 - Envelope behavior
+        case (3, 0): // Delay
+            let delayTime = value * 5.0
+            return String(format: "%.2fs", delayTime)
+        case (3, 1), (3, 2): // Trig Mode, Phase Reset (discrete)
+            return value > 0.5 ? "ON" : "OFF"
+        case (3, 7): // Key Tracking
+            let trackingValue = value * 200 - 100 // -100 to +100
+            return String(format: "%.0f%%", trackingValue)
+            
+        // Page 4 - Offsets & Key Tracking
+        case (4, 0), (4, 1): // Offsets A/B
+            let offsetValue = (value - 0.5) * 200 // -100 to +100
+            return String(format: "%.0f", offsetValue)
+        case (4, 2): // Key Tracking
+            let trackingValue = value * 200
+            return String(format: "%.0f%%", trackingValue)
+        case (4, 3): // Velocity Sensitivity
+            let percentage = Int(value * 100)
+            return "\(percentage)%"
+        case (4, 4), (4, 5): // Scale, Root (discrete 0-11)
+            let scaleValue = Int(value * 11)
+            return "\(scaleValue)"
+        case (4, 6): // Tune
+            let tuneValue = (value - 0.5) * 48 // -24 to +24 semitones
+            return String(format: "%.0f", tuneValue)
+        case (4, 7): // Fine
+            let fineValue = (value - 0.5) * 200 // -100 to +100 cents
+            return String(format: "%.0f", fineValue)
+            
+        default:
+            let percentage = Int(value * 100)
+            return "\(percentage)%"
+        }
     }
     
     private var knobGradient: LinearGradient {
@@ -291,11 +363,19 @@ struct EnhancedParameterEncoder: View {
                 lastDragValue = gesture.translation.height
                 
                 let newValue = layoutState.parameterValues[index] + Double(delta)
-                layoutState.parameterValues[index] = max(0.0, min(1.0, newValue))
+                let clampedValue = max(0.0, min(1.0, newValue))
                 
-                // Quantize to step
+                // Quantize to step for smoother control
                 let step = 0.01
-                layoutState.parameterValues[index] = round(layoutState.parameterValues[index] / step) * step
+                let quantizedValue = round(clampedValue / step) * step
+                
+                // Update layout state
+                layoutState.parameterValues[index] = quantizedValue
+                
+                // Update FM parameter bridge for real-time audio (if in FM mode)
+                if layoutState.isFMToneMode {
+                    layoutState.updateEncoderValue(index, value: quantizedValue)
+                }
             }
             .onEnded { _ in
                 isDragging = false
