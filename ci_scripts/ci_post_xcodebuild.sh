@@ -8,12 +8,13 @@ set -e  # Exit on any error
 echo "🎉 Starting Xcode Cloud Post-Build Script"
 
 # Check build status
-if [[ "$CI_XCODEBUILD_EXIT_CODE" == "0" ]]; then
-    echo "✅ Build completed successfully"
-else
-    echo "❌ Build failed with exit code: $CI_XCODEBUILD_EXIT_CODE"
+if [[ "${CI_XCODEBUILD_EXIT_CODE:-1}" != "0" ]]; then
+    echo "❌ Build failed with exit code: ${CI_XCODEBUILD_EXIT_CODE:-'unknown'}"
+    echo "⚠️  Skipping post-build processing due to build failure"
     exit 1
 fi
+
+echo "✅ Build completed successfully"
 
 # Display build information
 echo "📊 Build Information:"
