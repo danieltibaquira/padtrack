@@ -3,6 +3,34 @@ import Accelerate
 import simd
 import MachineProtocols
 
+// MARK: - Multi-Mode Filter Configuration
+
+/// Configuration for the multi-mode filter machine
+public struct MultiModeFilterConfig {
+    public var sampleRate: Float = 44100.0
+    public var enableMorphing: Bool = true
+    public var enableKeyboardTracking: Bool = true
+    public var enableResonance: Bool = true
+    public var enablePerformanceOptimization: Bool = true
+    public var oversampling: Int = 1
+    
+    public init() {}
+}
+
+/// Filter parameters for the multi-mode filter
+public struct FilterParameters {
+    public var cutoff: Float = 1000.0
+    public var resonance: Float = 0.0
+    public var drive: Float = 0.0
+    public var morphAmount: Float = 0.0
+    public var keyTracking: Float = 0.0
+    
+    public init() {}
+}
+
+// Alias for FilterParameterSmoother to use existing ParameterSmoother
+public typealias FilterParameterSmoother = ParameterSmoother
+
 // MARK: - Multi-Mode Filter Machine
 
 /// Comprehensive Multi-Mode Filter Machine integrating all filter components
