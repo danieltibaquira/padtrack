@@ -7,7 +7,10 @@
       "Bash(swift build:*)",
       "Bash(swift validate_integration.swift:*)",
       "Bash(task-master list:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(git fetch:*)",
+      "Bash(git merge:*)"
     ],
     "deny": []
   }
