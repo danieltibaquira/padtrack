@@ -40,8 +40,13 @@ else
     echo "📍 xcodegen version: $(xcodegen --version)"
 fi
 
-# Generate Xcode project from project.yml
-echo "🔨 Generating Xcode project..."
+# Check if DigitonePad.xcodeproj already exists
+if [[ -d "DigitonePad.xcodeproj" ]]; then
+    echo "📂 DigitonePad.xcodeproj already exists"
+    echo "🔍 Checking if project.yml exists for potential regeneration..."
+fi
+
+# Generate Xcode project from project.yml if available
 if [[ -f "project.yml" ]]; then
     echo "✅ project.yml found"
     echo "📄 project.yml contents preview:"
@@ -49,18 +54,23 @@ if [[ -f "project.yml" ]]; then
     echo "🔨 Running xcodegen generate..."
     xcodegen generate
     echo "✅ Xcode project generated successfully"
+elif [[ -d "DigitonePad.xcodeproj" ]]; then
+    echo "⚠️  project.yml not found, but DigitonePad.xcodeproj exists"
+    echo "✅ Proceeding with existing Xcode project"
 else
-    echo "❌ project.yml not found!"
+    echo "❌ Neither project.yml nor DigitonePad.xcodeproj found!"
     echo "📁 Searching for project.yml in current directory and subdirectories:"
     find . -name "project.yml" -type f 2>/dev/null || echo "No project.yml files found"
+    echo "📁 Searching for .xcodeproj files:"
+    find . -name "*.xcodeproj" -type d 2>/dev/null || echo "No .xcodeproj files found"
     exit 1
 fi
 
-# Verify DigitonePad.xcodeproj was created
+# Verify DigitonePad.xcodeproj exists
 if [[ -d "DigitonePad.xcodeproj" ]]; then
-    echo "✅ DigitonePad.xcodeproj created successfully"
+    echo "✅ DigitonePad.xcodeproj confirmed to exist"
 else
-    echo "❌ Failed to generate DigitonePad.xcodeproj"
+    echo "❌ DigitonePad.xcodeproj not found after generation attempt"
     exit 1
 fi
 
