@@ -35,7 +35,7 @@ public final class ExternalControllerManager: @unchecked Sendable {
     // MARK: - Public Interface
     
     /// Get list of detected controllers
-    public var detectedControllers: [ExternalController] {
+    public var allDetectedControllers: [ExternalController] {
         lock.lock()
         defer { lock.unlock() }
         return Array(detectedControllers)
@@ -119,10 +119,10 @@ public final class ExternalControllerManager: @unchecked Sendable {
     /// Process incoming message from controller
     public func processControllerMessage(_ message: MIDIMessage, from device: MIDIDeviceProtocol) {
         // Update last CC values tracking
-        if case .controlChange(let channel, let controller, let value) = message {
-            let key = ChannelCCKey(channel: channel, cc: controller)
+        if message.type == .controlChange {
+            let key = ChannelCCKey(channel: message.channel, cc: message.data1)
             lock.lock()
-            lastCCValues[key] = value
+            lastCCValues[key] = message.data2
             lock.unlock()
         }
         
@@ -364,7 +364,7 @@ public final class ExternalControllerManager: @unchecked Sendable {
     }
     
     private func getDestinationForMessage(_ message: MIDIMessage, routing: RoutingConfiguration) -> RoutingDestination {
-        switch message {
+        switch message.type {
         case .noteOn, .noteOff:
             return routing.noteDestination
         case .controlChange:
@@ -376,12 +376,15 @@ public final class ExternalControllerManager: @unchecked Sendable {
     
     private func handleAutoLEDFeedback(_ message: MIDIMessage, device: MIDIDeviceProtocol) {
         // Automatically sync LED state with button presses
-        if case .noteOn(_, let note, let velocity) = message {
+        if message.type == .noteOn {
+            let note = message.data1
+            let velocity = message.data2
+            
             // Simple LED feedback - turn on LED when note is pressed
             if velocity > 0 {
-                device.send(.noteOn(channel: 1, note: note, velocity: velocity))
+                device.send(MIDIMessage(type: .noteOn, channel: 1, data1: note, data2: velocity))
             } else {
-                device.send(.noteOff(channel: 1, note: note, velocity: 0))
+                device.send(MIDIMessage(type: .noteOff, channel: 1, data1: note, data2: 0))
             }
         }
     }

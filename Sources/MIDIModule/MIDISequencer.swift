@@ -403,7 +403,7 @@ public final class MIDISequencer: @unchecked Sendable {
         return UInt8(max(0, min(127, transposed)))
     }
     
-    private func sendTransportMessage(_ message: TransportMessage) {
+    private func sendTransportMessage(_ message: SequencerTransportMessage) {
         let midiMessage: MIDIMessage
         
         switch message {
@@ -657,8 +657,8 @@ public enum RecordQuantization: String, CaseIterable {
     case whole
 }
 
-/// Transport messages
-public enum TransportMessage {
+/// Sequencer transport messages
+public enum SequencerTransportMessage {
     case start
     case stop
     case `continue`

@@ -6,6 +6,7 @@
 import Foundation
 import CoreAudio
 import MachineProtocols
+import QuartzCore
 
 /// MIDI clock synchronization manager
 public final class MIDIClockSync: @unchecked Sendable {
@@ -92,7 +93,7 @@ public final class MIDIClockSync: @unchecked Sendable {
         syncMode = mode
         
         switch mode {
-        case .internal:
+        case .`internal`:
             stopReceivingClock()
             startGeneratingClock()
         case .external:
@@ -136,7 +137,7 @@ public final class MIDIClockSync: @unchecked Sendable {
         isPlaying = true
         transportState = .playing
         
-        if syncMode == .internal || (syncMode == .auto && !isSynced) {
+        if syncMode == .`internal` || (syncMode == .auto && !isSynced) {
             startClockGeneration()
         }
         
@@ -159,14 +160,14 @@ public final class MIDIClockSync: @unchecked Sendable {
     }
     
     /// Continue playback from current position
-    public func continue() {
+    public func `continue`() {
         lock.lock()
         defer { lock.unlock() }
         
         isPlaying = true
         transportState = .continuing
         
-        if syncMode == .internal || (syncMode == .auto && !isSynced) {
+        if syncMode == .`internal` || (syncMode == .auto && !isSynced) {
             startClockGeneration()
         }
         
@@ -241,7 +242,7 @@ public final class MIDIClockSync: @unchecked Sendable {
             transportState = .playing
             delegate?.midiClockSync(self, transportStateChanged: .playing)
             
-        case .continue:
+        case .`continue`:
             isPlaying = true
             transportState = .continuing
             delegate?.midiClockSync(self, transportStateChanged: .continuing)
@@ -353,7 +354,7 @@ public final class MIDIClockSync: @unchecked Sendable {
     }
     
     private func startGeneratingClock() {
-        guard syncMode == .internal || (syncMode == .auto && !isSynced) else { return }
+        guard syncMode == .`internal` || (syncMode == .auto && !isSynced) else { return }
         isGeneratingClock = true
         startClockGeneration()
     }
@@ -455,7 +456,7 @@ public final class MIDIClockSync: @unchecked Sendable {
     
     private func applyJitterCompensation(_ interval: TimeInterval) -> TimeInterval {
         // Simple moving average filter
-        let windowSize = min(8, clockHistory.count)
+        let windowSize = min(8, clockHistory.itemCount)
         guard windowSize > 0 else { return interval }
         
         let recentIntervals = clockHistory.recentValues(count: windowSize)
@@ -516,7 +517,7 @@ public final class MIDIClockSync: @unchecked Sendable {
 
 /// Sync modes
 public enum SyncMode: String, CaseIterable {
-    case internal = "internal"
+    case `internal` = "internal"
     case external = "external"
     case auto = "auto"
 }
@@ -538,7 +539,7 @@ public enum TransportState: String, CaseIterable {
 /// Transport messages
 public enum TransportMessage: String, CaseIterable {
     case start = "start"
-    case continue = "continue"
+    case `continue` = "continue"
     case stop = "stop"
 }
 
@@ -675,7 +676,7 @@ private class CircularBuffer<T> {
         count = 0
     }
     
-    var count: Int {
+    var itemCount: Int {
         return count
     }
 }
