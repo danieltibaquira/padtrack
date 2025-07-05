@@ -9,6 +9,82 @@ import MachineProtocols
 import AudioEngine
 import VoiceModule
 
+// MARK: - Keyboard Tracking Types
+
+/// Configuration for keyboard tracking behavior
+public struct KeyboardTrackingConfig {
+    public var amount: Float = 0.0               // Tracking amount (0.0 to 1.0)
+    public var keyCenter: UInt8 = 60            // Center note (C4)
+    public var trackingMode: TrackingMode = .linear
+    public var velocitySensitivity: Float = 0.0 // Velocity influence (0.0 to 1.0)
+    public var smoothingTime: Float = 0.001     // Smoothing time in seconds
+    
+    public init() {}
+}
+
+/// Keyboard tracking modes
+public enum TrackingMode: CaseIterable, Codable {
+    case linear      // Linear tracking
+    case exponential // Exponential tracking
+    case custom      // Custom curve
+}
+
+/// Delegate protocol for keyboard tracking events
+public protocol KeyboardTrackingDelegate: AnyObject {
+    func trackingEngineRegistered(id: String)
+    func trackingEngineUnregistered(id: String)
+    func trackingValueChanged(engineId: String, note: UInt8, value: Float)
+}
+
+/// Individual keyboard tracking engine
+public class KeyboardTrackingEngine {
+    public var config = KeyboardTrackingConfig()
+    private var lastNote: UInt8 = 60
+    private var lastVelocity: UInt8 = 127
+    private var currentValue: Float = 0.0
+    
+    public init() {}
+    
+    /// Calculate tracking value for a given note
+    public func calculateTrackingValue(note: UInt8, velocity: UInt8 = 127) -> Float {
+        lastNote = note
+        lastVelocity = velocity
+        
+        guard config.amount > 0.0 else { return 0.0 }
+        
+        let noteOffset = Float(note) - Float(config.keyCenter)
+        let velocityFactor = 1.0 + (Float(velocity) / 127.0 - 1.0) * config.velocitySensitivity
+        
+        var trackingValue: Float
+        
+        switch config.trackingMode {
+        case .linear:
+            trackingValue = noteOffset / 12.0 // Octave-based tracking
+        case .exponential:
+            trackingValue = pow(2.0, noteOffset / 12.0) - 1.0
+        case .custom:
+            // Simple S-curve for custom mode
+            let normalized = noteOffset / 24.0 // ±2 octaves
+            trackingValue = tanh(normalized * 2.0)
+        }
+        
+        currentValue = trackingValue * config.amount * velocityFactor
+        return currentValue
+    }
+    
+    /// Get the current tracking value
+    public func getCurrentValue() -> Float {
+        return currentValue
+    }
+    
+    /// Reset the tracking state
+    public func reset() {
+        currentValue = 0.0
+        lastNote = config.keyCenter
+        lastVelocity = 127
+    }
+}
+
 // MARK: - Keyboard Tracking Integration Manager
 
 /// Comprehensive integration manager for keyboard tracking across the system

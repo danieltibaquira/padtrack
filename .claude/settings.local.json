@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git checkout:*)",
+      "Bash(mv:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(swift build:*)",
+      "Bash(git add:*)",
+      "Bash(swift package:*)",
+      "Bash(git commit:*)"
+    ],
+    "deny": []
+  }
+}
