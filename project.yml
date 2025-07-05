@@ -22,7 +22,7 @@ settings:
     # Reduce code signing verbosity for simulator builds
     CODE_SIGN_IDENTITY[sdk=iphonesimulator*]: ""
     CODE_SIGN_STYLE: Automatic
-    DEVELOPMENT_TEAM: ""
+    DEVELOPMENT_TEAM: GN9UGD54YC
 
 # External packages can be added here when needed
 # packages:

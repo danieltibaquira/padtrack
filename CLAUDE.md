@@ -1,5 +1,56 @@
 # Task Master AI - Claude Code Integration Guide
 
+## 🧪 **CRITICAL: TEST-DRIVEN DEVELOPMENT MANDATE**
+
+### **DigitonePad Quality Standards**
+DigitonePad is a professional-grade synthesizer with ~9,300+ lines of high-quality implementation. **ALL NEW DEVELOPMENT MUST MAINTAIN THIS STANDARD** through strict Test-Driven Development.
+
+### **MANDATORY TDD Workflow**
+Every feature implementation **MUST** follow this exact sequence:
+
+#### **1. RED Phase (Write Failing Tests First)**
+```bash
+# ALWAYS start with tests
+cd Tests/[ModuleName]Tests/
+# Create comprehensive test file BEFORE any implementation
+# Tests must fail initially to validate they're testing correctly
+```
+
+#### **2. GREEN Phase (Minimal Implementation)**
+```bash
+# Implement ONLY enough code to make tests pass
+# No over-engineering or premature optimization
+# Focus on making tests pass with minimal complexity
+```
+
+#### **3. REFACTOR Phase (Optimize While Testing)**
+```bash
+# Optimize implementation while maintaining test coverage
+# Improve code quality without changing behavior
+# Ensure all tests still pass after refactoring
+```
+
+### **Quality Gates (NON-NEGOTIABLE)**
+Before any code merge:
+- [ ] **100% of new tests pass**
+- [ ] **95%+ code coverage** on new functionality  
+- [ ] **All existing tests pass** (zero regression tolerance)
+- [ ] **Performance benchmarks met** (audio latency <10ms, CPU <30%)
+- [ ] **Memory usage stable** (<10MB increase for new features)
+- [ ] **Audio quality maintained** (no degradation from changes)
+
+### **Audio-Specific Testing Requirements**
+```swift
+// MANDATORY: Audio testing pattern for all synthesis features
+func testAudioOutput() {
+    // 1. Setup voice machine with known parameters
+    // 2. Generate audio offline for deterministic testing
+    // 3. Analyze frequency content with FFT
+    // 4. Verify audio characteristics match specifications
+    // 5. Ensure no audio artifacts or dropouts
+}
+```
+
 ## Essential Commands
 
 ### Core Workflow Commands
@@ -369,6 +420,112 @@ task-master fix-dependencies
 ```
 
 DO NOT RE-INITIALIZE. That will not do anything beyond re-adding the same Taskmaster core files.
+
+## 🧪 **TESTING-FIRST DEVELOPMENT GUIDELINES**
+
+### **Before Starting ANY New Feature**
+```bash
+# 1. ALWAYS check current test status first
+swift test                                     # Ensure all existing tests pass
+xcodebuild test -scheme DigitonePad           # Run full test suite
+
+# 2. Create test files BEFORE implementation
+mkdir -p Tests/[ModuleName]Tests
+touch Tests/[ModuleName]Tests/[FeatureName]Tests.swift
+
+# 3. Write failing tests that define expected behavior
+# 4. ONLY THEN start implementation to make tests pass
+```
+
+### **Required Testing Patterns for DigitonePad**
+
+#### **Audio Processing Tests**
+```swift
+// MANDATORY pattern for all audio features
+class AudioFeatureTests: XCTestCase {
+    func testAudioProcessingQuality() {
+        // Setup: Create voice machine with known parameters
+        let voiceMachine = FMToneVoiceMachine()
+        voiceMachine.setParameter(.algorithm, value: 3.0)
+        
+        // Action: Generate audio offline (deterministic)
+        let audioBuffer = try await voiceMachine.renderOffline(duration: 1.0)
+        
+        // Verify: Check audio characteristics
+        let frequencyAnalysis = analyzeFrequencyContent(audioBuffer)
+        XCTAssertTrue(frequencyAnalysis.hasExpectedHarmonics)
+        XCTAssertFalse(audioBuffer.hasAudioArtifacts)
+    }
+    
+    func testPerformanceRequirements() {
+        // Verify audio processing meets performance targets
+        measure {
+            // Must complete audio processing in <1ms
+            voiceMachine.processAudio(bufferSize: 512)
+        }
+    }
+}
+```
+
+#### **UI Integration Tests**
+```swift
+// REQUIRED pattern for UI-Audio integration
+class UIIntegrationTests: XCTestCase {
+    func testParameterControlAffectsAudio() {
+        let layoutState = MainLayoutState()
+        let mockAudioEngine = MockAudioEngine()
+        
+        // Action: Change parameter via UI
+        layoutState.updateParameter("algorithm", value: 0.5)
+        
+        // Verify: Audio engine receives parameter change
+        XCTAssertEqual(mockAudioEngine.lastParameterUpdate.value, 0.5)
+        XCTAssertLessThan(mockAudioEngine.lastParameterUpdate.latency, 0.001)
+    }
+}
+```
+
+#### **Performance Testing Requirements**
+```swift
+// MANDATORY for all new features
+func testMemoryUsageStable() {
+    let initialMemory = getCurrentMemoryUsage()
+    
+    // Perform intensive operations
+    for _ in 0..<1000 {
+        executeNewFeature()
+    }
+    
+    let finalMemory = getCurrentMemoryUsage()
+    let memoryIncrease = finalMemory - initialMemory
+    
+    // REQUIREMENT: <10MB memory increase
+    XCTAssertLessThan(memoryIncrease, 10_000_000)
+}
+```
+
+### **Quality Validation Commands**
+```bash
+# Run before committing ANY changes
+./scripts/validate_quality.sh              # Custom quality validation
+xcodebuild test -enableCodeCoverage YES    # Generate coverage report
+instruments -t "Time Profiler" ...         # Profile performance impact
+
+# Required coverage levels
+# - Unit tests: >90% coverage
+# - Integration tests: >95% coverage  
+# - Audio processing: 100% coverage
+# - UI interactions: >85% coverage
+```
+
+### **Regression Prevention Checklist**
+Before any commit:
+- [ ] All existing tests pass (ZERO failures allowed)
+- [ ] New tests cover all new functionality
+- [ ] Performance benchmarks met on minimum iPad
+- [ ] Audio quality maintained (no degradation)
+- [ ] Memory usage stable (no leaks)
+- [ ] UI responsiveness maintained (60fps)
 
 ## Important Notes
 

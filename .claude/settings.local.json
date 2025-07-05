@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(task-master list:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(python3:*)",
+      "Bash(/dev/null)",
+      "Bash(cat:*)",
+      "Bash(rm:*)",
+      "Bash(chmod:*)",
+      "Bash(./quick_syntax_check.sh:*)",
+      "Bash(./pre_commit_validation.sh:*)",
+      "Bash(swift build:*)",
+      "Bash(xcodebuild:*)",
+      "Bash(xcodegen generate:*)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)",
+      "Bash(./local_validation.sh:*)",
+      "Bash(swift --version)",
+      "Bash(swift package:*)",
+      "Bash(swift test:*)",
+      "Bash(grep:*)",
+      "Bash(git add:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(task-master init:*)",
+      "Bash(task-master generate:*)",
+      "Bash(cp:*)",
+      "Bash(task-master show:*)",
+      "Bash(jq:*)",
+      "Bash(gh repo view:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh issue edit:*)"
+    ],
+    "deny": []
+  }
+}

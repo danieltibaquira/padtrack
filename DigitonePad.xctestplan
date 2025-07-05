@@ -1,0 +1,111 @@
+{
+  "configurations" : [
+    {
+      "id" : "73F8D9B2-8B1A-4C9A-9D3E-F5A7B8C9D0E1",
+      "name" : "Configuration 1",
+      "options" : {
+        "environmentVariableEntries" : [
+          {
+            "key" : "XCODE_CLOUD_BUILD",
+            "value" : "1"
+          }
+        ],
+        "testExecutionOrdering" : "random"
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:DigitonePad.xcodeproj",
+          "identifier" : "AudioEngine",
+          "name" : "AudioEngine"
+        },
+        {
+          "containerPath" : "container:DigitonePad.xcodeproj",
+          "identifier" : "DataLayer", 
+          "name" : "DataLayer"
+        },
+        {
+          "containerPath" : "container:DigitonePad.xcodeproj",
+          "identifier" : "SequencerModule",
+          "name" : "SequencerModule"
+        },
+        {
+          "containerPath" : "container:DigitonePad.xcodeproj",
+          "identifier" : "VoiceModule",
+          "name" : "VoiceModule"
+        },
+        {
+          "containerPath" : "container:DigitonePad.xcodeproj",
+          "identifier" : "FilterModule",
+          "name" : "FilterModule"
+        },
+        {
+          "containerPath" : "container:DigitonePad.xcodeproj",
+          "identifier" : "FXModule",
+          "name" : "FXModule"
+        },
+        {
+          "containerPath" : "container:DigitonePad.xcodeproj",
+          "identifier" : "MIDIModule",
+          "name" : "MIDIModule"
+        }
+      ]
+    },
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:DigitonePad.xcodeproj",
+        "identifier" : "AudioEngineTests",
+        "name" : "AudioEngineTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:DigitonePad.xcodeproj", 
+        "identifier" : "DataLayerTests",
+        "name" : "DataLayerTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:DigitonePad.xcodeproj",
+        "identifier" : "SequencerModuleTests", 
+        "name" : "SequencerModuleTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:DigitonePad.xcodeproj",
+        "identifier" : "VoiceModuleTests",
+        "name" : "VoiceModuleTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:DigitonePad.xcodeproj",
+        "identifier" : "FilterModuleTests",
+        "name" : "FilterModuleTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:DigitonePad.xcodeproj",
+        "identifier" : "FXModuleTests", 
+        "name" : "FXModuleTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:DigitonePad.xcodeproj",
+        "identifier" : "MIDIModuleTests",
+        "name" : "MIDIModuleTests"
+      }
+    }
+  ],
+  "version" : 1
+}
