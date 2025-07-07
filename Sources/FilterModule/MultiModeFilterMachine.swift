@@ -24,13 +24,7 @@ public struct FilterStatus {
     }
 }
 
-/// Filter types available for morphing
-public enum FilterType: String, CaseIterable {
-    case lowpass = "lowpass"
-    case highpass = "highpass" 
-    case bandpass = "bandpass"
-    case notch = "notch"
-}
+// FilterType is imported from MachineProtocols to avoid conflicts
 
 /// Morphing modes for transitioning between filter types
 public enum MorphingMode: String, CaseIterable {
@@ -98,8 +92,8 @@ public class MultiModeFilterMachine {
         
         // Initialize with basic coefficients
         self.currentCoefficients = BiquadCoefficients(
-            b0: 1.0, b1: 0.0, b2: 0.0,
-            a1: 0.0, a2: 0.0
+            a0: 1.0, a1: 0.0, a2: 0.0,
+            b0: 1.0, b1: 0.0, b2: 0.0
         )
         
         updateCoefficients()
@@ -172,8 +166,8 @@ public class MultiModeFilterMachine {
         let a2 = 1.0 - alpha
         
         currentCoefficients = BiquadCoefficients(
-            b0: b0 / a0, b1: b1 / a0, b2: b2 / a0,
-            a1: a1 / a0, a2: a2 / a0
+            a0: 1.0, a1: a1 / a0, a2: a2 / a0,
+            b0: b0 / a0, b1: b1 / a0, b2: b2 / a0
         )
     }
     
