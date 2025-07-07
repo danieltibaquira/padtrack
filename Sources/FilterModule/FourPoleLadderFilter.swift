@@ -435,13 +435,13 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
             name: "Saturation",
             description: "Saturation curve type",
             value: 0.0,
+            minValue: 0.0,
+            maxValue: Float(SaturationCurve.allCases.count - 1),
+            defaultValue: 0.0,
             unit: "",
             category: .filter,
             dataType: .integer,
             scaling: .linear,
-            minValue: 0.0,
-            maxValue: Float(SaturationCurve.allCases.count - 1),
-            defaultValue: 0.0,
             isAutomatable: true
         ))
 
@@ -509,6 +509,20 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
         case .tube:
             let x2 = x * x
             return x * (1.0 + x2) / (1.0 + x2 + x2 * x2 * 0.1)
+            
+        case .softClip:
+            let threshold: Float = 0.7
+            if abs(x) <= threshold {
+                return x
+            } else {
+                let sign: Float = x < 0 ? -1.0 : 1.0
+                let excess = abs(x) - threshold
+                return sign * (threshold + excess * 0.3)
+            }
+            
+        case .polynomial:
+            let clampedX = max(-1.0, min(1.0, x))
+            return clampedX - pow(clampedX, 3) / 3.0
         }
     }
 

@@ -3,6 +3,42 @@ import Accelerate
 import simd
 import MachineProtocols
 
+// MARK: - Supporting Types
+
+/// Comprehensive filter status information
+public struct FilterStatus {
+    public let isActive: Bool
+    public let currentCoefficients: BiquadCoefficients
+    public let parameters: FilterParameters
+    public let performanceMetrics: MachinePerformanceMetrics
+    public let resonanceInfo: String  // Simplified for now
+    public let trackingInfo: TrackingInfo
+    
+    public init(isActive: Bool, currentCoefficients: BiquadCoefficients, parameters: FilterParameters, performanceMetrics: MachinePerformanceMetrics, resonanceInfo: String, trackingInfo: TrackingInfo) {
+        self.isActive = isActive
+        self.currentCoefficients = currentCoefficients
+        self.parameters = parameters
+        self.performanceMetrics = performanceMetrics
+        self.resonanceInfo = resonanceInfo
+        self.trackingInfo = trackingInfo
+    }
+}
+
+/// Filter types available for morphing
+public enum FilterType: String, CaseIterable {
+    case lowpass = "lowpass"
+    case highpass = "highpass" 
+    case bandpass = "bandpass"
+    case notch = "notch"
+}
+
+/// Morphing modes for transitioning between filter types
+public enum MorphingMode: String, CaseIterable {
+    case linear = "linear"
+    case exponential = "exponential"
+    case smooth = "smooth"
+}
+
 // MARK: - Multi-Mode Filter Configuration
 
 /// Configuration for the multi-mode filter machine
@@ -13,6 +49,12 @@ public struct MultiModeFilterConfig {
     public var enableResonance: Bool = true
     public var enablePerformanceOptimization: Bool = true
     public var oversampling: Int = 1
+    public var defaultFilterType: FilterType = .lowpass
+    public var baseFilterType: FilterType = .lowpass
+    public var targetFilterType: FilterType = .bandpass
+    public var morphingMode: MorphingMode = .linear
+    public var maxResonance: Float = 0.99
+    public var selfOscillationThreshold: Float = 0.95
     
     public init() {}
 }
@@ -24,6 +66,8 @@ public struct FilterParameters {
     public var drive: Float = 0.0
     public var morphAmount: Float = 0.0
     public var keyTracking: Float = 0.0
+    public var morphPosition: Float = 0.0
+    public var keyboardTracking: Float = 0.0
     
     public init() {}
 }

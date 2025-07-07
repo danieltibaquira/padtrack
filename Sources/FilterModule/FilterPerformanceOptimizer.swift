@@ -182,9 +182,7 @@ public class HighPerformanceFilterEngine {
         if vectorSize > 0 {
             // Copy input to temp buffer for processing
             tempBuffer.withUnsafeMutableBufferPointer { dest in
-                input.withUnsafeBufferPointer { src in
-                    cblas_scopy(Int32(vectorSize), src.baseAddress!, 1, dest.baseAddress!, 1)
-                }
+                cblas_scopy(Int32(vectorSize), input, 1, dest.baseAddress!, 1)
             }
             
             // Apply biquad filter using vector operations

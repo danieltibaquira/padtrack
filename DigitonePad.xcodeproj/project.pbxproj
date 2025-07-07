@@ -44,6 +44,7 @@
 		1759B934CB0114385D6C7D7F /* Project+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9EC6FFACD0AA7F8A5B9EA1 /* Project+CoreDataClass.swift */; };
 		17C5250DE556185A3249D012 /* AudioEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17A1DE5579434E59E933A3D8 /* AudioEngine.framework */; };
 		17E71AEE6E6FA9A85025CCB9 /* FilterMachine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E7E154B2287D92C3231AD4B8 /* FilterMachine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		19327F8591056FE9862D6F6D /* FMParameterBridgeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F7194F5ED7B8FFF6113681 /* FMParameterBridgeTests.swift */; };
 		1AC038CBB21E09536DFD9069 /* DataModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7C154BA7FFF9BD6BF27472E /* DataModel.framework */; };
 		1BA5C2663796E32B349A5559 /* MachineProtocols.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3BB6877737874A9B6221044 /* MachineProtocols.framework */; };
 		1C49BABC2A296DEC60B72F8B /* FilterModule.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A675DC0788C6ECBD3BF182F3 /* FilterModule.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -68,6 +69,8 @@
 		2DD627A836F60CE1D81A1DEF /* ParameterPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC654733DBF8DFA0431B3F2 /* ParameterPageView.swift */; };
 		2E4AB181FF81B148E666DB98 /* WavetoneModulationMatrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD917E3890067FFFA7E6CAE /* WavetoneModulationMatrix.swift */; };
 		2E82A0788FBFF42A1DD44550 /* FMSynthesis.swift in Sources */ = {isa = PBXBuildFile; fileRef = C173BBC0AB434038B7EDAE8B /* FMSynthesis.swift */; };
+		2F64789791DC5C574F10ECDF /* ExternalControllerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69029C6F6169A4DD0F67C940 /* ExternalControllerManager.swift */; };
+		31080F992E2DFE91D6A5443C /* Preset+FMParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A13679395CC3051248C4A69A /* Preset+FMParameters.swift */; };
 		3233840A379E6316790269EE /* KeyboardTrackingIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBEA4DAF9A5ED18AD88E17C /* KeyboardTrackingIntegrationTests.swift */; };
 		3307452B117B32B3F42A3A12 /* TestUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B80091BF8059D2E38C05956 /* TestUtilities.swift */; };
 		333E41CA4E7F5990DB6C9386 /* FMToneParameterProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FCDC27C112749DC20E5F34E /* FMToneParameterProtocols.swift */; };
@@ -78,12 +81,13 @@
 		397E1BADB9A9CD215C2E0E16 /* WavetableInterpolation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA5EEF570FB14EBEEA2BF3F /* WavetableInterpolation.swift */; };
 		3A1C838EF0077F30332DEB21 /* MIDIRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D9CA2E50FE09BA85B8CFAB /* MIDIRouter.swift */; };
 		3CFADCCD3ADF5518F09D9989 /* AppShell.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ABC219E1783F601FF4DD113 /* AppShell.framework */; };
+		3EFF9F2BEE9E4C8B87578236 /* MIDIClockSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA4328749ED628D36B2C122F /* MIDIClockSync.swift */; };
+		3F6FE9D80D867ECF3A1D8B29 /* MIDITimingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98236F4BD4EC63797D41A9D7 /* MIDITimingTests.swift */; };
 		3F979CBFAF25223A3ED9CCA0 /* SequencerModule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75250BE5462BAC570EC77037 /* SequencerModule.framework */; };
 		3FC1B599FEF71A7F420DF670 /* MachineProtocols.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3BB6877737874A9B6221044 /* MachineProtocols.framework */; };
 		407FB30F1C404EB3701CD950 /* WavetoneParameterManagementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A1284F7B72799423EC0E18 /* WavetoneParameterManagementTests.swift */; };
 		4212E3B3B0DE8859EA5BCF60 /* KeyComboViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1630AC9D10F04F9E3D30C2B9 /* KeyComboViews.swift */; };
 		438AC589CEB2DAE1BB0A477D /* ProjectManagementProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A0F19FFC6B971EE11A75A0 /* ProjectManagementProtocols.swift */; };
-		446737F2A70189305778F0B9 /* FourPoleLadderFilter.swift.disabled in Resources */ = {isa = PBXBuildFile; fileRef = 775AA3CF1BD662AD7F7F22E0 /* FourPoleLadderFilter.swift.disabled */; };
 		44BAD2E27269EA3F7A83A081 /* MasterFXImplementationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9E8D5CF7CF617F59AF9B01 /* MasterFXImplementationTests.swift */; };
 		44D6C8E32F19F3CA93384682 /* OnScreenKeyboardIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C045F201436F452802B58E68 /* OnScreenKeyboardIntegrationTests.swift */; };
 		463CC1F45CDC665513BD25A7 /* DataModel.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B7C154BA7FFF9BD6BF27472E /* DataModel.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -101,15 +105,20 @@
 		5184BB37DA7286FEA7C2D35C /* CoverageUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB28B5320934CD9F15309F1A /* CoverageUtilities.swift */; };
 		52523A302C3FD9934B55BA86 /* FMDrumCPUOptimizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E920B27B3FC7A65D34D2EA /* FMDrumCPUOptimizer.swift */; };
 		52E0FF4B58DAF06203F32A5D /* FMDrumMIDIHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B92E4FD6DAA7D042C88C674 /* FMDrumMIDIHandler.swift */; };
+		54E8077C1A31F9CA29A3D797 /* MIDICCMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9B71DF660385768777F500 /* MIDICCMapperTests.swift */; };
+		5501FDFD60E1AA92DF760C7B /* FourPoleLadderFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0BFD556AB7A8BE982E1089 /* FourPoleLadderFilter.swift */; };
+		55726B93C9BAD067B3FC6F51 /* ParameterBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8838AD6F98BEC592AD9AF4FF /* ParameterBridge.swift */; };
 		56576D8D2F806F5DFE815651 /* KeyboardTrackingIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1B50B219CD678B3C90F083 /* KeyboardTrackingIntegration.swift */; };
 		566EFCE551FF9CC15D9435AC /* VoiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5834276B1F3F8B394CE8DDEA /* VoiceManager.swift */; };
 		56C902F6FAD349067D4D4C06 /* MIDIModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = E418852C897DEB7FBB327C20 /* MIDIModule.swift */; };
 		56E56ADE5AD6E8566AC3133A /* WavetoneEnvelopeIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C517ED169050DB05089BFBB /* WavetoneEnvelopeIntegrationTests.swift */; };
+		57310D99A3F0BF93BA8ADCA1 /* MIDITrackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CABCBCCA612D010EE43AFBD9 /* MIDITrackTests.swift */; };
 		57611BD59A99B6B05AEE77D2 /* ProjectManagementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F394A623D4014C839771365 /* ProjectManagementTests.swift */; };
 		57AF9E57C00176754A0D54D3 /* NoiseGeneratorModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17171B50D503984C143C21C0 /* NoiseGeneratorModuleTests.swift */; };
 		5812BC875C84439D5963B143 /* FMDrumModulationMatrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55078271CFD1F3F08AE552E /* FMDrumModulationMatrix.swift */; };
 		5847D8167F6E15D86091278C /* OverdriveEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F2C9B52FE0253AC7DA0DAD /* OverdriveEffect.swift */; };
 		58B58162AAADA9E0A3DF6147 /* StepSequencerGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF999FA005676328822E504 /* StepSequencerGrid.swift */; };
+		59142369267317F8A292ACBE /* MIDISequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B295D1F4E3BBE96057F314B /* MIDISequencer.swift */; };
 		59AF33306F541B31CB304847 /* MIDIModule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E27C90A14EAA33750DB29B /* MIDIModule.framework */; };
 		5A9CD335C9A0291A32A06475 /* MachineProtocols.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3BB6877737874A9B6221044 /* MachineProtocols.framework */; };
 		5CD6F64351EF38CA6B2A5024 /* UIComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D432F10B07387E4A024C8858 /* UIComponents.swift */; };
@@ -131,22 +140,27 @@
 		6600BB579629D50CDACD333B /* WavetoneOscillatorModulationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD6A24FB88371FBDF7AB2D4 /* WavetoneOscillatorModulationTests.swift */; };
 		666999F7BAB24AC281CAC481 /* ParameterSmoother.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6BFA97E1D4A659567288B6 /* ParameterSmoother.swift */; };
 		67E0C12237DE72FF68B45732 /* FilterMachine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E154B2287D92C3231AD4B8 /* FilterMachine.framework */; };
+		67FD0C6B8B14F4FB7D1D4CC0 /* ParameterEncoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE9E1658BC9426D70BF1F4D /* ParameterEncoderTests.swift */; };
 		681DD7A3A04FBBA3E1121906 /* EffectControlViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8457E3A5FD4E28787D43507 /* EffectControlViews.swift */; };
 		68532F4EDA0C1DC30B506C3F /* MasterEffectsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1625CBDD7B775F86D6DC341D /* MasterEffectsTests.swift */; };
 		69142EFE3AE67A917A3B4067 /* ValidationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFFCABB32E6ABD8708A5BE13 /* ValidationTests.swift */; };
 		69B3965D358A4EB92EF5F7FA /* KeyComboInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9E41FC1D30F5B77AFA7188 /* KeyComboInteractor.swift */; };
 		69ED1FDD443C06F4087A924E /* FMToneParameterInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04902679271D82FCAFDA028D /* FMToneParameterInteractor.swift */; };
+		6A5263674DE2FE1015DCAD8E /* FMParameterBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19FCA33869F9E41E853774E9 /* FMParameterBridge.swift */; };
 		6CEC5D836EC709D9D8C1F5A3 /* FilterParameterSmoothing.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5715160D1CE7A1BD3FF363A /* FilterParameterSmoothing.swift */; };
+		6D82BA667114149C9C0F15CA /* ParameterPageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6AFC2B28CEA3DA07636689 /* ParameterPageTests.swift */; };
 		70A58CA00F8FD07914C70007 /* FetchOptimizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9ECDE0C0228C47D64F2B675 /* FetchOptimizationTests.swift */; };
 		71B9C84097BC1CCC427CC0DA /* KeyboardTrackingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1B971240A0CFC49F34E4C5 /* KeyboardTrackingTests.swift */; };
 		71EE1CDF88DF5DF945CFEC18 /* DrumComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15ACB13BA36AB1856BD42860 /* DrumComponents.swift */; };
 		723A0E2C7535850FB1EFFF8C /* AVAudioEngineCoreArchitecture.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18F3BBD3E8192BD315B60B9 /* AVAudioEngineCoreArchitecture.swift */; };
 		739374576C34AD5CE26E2235 /* ReverbEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D85D7CC71395DBB036E3D93 /* ReverbEffect.swift */; };
 		739CDFB8DF230916E004BBBD /* FMToneSynthesisEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE6C7F9D5BB558747871C27 /* FMToneSynthesisEngine.swift */; };
+		75F11C333DB748B85668C58B /* UIAudioIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AA2ABB14B7BE0630E05BEB /* UIAudioIntegrationTests.swift */; };
 		7622455995F8742BEE2C790B /* MachineProtocols.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E3BB6877737874A9B6221044 /* MachineProtocols.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		763DAE258CAD2AEBF8CC7798 /* DataModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7C154BA7FFF9BD6BF27472E /* DataModel.framework */; };
 		78794B0C0007F549147CF292 /* MockSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F38BECE2A25679FE5A90F2 /* MockSequencer.swift */; };
 		788B2F491B0463DD811EB5F0 /* MainLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5ACA76BB63098CC8AA8D1E9 /* MainLayoutView.swift */; };
+		78EDA627BB7C59C3152E2FD4 /* FilterResonance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83AD55F092D124CD7CD17890 /* FilterResonance.swift */; };
 		7976CDC4308392A2E0E915D1 /* MIDIIOModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D41B038F113128F53482641 /* MIDIIOModule.swift */; };
 		79E0AD13A090854AAE1DE6A0 /* MIDIModuleProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7770A25BC1254B7E23F11B8 /* MIDIModuleProtocols.swift */; };
 		7B36EC3FFE69F7E44B78DF06 /* UIComponents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE5E5A759B75354EF7758934 /* UIComponents.framework */; };
@@ -166,6 +180,7 @@
 		88C379735A0137A7FCE2D5C7 /* Pattern+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7539EBB6D5E976CB2C31C9A9 /* Pattern+CoreDataClass.swift */; };
 		8B763D4752D421B811BB07D0 /* VoiceModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC4B3BFD616B46AB0EAF843 /* VoiceModule.swift */; };
 		8C2E96CD1F5438887E0427D7 /* HeaderDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B85C63F4C9DD0923629711 /* HeaderDisplayView.swift */; };
+		8CDD5DBE03D0C16D4A919AFA /* SequencerBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847976891C2F28D8632DB72F /* SequencerBridge.swift */; };
 		8D2D171E3B5A538CA6EFFBA2 /* AppShell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4CAF2C9FB0F4FBB2FDE4BE /* AppShell.swift */; };
 		8D907725BF358A2600444A92 /* BitReductionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7592E7E300658F98D463BCFD /* BitReductionEffect.swift */; };
 		8F01AB0A032A13AFA09308E6 /* MIDISwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3045BC0C2C86DB216E07D963 /* MIDISwiftUIView.swift */; };
@@ -181,12 +196,14 @@
 		95F6131F7C541F783408E4B4 /* SwarmerVoiceMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E631BC8502F125D08777A24D /* SwarmerVoiceMachineTests.swift */; };
 		9626F73F8814BAE4E791E665 /* OnScreenKeyboardPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5178C2866EC38590FCA9DD1A /* OnScreenKeyboardPresenter.swift */; };
 		9861F425A68FDC864ADD5878 /* FilterModule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A675DC0788C6ECBD3BF182F3 /* FilterModule.framework */; };
+		9A0AFB613BC2D8CE64D84081 /* ParameterPersistenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BED95FF6BAF196F7449BC650 /* ParameterPersistenceTests.swift */; };
 		9E2EC6B50FFA91436A770A89 /* MasterFXImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9829EB4FD77882EEA50E7E62 /* MasterFXImplementation.swift */; };
 		A205DF649EBA164C5060809B /* ProjectManagementUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CEFD7B7D3D61E72816BC415 /* ProjectManagementUITests.swift */; };
 		A234DDBD6FD788C31C482D18 /* MasterEffectsProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0933ACDB48CCC71595C36F2B /* MasterEffectsProcessor.swift */; };
 		A2C48A0F56E948BBB70198CE /* ParameterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C41B230B1504ECF994F41C /* ParameterManager.swift */; };
 		A54AE9760207B7358EABF3BC /* SequencerModule.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 75250BE5462BAC570EC77037 /* SequencerModule.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A5B0CE056385492812E6005F /* TrackFXProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC26FA264BD14AD3E0F4F2E /* TrackFXProcessor.swift */; };
+		A628FE316687BBAA6E0202B5 /* ExternalControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84CCF803AA9FF2CA604BD07 /* ExternalControllerTests.swift */; };
 		A7348947EC183529420F977A /* DataModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7C154BA7FFF9BD6BF27472E /* DataModel.framework */; };
 		A771F1D529019D62AE061471 /* UIComponentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09428CF1FDF956F1490ED47A /* UIComponentsTests.swift */; };
 		A9184EC9D32694E3C469D6EE /* CRUDOperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FD27077DB6E40A076B5FB2 /* CRUDOperationTests.swift */; };
@@ -194,12 +211,13 @@
 		AA6AE6BF9971A0726A3042F2 /* FetchOptimizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5507D4299552EFF898B98B /* FetchOptimizationService.swift */; };
 		ABF21F99DE511E8091538901 /* UIComponents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE5E5A759B75354EF7758934 /* UIComponents.framework */; };
 		ACDFDD50D36825A5D9305072 /* Pattern+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69B3ADDF597AD7BFEC2D13A /* Pattern+CoreDataProperties.swift */; };
+		AE4506BBE74079FB38279240 /* MIDICCMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556112DC8BDF1CACA3F59901 /* MIDICCMapper.swift */; };
+		AE529D50D7545D0FD40A6569 /* MIDIPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A34B4C2DA957FFDA1EA3B60 /* MIDIPerformanceTests.swift */; };
 		AFAAAF02F28F4AC3DFE3639C /* FMDrumDSPOptimizations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81FD8166CB4B9BD40EA70EB0 /* FMDrumDSPOptimizations.swift */; };
 		B1037D098BF25896B5B43FDB /* TrackEffectsProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0722D03FDBAFE3F325BF20 /* TrackEffectsProcessor.swift */; };
 		B1B34A15F31A91419C905075 /* Kit+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86FD305E95771D46ACBDC27 /* Kit+CoreDataClass.swift */; };
-		B3F894CB39F77ED95272539D /* MultiModeFilterMachine.swift.disabled in Resources */ = {isa = PBXBuildFile; fileRef = 64CCE5A0ED93E0FBD44F9463 /* MultiModeFilterMachine.swift.disabled */; };
+		B3E89542BC5D095A7A6A8CCC /* SequencerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97BD587466869DFF7806A9F /* SequencerIntegrationTests.swift */; };
 		B480667E557D737122CADC18 /* WavetoneVoiceMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F98B6421DB00051C9135813 /* WavetoneVoiceMachine.swift */; };
-		B510DCF8B5DDCE7AF3EC82C2 /* FilterResonance.swift.disabled in Resources */ = {isa = PBXBuildFile; fileRef = 7E69B4A580D2BB03C4648386 /* FilterResonance.swift.disabled */; };
 		B571B3A8522065A24CA3E2F3 /* SwarmerVoiceMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7435B138B8C1F9F9DEBA9E8 /* SwarmerVoiceMachine.swift */; };
 		B6657730349FCB6B87BA8809 /* AudioEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17A1DE5579434E59E933A3D8 /* AudioEngine.framework */; };
 		B6F6576347793C4D9A1DA6D1 /* MIDIModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADD7861A07AD5FCAD70BDFF /* MIDIModuleTests.swift */; };
@@ -210,6 +228,7 @@
 		BCFCCD03119702929F37C5DD /* MachineProtocols.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3BB6877737874A9B6221044 /* MachineProtocols.framework */; };
 		BF3C9230DC8ED3A3C95E8B9D /* VoiceModule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD196E7566516944B7DAD63A /* VoiceModule.framework */; };
 		BF540BE2E4E1A7569F01512C /* AudioEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17A1DE5579434E59E933A3D8 /* AudioEngine.framework */; };
+		BF714353BE8163F5C8F2EE73 /* FilterPerformanceOptimizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D1CA9AF5296FFE00761A5F /* FilterPerformanceOptimizer.swift */; };
 		C04327F2F9DF787D1A8B2C7F /* AudioEngineInteractorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B890A6D7756C9B45879210 /* AudioEngineInteractorTests.swift */; };
 		C1E194DA719231CC633EEF9B /* OscillatorModulationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1FA17D95FBE35007DC1247 /* OscillatorModulationTests.swift */; };
 		C1EF43F1A0A2D4C0344C11ED /* Trig+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FFCED2330EF7B5496E44582 /* Trig+CoreDataClass.swift */; };
@@ -232,15 +251,18 @@
 		D2A2F45553F45DFC5081A367 /* FMToneVoiceMachineIntegrated.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24FF654486D027C9B9FCFBF /* FMToneVoiceMachineIntegrated.swift */; };
 		D2D3A75A6A290D12866A9C22 /* CRUDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AEB87A1428BAD39C18A13E /* CRUDTests.swift */; };
 		D30F22E684F14A643785AB3B /* CoreDataTestBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 332CC5DB45484DFFE55C587A /* CoreDataTestBase.swift */; };
+		D3F1D525D91CF8970FFA1CFB /* VoiceMachineSelectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565FB365B6C5AFA0B393309A /* VoiceMachineSelectionTests.swift */; };
 		D477764C358E978D15B4C0EE /* OptimizedEffectProcessing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2F4E954C272A15BFE14AAD /* OptimizedEffectProcessing.swift */; };
 		D575FE1C789B48E694999AB7 /* MachineProtocols.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3BB6877737874A9B6221044 /* MachineProtocols.framework */; };
 		D8AF2C67FDBD64D06157EC62 /* WavetoneVoiceMachineIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880295ED4FEDBD4D8B1DEDD5 /* WavetoneVoiceMachineIntegrationTests.swift */; };
+		D8E852E7B4323C8F05CC1D09 /* MultiModeFilterMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D46614D7FD0BE2B18B9D4F1 /* MultiModeFilterMachine.swift */; };
 		D9CA7E514CF8F0279AEC0945 /* OnScreenKeyboardInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023FD32B758DFF506C171CB5 /* OnScreenKeyboardInteractor.swift */; };
 		DB2C0E564BBB90F81ED32D8D /* FMParameterInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD06AA96D66B73E27A4CE682 /* FMParameterInteractor.swift */; };
 		DC991BC845FBF40FE366B750 /* TrackEffectsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F39DCBC5D20CFE8F2CF1CB1 /* TrackEffectsTests.swift */; };
 		DCFD9DD3A667B21B2D614374 /* SequencerModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FD12D3E70864B8E2F59DC7 /* SequencerModule.swift */; };
 		DD5E223A931EF45CD2130682 /* ValidationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C509A5F2F729E121608F08CF /* ValidationService.swift */; };
 		DE5766484E13C8FAA8F733BE /* CoreDataValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F0BA9DC736833BA98529AD /* CoreDataValidation.swift */; };
+		DE7A3873BAA5645CCDDFF316 /* ParameterBindingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE5DE43CEF055338B00ED75 /* ParameterBindingTests.swift */; };
 		DEF81BC81C09762AE634CEE1 /* PhaseDistortion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648708EF2871EACD85B861AE /* PhaseDistortion.swift */; };
 		DF4363FE51F1CF6A796CE4A7 /* FMToneParameterControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AAA6FBE41C66F39678E64D /* FMToneParameterControl.swift */; };
 		DFB3AD8C1DBE41FE21DA67FE /* FourPoleLadderFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D073DD263A2587B53912ACA1 /* FourPoleLadderFilterTests.swift */; };
@@ -270,7 +292,6 @@
 		F922E8491D7E24898F80AB20 /* DigitonePadTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773AFEACC8A4B4425E320A54 /* DigitonePadTypes.swift */; };
 		FA0C7EADC187EAD0327A3E6C /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C9CBEF79A0A6679BD39811 /* CoreDataStack.swift */; };
 		FA0D9A847DE5C0B3AA1887E1 /* MIDIInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED0FD55281E7CBC819A28C /* MIDIInteractor.swift */; };
-		FA4E3214CDDE8D95D96C5D1F /* FilterPerformanceOptimizer.swift.disabled in Resources */ = {isa = PBXBuildFile; fileRef = 92AAAD01A69D3B2475F0397F /* FilterPerformanceOptimizer.swift.disabled */; };
 		FB3FE6C45BF3FEDD3EE08502 /* HighPrecisionTimerCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006A60CAE73079F5BF6CDC4C /* HighPrecisionTimerCoreTests.swift */; };
 		FB734FFA9E1955CC35311A4E /* FilterModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1253BD5706B7A4E4348DF3AF /* FilterModuleTests.swift */; };
 		FBE6F1D5BB1EA7BF23245799 /* OnScreenKeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98348F5DF7FFE9C760A569EB /* OnScreenKeyboardView.swift */; };
@@ -642,11 +663,13 @@
 		17171B50D503984C143C21C0 /* NoiseGeneratorModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoiseGeneratorModuleTests.swift; sourceTree = "<group>"; };
 		17A1DE5579434E59E933A3D8 /* AudioEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AudioEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		18874E097E837758D963F825 /* Track+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Track+CoreDataClass.swift"; sourceTree = "<group>"; };
+		19FCA33869F9E41E853774E9 /* FMParameterBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMParameterBridge.swift; sourceTree = "<group>"; };
 		1B80091BF8059D2E38C05956 /* TestUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestUtilities.swift; sourceTree = "<group>"; };
 		1C517ED169050DB05089BFBB /* WavetoneEnvelopeIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WavetoneEnvelopeIntegrationTests.swift; sourceTree = "<group>"; };
 		1C5507D4299552EFF898B98B /* FetchOptimizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchOptimizationService.swift; sourceTree = "<group>"; };
 		1CEFD7B7D3D61E72816BC415 /* ProjectManagementUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectManagementUITests.swift; sourceTree = "<group>"; };
 		1D49C36340E79853CA511D6E /* KeyboardDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardDemoView.swift; sourceTree = "<group>"; };
+		1EE9E1658BC9426D70BF1F4D /* ParameterEncoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterEncoderTests.swift; sourceTree = "<group>"; };
 		1F9E58CF2A8B288B394AF67C /* Preset+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Preset+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		20D9686094DFA3F55E661D3E /* AppShellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppShellTests.swift; sourceTree = "<group>"; };
 		22AA757C17DF57310F281E9C /* AVAudioEngineCoreArchitectureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAudioEngineCoreArchitectureTests.swift; sourceTree = "<group>"; };
@@ -676,6 +699,7 @@
 		38ED0FD55281E7CBC819A28C /* MIDIInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDIInteractor.swift; sourceTree = "<group>"; };
 		3A4CAF2C9FB0F4FBB2FDE4BE /* AppShell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppShell.swift; sourceTree = "<group>"; };
 		3A9EC6FFACD0AA7F8A5B9EA1 /* Project+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataClass.swift"; sourceTree = "<group>"; };
+		3B9B71DF660385768777F500 /* MIDICCMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDICCMapperTests.swift; sourceTree = "<group>"; };
 		3D49BD343E286452B04CB956 /* FMVoiceMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMVoiceMachine.swift; sourceTree = "<group>"; };
 		3E9E8D5CF7CF617F59AF9B01 /* MasterFXImplementationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterFXImplementationTests.swift; sourceTree = "<group>"; };
 		42E3C1E14A7D509628E5CB65 /* KeyComboDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyComboDetector.swift; sourceTree = "<group>"; };
@@ -692,22 +716,28 @@
 		53727B9E1B7C06950BC9D3FA /* MockAudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAudioEngine.swift; sourceTree = "<group>"; };
 		5491E649016164B675C68743 /* KeyComboRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyComboRouter.swift; sourceTree = "<group>"; };
 		5517BAE9CF07B04B61B63550 /* BaseMigrationPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMigrationPolicy.swift; sourceTree = "<group>"; };
+		556112DC8BDF1CACA3F59901 /* MIDICCMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDICCMapper.swift; sourceTree = "<group>"; };
 		55D2BF4F824DEB605F3C139F /* WavetoneAudioEngineIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WavetoneAudioEngineIntegrationTests.swift; sourceTree = "<group>"; };
 		55FBDDD3FDFB1A4C0E07131C /* MasterFXProcessors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterFXProcessors.swift; sourceTree = "<group>"; };
+		565FB365B6C5AFA0B393309A /* VoiceMachineSelectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceMachineSelectionTests.swift; sourceTree = "<group>"; };
 		57EBFC73BDE09A6F698D821D /* Project+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		5834276B1F3F8B394CE8DDEA /* VoiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceManager.swift; sourceTree = "<group>"; };
+		5A34B4C2DA957FFDA1EA3B60 /* MIDIPerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDIPerformanceTests.swift; sourceTree = "<group>"; };
 		5D85D7CC71395DBB036E3D93 /* ReverbEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReverbEffect.swift; sourceTree = "<group>"; };
 		5DC26FA264BD14AD3E0F4F2E /* TrackFXProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackFXProcessor.swift; sourceTree = "<group>"; };
 		5DD6B2624289E5407446B73F /* FMToneOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMToneOperator.swift; sourceTree = "<group>"; };
 		5DDBA6A190C1BA5FDFBE3053 /* FMToneDSPOptimizations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMToneDSPOptimizations.swift; sourceTree = "<group>"; };
+		5E0BFD556AB7A8BE982E1089 /* FourPoleLadderFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourPoleLadderFilter.swift; sourceTree = "<group>"; };
 		5F4AC2BCD78282B4BBBE8801 /* FXModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FXModuleTests.swift; sourceTree = "<group>"; };
 		5FF999FA005676328822E504 /* StepSequencerGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepSequencerGrid.swift; sourceTree = "<group>"; };
 		5FFCED2330EF7B5496E44582 /* Trig+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Trig+CoreDataClass.swift"; sourceTree = "<group>"; };
 		610A2CD9F87C168489F82E75 /* FilterMorphing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterMorphing.swift; sourceTree = "<group>"; };
 		621FAC0976F7F447F7EC2FD1 /* DigitonePadTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DigitonePadTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		63AA2ABB14B7BE0630E05BEB /* UIAudioIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAudioIntegrationTests.swift; sourceTree = "<group>"; };
+		63D1CA9AF5296FFE00761A5F /* FilterPerformanceOptimizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPerformanceOptimizer.swift; sourceTree = "<group>"; };
 		648708EF2871EACD85B861AE /* PhaseDistortion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhaseDistortion.swift; sourceTree = "<group>"; };
-		64CCE5A0ED93E0FBD44F9463 /* MultiModeFilterMachine.swift.disabled */ = {isa = PBXFileReference; path = MultiModeFilterMachine.swift.disabled; sourceTree = "<group>"; };
 		6520B485F9CFDB61820F7940 /* WavetoneEnvelopeSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WavetoneEnvelopeSystem.swift; sourceTree = "<group>"; };
+		69029C6F6169A4DD0F67C940 /* ExternalControllerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalControllerManager.swift; sourceTree = "<group>"; };
 		690F5A20BB20A41FDDEDD0F6 /* ProjectManagementIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectManagementIntegrationTests.swift; sourceTree = "<group>"; };
 		6AD2733267B1B5928929C08A /* DelayEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayEffect.swift; sourceTree = "<group>"; };
 		6C7CF1A80EB3357D898BF490 /* SendFXImplementationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendFXImplementationTests.swift; sourceTree = "<group>"; };
@@ -723,23 +753,26 @@
 		75DC71FB5DAD6A2E1145520A /* SequencerClock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequencerClock.swift; sourceTree = "<group>"; };
 		76D1D7E5C9142A9149AA14D4 /* FMToneAlgorithmRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMToneAlgorithmRouter.swift; sourceTree = "<group>"; };
 		773AFEACC8A4B4425E320A54 /* DigitonePadTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigitonePadTypes.swift; sourceTree = "<group>"; };
-		775AA3CF1BD662AD7F7F22E0 /* FourPoleLadderFilter.swift.disabled */ = {isa = PBXFileReference; path = FourPoleLadderFilter.swift.disabled; sourceTree = "<group>"; };
 		7AED0DC7707E1C4B7EED5001 /* FMDrumSynthesisEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMDrumSynthesisEngine.swift; sourceTree = "<group>"; };
 		7BBEA4DAF9A5ED18AD88E17C /* KeyboardTrackingIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardTrackingIntegrationTests.swift; sourceTree = "<group>"; };
 		7CC654733DBF8DFA0431B3F2 /* ParameterPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterPageView.swift; sourceTree = "<group>"; };
-		7E69B4A580D2BB03C4648386 /* FilterResonance.swift.disabled */ = {isa = PBXFileReference; path = FilterResonance.swift.disabled; sourceTree = "<group>"; };
+		7D46614D7FD0BE2B18B9D4F1 /* MultiModeFilterMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiModeFilterMachine.swift; sourceTree = "<group>"; };
 		7EC33EB456360F6BB07DACBE /* TrackFXProcessorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackFXProcessorTests.swift; sourceTree = "<group>"; };
 		7F14F0C2187512A0ECE6962C /* FMSynthesisEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMSynthesisEngine.swift; sourceTree = "<group>"; };
 		7F6BFA97E1D4A659567288B6 /* ParameterSmoother.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterSmoother.swift; sourceTree = "<group>"; };
 		7FA5EEF570FB14EBEEA2BF3F /* WavetableInterpolation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WavetableInterpolation.swift; sourceTree = "<group>"; };
 		7FD19F7A19975BECD98CEFDF /* CompressorEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompressorEffect.swift; sourceTree = "<group>"; };
 		81FD8166CB4B9BD40EA70EB0 /* FMDrumDSPOptimizations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMDrumDSPOptimizations.swift; sourceTree = "<group>"; };
+		83AD55F092D124CD7CD17890 /* FilterResonance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterResonance.swift; sourceTree = "<group>"; };
+		847976891C2F28D8632DB72F /* SequencerBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequencerBridge.swift; sourceTree = "<group>"; };
 		850D2E1815AC80F8B60C089D /* MIDIIOModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDIIOModuleTests.swift; sourceTree = "<group>"; };
 		8624FB26F279546B30513308 /* FMDrumVoice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMDrumVoice.swift; sourceTree = "<group>"; };
 		86A1880FD330CDAE7A45B128 /* MasterOverdriveEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterOverdriveEffect.swift; sourceTree = "<group>"; };
 		880295ED4FEDBD4D8B1DEDD5 /* WavetoneVoiceMachineIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WavetoneVoiceMachineIntegrationTests.swift; sourceTree = "<group>"; };
+		8838AD6F98BEC592AD9AF4FF /* ParameterBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterBridge.swift; sourceTree = "<group>"; };
 		88F8043539B8C575E10FC56C /* MIDIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDIViewModel.swift; sourceTree = "<group>"; };
 		8AE66340F0B348CA9A871414 /* KeyboardSelectorViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardSelectorViews.swift; sourceTree = "<group>"; };
+		8B295D1F4E3BBE96057F314B /* MIDISequencer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDISequencer.swift; sourceTree = "<group>"; };
 		8B58A00FD2B23678120D19B8 /* DataLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLayer.swift; sourceTree = "<group>"; };
 		8C6E63785862A5DCA2EA1DF1 /* Kit+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Kit+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		8ECF5E71AA730C437D9E329D /* CoreDataMigrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataMigrationManager.swift; sourceTree = "<group>"; };
@@ -751,13 +784,13 @@
 		914CD781264D0D130A4322B6 /* FilterCoefficients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCoefficients.swift; sourceTree = "<group>"; };
 		91E920B27B3FC7A65D34D2EA /* FMDrumCPUOptimizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMDrumCPUOptimizer.swift; sourceTree = "<group>"; };
 		91FE0A490460A8B19AA48F84 /* Track+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Track+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		92AAAD01A69D3B2475F0397F /* FilterPerformanceOptimizer.swift.disabled */ = {isa = PBXFileReference; path = FilterPerformanceOptimizer.swift.disabled; sourceTree = "<group>"; };
 		92FF1BA3F4517CF003E0494E /* Preset+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Preset+CoreDataClass.swift"; sourceTree = "<group>"; };
 		930C42AB50A37C9A62D06096 /* KeyComboRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyComboRegistry.swift; sourceTree = "<group>"; };
 		94535A0EE687654A9F6F3590 /* SequencerModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequencerModuleTests.swift; sourceTree = "<group>"; };
 		958D467953C9A0B6D862D629 /* FMDrumVoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMDrumVoiceView.swift; sourceTree = "<group>"; };
 		97B51DA828DBA95EBD380CC9 /* ProjectInteractorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectInteractorTests.swift; sourceTree = "<group>"; };
 		97D319F67D04643E50B0AB97 /* Lowpass4FilterMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lowpass4FilterMachine.swift; sourceTree = "<group>"; };
+		98236F4BD4EC63797D41A9D7 /* MIDITimingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDITimingTests.swift; sourceTree = "<group>"; };
 		9829EB4FD77882EEA50E7E62 /* MasterFXImplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterFXImplementation.swift; sourceTree = "<group>"; };
 		98348F5DF7FFE9C760A569EB /* OnScreenKeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnScreenKeyboardView.swift; sourceTree = "<group>"; };
 		99FF4AB016B15D7C13FE0DD7 /* MultiModeFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiModeFilter.swift; sourceTree = "<group>"; };
@@ -767,6 +800,7 @@
 		9D0722D03FDBAFE3F325BF20 /* TrackEffectsProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackEffectsProcessor.swift; sourceTree = "<group>"; };
 		9F762D5E4BC037DDE0ECE059 /* SequencerInteractorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequencerInteractorTests.swift; sourceTree = "<group>"; };
 		9FBB0C273618CDE5754A0769 /* SampleRateReductionEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleRateReductionEffect.swift; sourceTree = "<group>"; };
+		A13679395CC3051248C4A69A /* Preset+FMParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Preset+FMParameters.swift"; sourceTree = "<group>"; };
 		A1F70273FDA72862EE997122 /* OnScreenKeyboardProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnScreenKeyboardProtocols.swift; sourceTree = "<group>"; };
 		A3C41B230B1504ECF994F41C /* ParameterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterManager.swift; sourceTree = "<group>"; };
 		A4EB8814FEA21CB8FECCED3B /* CacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheService.swift; sourceTree = "<group>"; };
@@ -775,8 +809,10 @@
 		A8EDC2A2F497238E9A80E49A /* ProjectManagementInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectManagementInteractor.swift; sourceTree = "<group>"; };
 		A99BC55AF026DFE29F7B4396 /* FMDrumVoiceMachineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMDrumVoiceMachineTests.swift; sourceTree = "<group>"; };
 		A9D1A4850F2DA9669EDC66ED /* VoiceModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceModuleTests.swift; sourceTree = "<group>"; };
+		AA6AFC2B28CEA3DA07636689 /* ParameterPageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterPageTests.swift; sourceTree = "<group>"; };
 		AAF4A085C5F60DA145F2F5FA /* AVAudioEngineCoreSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAudioEngineCoreSupport.swift; sourceTree = "<group>"; };
 		AD196E7566516944B7DAD63A /* VoiceModule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VoiceModule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		ADE5DE43CEF055338B00ED75 /* ParameterBindingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterBindingTests.swift; sourceTree = "<group>"; };
 		B0FD27077DB6E40A076B5FB2 /* CRUDOperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRUDOperationTests.swift; sourceTree = "<group>"; };
 		B4D31E1220B41DAFDB6050EC /* MasterFXUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterFXUtilities.swift; sourceTree = "<group>"; };
 		B69B3ADDF597AD7BFEC2D13A /* Pattern+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Pattern+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -789,12 +825,16 @@
 		BD6F21C05467A7BEAAD202EA /* HighPrecisionTimerCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighPrecisionTimerCore.swift; sourceTree = "<group>"; };
 		BE6F1EE08397CC196C950BE0 /* KeyComboTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyComboTests.swift; sourceTree = "<group>"; };
 		BE8FC99BAE63D5B828282310 /* MIDIIOSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDIIOSupport.swift; sourceTree = "<group>"; };
+		BED95FF6BAF196F7449BC650 /* ParameterPersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterPersistenceTests.swift; sourceTree = "<group>"; };
 		C03CD469FC8FB8926488940A /* KeyComboPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyComboPresenter.swift; sourceTree = "<group>"; };
 		C045F201436F452802B58E68 /* OnScreenKeyboardIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnScreenKeyboardIntegrationTests.swift; sourceTree = "<group>"; };
 		C14F2256BFE974A085EA6DBF /* FMDrumPresetSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMDrumPresetSystem.swift; sourceTree = "<group>"; };
 		C173BBC0AB434038B7EDAE8B /* FMSynthesis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMSynthesis.swift; sourceTree = "<group>"; };
 		C463B47C059EE0E11FCF7749 /* MasterEffectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterEffectsView.swift; sourceTree = "<group>"; };
 		C509A5F2F729E121608F08CF /* ValidationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationService.swift; sourceTree = "<group>"; };
+		C84CCF803AA9FF2CA604BD07 /* ExternalControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalControllerTests.swift; sourceTree = "<group>"; };
+		C97BD587466869DFF7806A9F /* SequencerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequencerIntegrationTests.swift; sourceTree = "<group>"; };
+		CABCBCCA612D010EE43AFBD9 /* MIDITrackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDITrackTests.swift; sourceTree = "<group>"; };
 		CAF31B582DACE0CDC5E66BE7 /* CoverageUtilitiesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverageUtilitiesTests.swift; sourceTree = "<group>"; };
 		CDE6C7F9D5BB558747871C27 /* FMToneSynthesisEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMToneSynthesisEngine.swift; sourceTree = "<group>"; };
 		CE5054671F7018A34E6B8E3F /* DrumVisualizationComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrumVisualizationComponents.swift; sourceTree = "<group>"; };
@@ -810,6 +850,7 @@
 		D7D9CA2E50FE09BA85B8CFAB /* MIDIRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDIRouter.swift; sourceTree = "<group>"; };
 		D8457E3A5FD4E28787D43507 /* EffectControlViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectControlViews.swift; sourceTree = "<group>"; };
 		D9ECDE0C0228C47D64F2B675 /* FetchOptimizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchOptimizationTests.swift; sourceTree = "<group>"; };
+		DA4328749ED628D36B2C122F /* MIDIClockSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDIClockSync.swift; sourceTree = "<group>"; };
 		DABB9B2678DABC867FE81A0E /* TrackFXImplementationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackFXImplementationTests.swift; sourceTree = "<group>"; };
 		DB28B5320934CD9F15309F1A /* CoverageUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverageUtilities.swift; sourceTree = "<group>"; };
 		DCD6A24FB88371FBDF7AB2D4 /* WavetoneOscillatorModulationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WavetoneOscillatorModulationTests.swift; sourceTree = "<group>"; };
@@ -819,6 +860,7 @@
 		E18F3BBD3E8192BD315B60B9 /* AVAudioEngineCoreArchitecture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAudioEngineCoreArchitecture.swift; sourceTree = "<group>"; };
 		E24FF654486D027C9B9FCFBF /* FMToneVoiceMachineIntegrated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMToneVoiceMachineIntegrated.swift; sourceTree = "<group>"; };
 		E25C0BFFB484CEABDB6718C0 /* CoreDataModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModelTests.swift; sourceTree = "<group>"; };
+		E2F7194F5ED7B8FFF6113681 /* FMParameterBridgeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMParameterBridgeTests.swift; sourceTree = "<group>"; };
 		E3BB6877737874A9B6221044 /* MachineProtocols.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MachineProtocols.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E418852C897DEB7FBB327C20 /* MIDIModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDIModule.swift; sourceTree = "<group>"; };
 		E5235795D9153E4909AFBC84 /* AudioEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngineTests.swift; sourceTree = "<group>"; };
@@ -993,6 +1035,13 @@
 			path = AppShellTests;
 			sourceTree = "<group>";
 		};
+		084DD8F8BD04C7C9CA2E36A2 /* Interactor */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Interactor;
+			sourceTree = "<group>";
+		};
 		0DA38097E384F57D0397633D /* FilterModule */ = {
 			isa = PBXGroup;
 			children = (
@@ -1002,13 +1051,13 @@
 				36F238F240DD13D58B068C45 /* FilterModule.swift */,
 				610A2CD9F87C168489F82E75 /* FilterMorphing.swift */,
 				D5715160D1CE7A1BD3FF363A /* FilterParameterSmoothing.swift */,
-				92AAAD01A69D3B2475F0397F /* FilterPerformanceOptimizer.swift.disabled */,
-				7E69B4A580D2BB03C4648386 /* FilterResonance.swift.disabled */,
-				775AA3CF1BD662AD7F7F22E0 /* FourPoleLadderFilter.swift.disabled */,
+				63D1CA9AF5296FFE00761A5F /* FilterPerformanceOptimizer.swift */,
+				83AD55F092D124CD7CD17890 /* FilterResonance.swift */,
+				5E0BFD556AB7A8BE982E1089 /* FourPoleLadderFilter.swift */,
 				0D1B50B219CD678B3C90F083 /* KeyboardTrackingIntegration.swift */,
 				97D319F67D04643E50B0AB97 /* Lowpass4FilterMachine.swift */,
 				99FF4AB016B15D7C13FE0DD7 /* MultiModeFilter.swift */,
-				64CCE5A0ED93E0FBD44F9463 /* MultiModeFilterMachine.swift.disabled */,
+				7D46614D7FD0BE2B18B9D4F1 /* MultiModeFilterMachine.swift */,
 			);
 			path = FilterModule;
 			sourceTree = "<group>";
@@ -1039,6 +1088,13 @@
 				0FCDC27C112749DC20E5F34E /* FMToneParameterProtocols.swift */,
 			);
 			path = FMToneParameters;
+			sourceTree = "<group>";
+		};
+		174732314CB173BC8A797ED5 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		20999F0DEEAFDDF8BC36A79A /* FilterModuleTests */ = {
@@ -1084,8 +1140,13 @@
 		2564DC4C732AEB0F5CD3A922 /* MIDIModuleTests */ = {
 			isa = PBXGroup;
 			children = (
+				C84CCF803AA9FF2CA604BD07 /* ExternalControllerTests.swift */,
+				3B9B71DF660385768777F500 /* MIDICCMapperTests.swift */,
 				850D2E1815AC80F8B60C089D /* MIDIIOModuleTests.swift */,
 				EADD7861A07AD5FCAD70BDFF /* MIDIModuleTests.swift */,
+				5A34B4C2DA957FFDA1EA3B60 /* MIDIPerformanceTests.swift */,
+				98236F4BD4EC63797D41A9D7 /* MIDITimingTests.swift */,
+				CABCBCCA612D010EE43AFBD9 /* MIDITrackTests.swift */,
 				F82BC0AF46DF07F00C56C186 /* MIDIUITests.swift */,
 			);
 			path = MIDIModuleTests;
@@ -1172,6 +1233,13 @@
 			path = SendEffects;
 			sourceTree = "<group>";
 		};
+		61062410EB4DB9FC5AC97D63 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
 		6B27D06E53894D3EB8931A4F /* CodeCoverage */ = {
 			isa = PBXGroup;
 			children = (
@@ -1180,6 +1248,13 @@
 				DB28B5320934CD9F15309F1A /* CoverageUtilities.swift */,
 			);
 			path = CodeCoverage;
+			sourceTree = "<group>";
+		};
+		6BA962A7FB10D289C2C38462 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Repositories;
 			sourceTree = "<group>";
 		};
 		6BA99FD6FDB5E6B763C66885 /* Entities */ = {
@@ -1221,6 +1296,7 @@
 		80E4067225EE343A323030DD /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				19FCA33869F9E41E853774E9 /* FMParameterBridge.swift */,
 				FD06AA96D66B73E27A4CE682 /* FMParameterInteractor.swift */,
 				04902679271D82FCAFDA028D /* FMToneParameterInteractor.swift */,
 				06C1BF64AC884274DFDB9B7F /* FMToneParameterView.swift */,
@@ -1309,7 +1385,9 @@
 			isa = PBXGroup;
 			children = (
 				6BA99FD6FDB5E6B763C66885 /* Entities */,
+				CEC9B68F572212373605323A /* Extensions */,
 				7F0FA3536E2AA2891546D317 /* Migration */,
+				6BA962A7FB10D289C2C38462 /* Repositories */,
 				A4EB8814FEA21CB8FECCED3B /* CacheService.swift */,
 				90C9CBEF79A0A6679BD39811 /* CoreDataStack.swift */,
 				8B58A00FD2B23678120D19B8 /* DataLayer.swift */,
@@ -1356,14 +1434,22 @@
 		9F3340334D7E7480306E5AD2 /* DigitonePadTests */ = {
 			isa = PBXGroup;
 			children = (
+				E2F7194F5ED7B8FFF6113681 /* FMParameterBridgeTests.swift */,
 				1625CBDD7B775F86D6DC341D /* MasterEffectsTests.swift */,
 				C045F201436F452802B58E68 /* OnScreenKeyboardIntegrationTests.swift */,
 				33028B536AA951BDDED45BA0 /* OnScreenKeyboardTests.swift */,
+				ADE5DE43CEF055338B00ED75 /* ParameterBindingTests.swift */,
+				1EE9E1658BC9426D70BF1F4D /* ParameterEncoderTests.swift */,
+				AA6AFC2B28CEA3DA07636689 /* ParameterPageTests.swift */,
+				BED95FF6BAF196F7449BC650 /* ParameterPersistenceTests.swift */,
 				690F5A20BB20A41FDDEDD0F6 /* ProjectManagementIntegrationTests.swift */,
 				6F394A623D4014C839771365 /* ProjectManagementTests.swift */,
 				1CEFD7B7D3D61E72816BC415 /* ProjectManagementUITests.swift */,
 				33B47D010BDAB7F633D01B51 /* SendEffectsTests.swift */,
+				C97BD587466869DFF7806A9F /* SequencerIntegrationTests.swift */,
 				4F39DCBC5D20CFE8F2CF1CB1 /* TrackEffectsTests.swift */,
+				63AA2ABB14B7BE0630E05BEB /* UIAudioIntegrationTests.swift */,
+				565FB365B6C5AFA0B393309A /* VoiceMachineSelectionTests.swift */,
 			);
 			path = DigitonePadTests;
 			sourceTree = "<group>";
@@ -1399,6 +1485,13 @@
 			path = SequencerModuleTests;
 			sourceTree = "<group>";
 		};
+		B46A7FC3E5222C86A6677C75 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
 		BB2559AE87116000DDB7FCB2 /* FilterMachineTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -1427,9 +1520,22 @@
 			path = MockObjects;
 			sourceTree = "<group>";
 		};
+		CEC9B68F572212373605323A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A13679395CC3051248C4A69A /* Preset+FMParameters.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		D802889FEAD39DCDF6DD0744 /* ProjectManagement */ = {
 			isa = PBXGroup;
 			children = (
+				EC26A5E019F9F3B16726025A /* Entity */,
+				084DD8F8BD04C7C9CA2E36A2 /* Interactor */,
+				B46A7FC3E5222C86A6677C75 /* Presenter */,
+				61062410EB4DB9FC5AC97D63 /* Router */,
+				174732314CB173BC8A797ED5 /* View */,
 				A8EDC2A2F497238E9A80E49A /* ProjectManagementInteractor.swift */,
 				E97B1D79B880F7166E6990CD /* ProjectManagementPresenter.swift */,
 				A7A0F19FFC6B971EE11A75A0 /* ProjectManagementProtocols.swift */,
@@ -1484,6 +1590,9 @@
 		DC30EBCB928CD4B0FF4BEB82 /* MIDIModule */ = {
 			isa = PBXGroup;
 			children = (
+				69029C6F6169A4DD0F67C940 /* ExternalControllerManager.swift */,
+				556112DC8BDF1CACA3F59901 /* MIDICCMapper.swift */,
+				DA4328749ED628D36B2C122F /* MIDIClockSync.swift */,
 				38ED0FD55281E7CBC819A28C /* MIDIInteractor.swift */,
 				2D41B038F113128F53482641 /* MIDIIOModule.swift */,
 				BE8FC99BAE63D5B828282310 /* MIDIIOSupport.swift */,
@@ -1491,6 +1600,7 @@
 				E7770A25BC1254B7E23F11B8 /* MIDIModuleProtocols.swift */,
 				F794C5B17D9D1990282B19AA /* MIDIPresenter.swift */,
 				D7D9CA2E50FE09BA85B8CFAB /* MIDIRouter.swift */,
+				8B295D1F4E3BBE96057F314B /* MIDISequencer.swift */,
 				3045BC0C2C86DB216E07D963 /* MIDISwiftUIView.swift */,
 				23BF00416128871C39D0EF7F /* MIDIViewController.swift */,
 				88F8043539B8C575E10FC56C /* MIDIViewModel.swift */,
@@ -1524,9 +1634,17 @@
 			path = TestUtilities;
 			sourceTree = "<group>";
 		};
+		E2D3A0CFE446EE211FFD492C /* Examples */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Examples;
+			sourceTree = "<group>";
+		};
 		E4BE706A4CD99A2627DFD86C /* AudioEngine */ = {
 			isa = PBXGroup;
 			children = (
+				E2D3A0CFE446EE211FFD492C /* Examples */,
 				35047D2855C0DDE0F4C646C4 /* AudioEngine.swift */,
 				E18F3BBD3E8192BD315B60B9 /* AVAudioEngineCoreArchitecture.swift */,
 				AAF4A085C5F60DA145F2F5FA /* AVAudioEngineCoreSupport.swift */,
@@ -1549,8 +1667,17 @@
 				773AFEACC8A4B4425E320A54 /* DigitonePadTypes.swift */,
 				2F75ABC53AB2BCB3CE21789C /* MainLayoutState.swift */,
 				D5ACA76BB63098CC8AA8D1E9 /* MainLayoutView.swift */,
+				8838AD6F98BEC592AD9AF4FF /* ParameterBridge.swift */,
+				847976891C2F28D8632DB72F /* SequencerBridge.swift */,
 			);
 			path = DigitonePad;
+			sourceTree = "<group>";
+		};
+		EC26A5E019F9F3B16726025A /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Entity;
 			sourceTree = "<group>";
 		};
 		F0505775C49A6C2B60D50F8B /* MasterEffects */ = {
@@ -1660,7 +1787,6 @@
 			buildConfigurationList = 14AD93FFF60724A19FD02F7C /* Build configuration list for PBXNativeTarget "FilterModule" */;
 			buildPhases = (
 				01381161AE0F02ED03B47097 /* Sources */,
-				2EB0BC7A53BB0ADF04EB1BA1 /* Resources */,
 				4BA514BB62AA156A4ED2BD0E /* Frameworks */,
 			);
 			buildRules = (
@@ -1884,59 +2010,59 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					177607479C85334D7F1E6765 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = GN9UGD54YC;
 						ProvisioningStyle = Automatic;
 					};
 					190FC4469B993B5C86DDC3A8 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = GN9UGD54YC;
 						ProvisioningStyle = Automatic;
 					};
 					3132DF8894C7C4AD417AD8CE = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = GN9UGD54YC;
 						ProvisioningStyle = Automatic;
 					};
 					39AC046FF8D8F79E64FAFD34 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = GN9UGD54YC;
 						ProvisioningStyle = Automatic;
 					};
 					69920340B8A162AE2E416E35 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = GN9UGD54YC;
 						ProvisioningStyle = Automatic;
 					};
 					915E2715DAD803B82A385520 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = GN9UGD54YC;
 						ProvisioningStyle = Automatic;
 					};
 					A75C02AFCD099A6E8C7EC349 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = GN9UGD54YC;
 						ProvisioningStyle = Automatic;
 					};
 					C90D9224C75BF9E097D1581F = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = GN9UGD54YC;
 						ProvisioningStyle = Automatic;
 					};
 					C9F6DCC37188C500925E7B94 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = GN9UGD54YC;
 						ProvisioningStyle = Automatic;
 					};
 					D1AB4D1D0DB9079499D2DE68 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = GN9UGD54YC;
 						ProvisioningStyle = Automatic;
 					};
 					D8734934439B87C8ADD856AB = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = GN9UGD54YC;
 						ProvisioningStyle = Automatic;
 					};
 					DBE57ABECF2CA564F666F829 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = GN9UGD54YC;
 						ProvisioningStyle = Automatic;
 					};
 					F0CFD0CA6E9D2B6A0250A8DC = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = GN9UGD54YC;
 						ProvisioningStyle = Automatic;
 					};
 					F78F3D5113B710F41C350DC0 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = GN9UGD54YC;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -1974,17 +2100,6 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		2EB0BC7A53BB0ADF04EB1BA1 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FA4E3214CDDE8D95D96C5D1F /* FilterPerformanceOptimizer.swift.disabled in Resources */,
-				B510DCF8B5DDCE7AF3EC82C2 /* FilterResonance.swift.disabled in Resources */,
-				446737F2A70189305778F0B9 /* FourPoleLadderFilter.swift.disabled in Resources */,
-				B3F894CB39F77ED95272539D /* MultiModeFilterMachine.swift.disabled in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		880739E7F1D2B4E755CE0B23 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2007,9 +2122,13 @@
 				25B5E7129BD5E81A45471749 /* FilterModule.swift in Sources */,
 				FCB18E778ADF6FE6E27D7862 /* FilterMorphing.swift in Sources */,
 				6CEC5D836EC709D9D8C1F5A3 /* FilterParameterSmoothing.swift in Sources */,
+				BF714353BE8163F5C8F2EE73 /* FilterPerformanceOptimizer.swift in Sources */,
+				78EDA627BB7C59C3152E2FD4 /* FilterResonance.swift in Sources */,
+				5501FDFD60E1AA92DF760C7B /* FourPoleLadderFilter.swift in Sources */,
 				56576D8D2F806F5DFE815651 /* KeyboardTrackingIntegration.swift in Sources */,
 				EAE7C4BD827F5C7CBB7C8312 /* Lowpass4FilterMachine.swift in Sources */,
 				A9D33DA81D68CD9618428711 /* MultiModeFilter.swift in Sources */,
+				D8E852E7B4323C8F05CC1D09 /* MultiModeFilterMachine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2017,6 +2136,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F64789791DC5C574F10ECDF /* ExternalControllerManager.swift in Sources */,
+				AE4506BBE74079FB38279240 /* MIDICCMapper.swift in Sources */,
+				3EFF9F2BEE9E4C8B87578236 /* MIDIClockSync.swift in Sources */,
 				7976CDC4308392A2E0E915D1 /* MIDIIOModule.swift in Sources */,
 				2586C62AD5ADD62BCEC5EBF4 /* MIDIIOSupport.swift in Sources */,
 				FA0D9A847DE5C0B3AA1887E1 /* MIDIInteractor.swift in Sources */,
@@ -2024,6 +2146,7 @@
 				79E0AD13A090854AAE1DE6A0 /* MIDIModuleProtocols.swift in Sources */,
 				7D06EFFD9070FA713CF40FF1 /* MIDIPresenter.swift in Sources */,
 				3A1C838EF0077F30332DEB21 /* MIDIRouter.swift in Sources */,
+				59142369267317F8A292ACBE /* MIDISequencer.swift in Sources */,
 				8F01AB0A032A13AFA09308E6 /* MIDISwiftUIView.swift in Sources */,
 				ED6579BAB2173DFC0DDBE710 /* MIDIViewController.swift in Sources */,
 				F494604752EE7FC383D66DEA /* MIDIViewModel.swift in Sources */,
@@ -2135,6 +2258,7 @@
 				ACDFDD50D36825A5D9305072 /* Pattern+CoreDataProperties.swift in Sources */,
 				20FFEB88043E32FF3CA77893 /* Preset+CoreDataClass.swift in Sources */,
 				B700E0B9C254485DA6F1025B /* Preset+CoreDataProperties.swift in Sources */,
+				31080F992E2DFE91D6A5443C /* Preset+FMParameters.swift in Sources */,
 				1759B934CB0114385D6C7D7F /* Project+CoreDataClass.swift in Sources */,
 				012B63F57818F7F99191C6B3 /* Project+CoreDataProperties.swift in Sources */,
 				2D8CAF47C18031C1FD580ECD /* Track+CoreDataClass.swift in Sources */,
@@ -2208,6 +2332,7 @@
 				B99376BA1BB6D62009F215C7 /* DigitonePadApp.swift in Sources */,
 				F922E8491D7E24898F80AB20 /* DigitonePadTypes.swift in Sources */,
 				681DD7A3A04FBBA3E1121906 /* EffectControlViews.swift in Sources */,
+				6A5263674DE2FE1015DCAD8E /* FMParameterBridge.swift in Sources */,
 				DB2C0E564BBB90F81ED32D8D /* FMParameterInteractor.swift in Sources */,
 				69ED1FDD443C06F4087A924E /* FMToneParameterInteractor.swift in Sources */,
 				333E41CA4E7F5990DB6C9386 /* FMToneParameterProtocols.swift in Sources */,
@@ -2223,6 +2348,7 @@
 				C46E64560BEA051AFD2BB704 /* OnScreenKeyboardProtocols.swift in Sources */,
 				62441E7618EA02AFBF44CC8C /* OnScreenKeyboardRouter.swift in Sources */,
 				FBE6F1D5BB1EA7BF23245799 /* OnScreenKeyboardView.swift in Sources */,
+				55726B93C9BAD067B3FC6F51 /* ParameterBridge.swift in Sources */,
 				F72906AC81B0E1320EA2DD90 /* ParameterEncoderSection.swift in Sources */,
 				2DD627A836F60CE1D81A1DEF /* ParameterPageView.swift in Sources */,
 				12A6C47065E9F874E4B6C0E1 /* ProjectManagementInteractor.swift in Sources */,
@@ -2231,6 +2357,7 @@
 				CA20F839C78005E144C1D753 /* ProjectManagementRouter.swift in Sources */,
 				22CC07974EDAE390CE0ADE6E /* ProjectManagementView.swift in Sources */,
 				639A2065BB172C71779249C8 /* SendControlsView.swift in Sources */,
+				8CDD5DBE03D0C16D4A919AFA /* SequencerBridge.swift in Sources */,
 				58B58162AAADA9E0A3DF6147 /* StepSequencerGrid.swift in Sources */,
 				114B836981DEC77063BC8F54 /* TrackEffectsView.swift in Sources */,
 			);
@@ -2254,7 +2381,9 @@
 				83EFCBE5ADBDC9F76B382D09 /* DataLayerTests.swift in Sources */,
 				EA5404CD8691B8762353C3D2 /* EntityValidationTests.swift in Sources */,
 				811B995A252CE31CB8E85BC8 /* EnvelopeGeneratorSystemTests.swift in Sources */,
+				A628FE316687BBAA6E0202B5 /* ExternalControllerTests.swift in Sources */,
 				23CD3EFA4F262E8EC1090DE5 /* FMDrumVoiceMachineTests.swift in Sources */,
+				19327F8591056FE9862D6F6D /* FMParameterBridgeTests.swift in Sources */,
 				94CC835F1CE674CEB99B7943 /* FXModuleTests.swift in Sources */,
 				70A58CA00F8FD07914C70007 /* FetchOptimizationTests.swift in Sources */,
 				FB734FFA9E1955CC35311A4E /* FilterModuleTests.swift in Sources */,
@@ -2264,8 +2393,12 @@
 				3233840A379E6316790269EE /* KeyboardTrackingIntegrationTests.swift in Sources */,
 				71B9C84097BC1CCC427CC0DA /* KeyboardTrackingTests.swift in Sources */,
 				87E0B7F13BBFD8B92D12A187 /* Lowpass4FilterMachineTests.swift in Sources */,
+				54E8077C1A31F9CA29A3D797 /* MIDICCMapperTests.swift in Sources */,
 				4FA7791C07521DAA345B4820 /* MIDIIOModuleTests.swift in Sources */,
 				B6F6576347793C4D9A1DA6D1 /* MIDIModuleTests.swift in Sources */,
+				AE529D50D7545D0FD40A6569 /* MIDIPerformanceTests.swift in Sources */,
+				3F6FE9D80D867ECF3A1D8B29 /* MIDITimingTests.swift in Sources */,
+				57310D99A3F0BF93BA8ADCA1 /* MIDITrackTests.swift in Sources */,
 				01248085A2405351BBBFC7AA /* MIDIUITests.swift in Sources */,
 				9000BCA8EDCB7A6C23B8132B /* MachineProtocolsTests.swift in Sources */,
 				68532F4EDA0C1DC30B506C3F /* MasterEffectsTests.swift in Sources */,
@@ -2278,6 +2411,10 @@
 				44D6C8E32F19F3CA93384682 /* OnScreenKeyboardIntegrationTests.swift in Sources */,
 				166560967B3B1A7BB9F356F2 /* OnScreenKeyboardTests.swift in Sources */,
 				C1E194DA719231CC633EEF9B /* OscillatorModulationTests.swift in Sources */,
+				DE7A3873BAA5645CCDDFF316 /* ParameterBindingTests.swift in Sources */,
+				67FD0C6B8B14F4FB7D1D4CC0 /* ParameterEncoderTests.swift in Sources */,
+				6D82BA667114149C9C0F15CA /* ParameterPageTests.swift in Sources */,
+				9A0AFB613BC2D8CE64D84081 /* ParameterPersistenceTests.swift in Sources */,
 				90726D673C95D683C4603D6D /* ProjectInteractorTests.swift in Sources */,
 				649D00B9A39B1599529542DB /* ProjectManagementIntegrationTests.swift in Sources */,
 				57611BD59A99B6B05AEE77D2 /* ProjectManagementTests.swift in Sources */,
@@ -2286,6 +2423,7 @@
 				0F9DBAD4EA70B49C546AE82F /* SendEffectsTests.swift in Sources */,
 				4C95329373B1C454DF7FAFF5 /* SendFXImplementationTests.swift in Sources */,
 				C320E6F7C4E56692A00AD1C1 /* SequencerBridgeTests.swift in Sources */,
+				B3E89542BC5D095A7A6A8CCC /* SequencerIntegrationTests.swift in Sources */,
 				C50C04AF2DA735801EBDF225 /* SequencerInteractorTests.swift in Sources */,
 				C209403EAEE513843AC8F68A /* SequencerModuleTests.swift in Sources */,
 				95F6131F7C541F783408E4B4 /* SwarmerVoiceMachineTests.swift in Sources */,
@@ -2293,8 +2431,10 @@
 				DC991BC845FBF40FE366B750 /* TrackEffectsTests.swift in Sources */,
 				4E66CBF9D24867323C37DB51 /* TrackFXImplementationTests.swift in Sources */,
 				FF504E3ED6773620697636AF /* TrackFXProcessorTests.swift in Sources */,
+				75F11C333DB748B85668C58B /* UIAudioIntegrationTests.swift in Sources */,
 				A771F1D529019D62AE061471 /* UIComponentsTests.swift in Sources */,
 				69142EFE3AE67A917A3B4067 /* ValidationTests.swift in Sources */,
+				D3F1D525D91CF8970FFA1CFB /* VoiceMachineSelectionTests.swift in Sources */,
 				619055C66449E9A3C8597A22 /* VoiceModuleTests.swift in Sources */,
 				B9CCF3836BCE053CC9C2202E /* WavetoneAudioEngineIntegrationTests.swift in Sources */,
 				56E56ADE5AD6E8566AC3133A /* WavetoneEnvelopeIntegrationTests.swift in Sources */,
@@ -3020,7 +3160,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = GN9UGD54YC;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -3237,7 +3377,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = GN9UGD54YC;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

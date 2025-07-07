@@ -74,12 +74,7 @@ public enum TrackingMode: CaseIterable, Codable {
     case custom      // Custom curve
 }
 
-/// Delegate protocol for keyboard tracking events
-public protocol KeyboardTrackingDelegate: AnyObject {
-    func trackingEngineRegistered(id: String)
-    func trackingEngineUnregistered(id: String)
-    func trackingValueChanged(engineId: String, note: UInt8, value: Float)
-}
+// KeyboardTrackingDelegate is defined later in this file with comprehensive methods
 
 /// Real-time parameters for keyboard tracking modulation
 public struct KeyboardTrackingParameters {
@@ -128,7 +123,7 @@ public class KeyboardTrackingEngine {
         case .exponential:
             trackingValue = pow(2.0, noteOffset / 12.0) - 1.0
         case .logarithmic:
-            trackingValue = log2(1.0 + abs(noteOffset) / 12.0) * sign(noteOffset)
+            trackingValue = log2(1.0 + abs(noteOffset) / 12.0) * (noteOffset < 0 ? -1.0 : 1.0)
         case .sCurve:
             // S-curve for smooth transitions
             let normalized = noteOffset / 24.0 // ±2 octaves
@@ -206,6 +201,18 @@ public class KeyboardTrackingEngine {
             pitchBendAmount: parameters.pitchBend,
             portamentoPhase: portamentoPhase
         )
+    }
+    
+    /// Convert MIDI note to frequency (for reference)
+    public static func midiNoteToFrequency(_ note: UInt8) -> Float {
+        let noteFloat = Float(note)
+        return 440.0 * pow(2.0, (noteFloat - 69.0) / 12.0)  // A4 = 440Hz = MIDI note 69
+    }
+    
+    /// Convert frequency to nearest MIDI note (for display)
+    public static func frequencyToMidiNote(_ frequency: Float) -> UInt8 {
+        let noteFloat = 69.0 + 12.0 * log2(frequency / 440.0)
+        return UInt8(max(0, min(127, round(noteFloat))))
     }
     
     /// Reset the tracking state
