@@ -4,6 +4,7 @@ import CoreData
 import VoiceModule
 import AudioEngine
 import DataLayer
+import DataModel
 
 /// Bridge class that connects UI parameter changes to the audio engine
 /// Provides real-time parameter updates with <1ms latency and maintains data persistence
@@ -15,7 +16,7 @@ public final class FMParameterBridge: ObservableObject {
     private let voiceMachine: FMToneVoiceMachine?
     private let audioEngine: AudioEngine?
     private let coreDataStack: CoreDataStack?
-    private var currentPreset: PresetEntity?
+    private var currentPreset: Preset?
     
     // Parameter mapping and scaling
     private let parameterSpecs: [FMParameterID: ParameterSpec]
@@ -186,14 +187,14 @@ public final class FMParameterBridge: ObservableObject {
         }
     }
     
-    private func saveParameterToPreset(_ parameterID: FMParameterID, value: Double, preset: PresetEntity) async {
+    private func saveParameterToPreset(_ parameterID: FMParameterID, value: Double, preset: Preset) async {
         guard let coreDataStack = coreDataStack else { return }
         
         let context = coreDataStack.newBackgroundContext()
         
         await context.perform {
             // Find preset in this context
-            if let presetInContext = try? context.existingObject(with: preset.objectID) as? PresetEntity {
+            if let presetInContext = try? context.existingObject(with: preset.objectID) as? Preset {
                 // Save parameter value using key-value coding
                 presetInContext.setValue(value, forKey: parameterID.persistenceKey)
                 
@@ -206,7 +207,7 @@ public final class FMParameterBridge: ObservableObject {
     // MARK: - Preset Management
     
     /// Attach to a preset for automatic parameter persistence
-    public func attachToPreset(_ preset: PresetEntity) {
+    public func attachToPreset(_ preset: Preset) {
         currentPreset = preset
     }
     
@@ -216,7 +217,7 @@ public final class FMParameterBridge: ObservableObject {
     }
     
     /// Load all parameters from a preset
-    public func loadPreset(_ preset: PresetEntity) async {
+    public func loadPreset(_ preset: Preset) async {
         let parameters = await loadParametersFromPreset(preset)
         
         await MainActor.run {
@@ -231,14 +232,14 @@ public final class FMParameterBridge: ObservableObject {
         }
     }
     
-    private func loadParametersFromPreset(_ preset: PresetEntity) async -> [FMParameterID: Double] {
+    private func loadParametersFromPreset(_ preset: Preset) async -> [FMParameterID: Double] {
         guard let coreDataStack = coreDataStack else { return [:] }
         
         let context = coreDataStack.newBackgroundContext()
         var parameters: [FMParameterID: Double] = [:]
         
         await context.perform {
-            if let presetInContext = try? context.existingObject(with: preset.objectID) as? PresetEntity {
+            if let presetInContext = try? context.existingObject(with: preset.objectID) as? Preset {
                 for parameterID in FMParameterID.allCases {
                     if let value = presetInContext.value(forKey: parameterID.persistenceKey) as? Double {
                         parameters[parameterID] = value

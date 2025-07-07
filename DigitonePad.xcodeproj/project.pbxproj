@@ -59,6 +59,7 @@
 		23CD3EFA4F262E8EC1090DE5 /* FMDrumVoiceMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99BC55AF026DFE29F7B4396 /* FMDrumVoiceMachineTests.swift */; };
 		24355EA6030BF7D553BBA7E5 /* FMVoiceMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D49BD343E286452B04CB956 /* FMVoiceMachine.swift */; };
 		245B52FA36CA18F383823CBA /* KeyComboPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03CD469FC8FB8926488940A /* KeyComboPresenter.swift */; };
+		2485727CAB87E044A3BC50CE /* VoiceModule.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AD196E7566516944B7DAD63A /* VoiceModule.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		251918DD9D6FA701435FBA86 /* MigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9060CF3BC44F9294B35761 /* MigrationTests.swift */; };
 		2586C62AD5ADD62BCEC5EBF4 /* MIDIIOSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8FC99BAE63D5B828282310 /* MIDIIOSupport.swift */; };
 		25B5E7129BD5E81A45471749 /* FilterModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F238F240DD13D58B068C45 /* FilterModule.swift */; };
@@ -72,6 +73,7 @@
 		2F64789791DC5C574F10ECDF /* ExternalControllerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69029C6F6169A4DD0F67C940 /* ExternalControllerManager.swift */; };
 		31080F992E2DFE91D6A5443C /* Preset+FMParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A13679395CC3051248C4A69A /* Preset+FMParameters.swift */; };
 		3233840A379E6316790269EE /* KeyboardTrackingIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBEA4DAF9A5ED18AD88E17C /* KeyboardTrackingIntegrationTests.swift */; };
+		32DB496119CE3290B40BAD0E /* DataModel.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B7C154BA7FFF9BD6BF27472E /* DataModel.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3307452B117B32B3F42A3A12 /* TestUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B80091BF8059D2E38C05956 /* TestUtilities.swift */; };
 		333E41CA4E7F5990DB6C9386 /* FMToneParameterProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FCDC27C112749DC20E5F34E /* FMToneParameterProtocols.swift */; };
 		3407E9D63723ACD2081E4AAF /* MasterOverdriveEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A1880FD330CDAE7A45B128 /* MasterOverdriveEffect.swift */; };
@@ -188,6 +190,7 @@
 		8F8305B97B9BFECDF34A71BE /* AudioEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17A1DE5579434E59E933A3D8 /* AudioEngine.framework */; };
 		9000BCA8EDCB7A6C23B8132B /* MachineProtocolsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9D1EB02F18F2B1778F8E42 /* MachineProtocolsTests.swift */; };
 		90726D673C95D683C4603D6D /* ProjectInteractorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B51DA828DBA95EBD380CC9 /* ProjectInteractorTests.swift */; };
+		90F9CD7BB23FA37EEF7525E2 /* AudioEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17A1DE5579434E59E933A3D8 /* AudioEngine.framework */; };
 		91E0EB22647A1A029BAF327F /* KeyboardDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D49C36340E79853CA511D6E /* KeyboardDemoView.swift */; };
 		923B2FB47A8DE63007388B2A /* DataLayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 089ADBEAB80684AD2FB47C50 /* DataLayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		94CC835F1CE674CEB99B7943 /* FXModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4AC2BCD78282B4BBBE8801 /* FXModuleTests.swift */; };
@@ -197,7 +200,9 @@
 		9626F73F8814BAE4E791E665 /* OnScreenKeyboardPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5178C2866EC38590FCA9DD1A /* OnScreenKeyboardPresenter.swift */; };
 		9861F425A68FDC864ADD5878 /* FilterModule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A675DC0788C6ECBD3BF182F3 /* FilterModule.framework */; };
 		9A0AFB613BC2D8CE64D84081 /* ParameterPersistenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BED95FF6BAF196F7449BC650 /* ParameterPersistenceTests.swift */; };
+		9BA0C90104DD83210747161C /* DataLayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 089ADBEAB80684AD2FB47C50 /* DataLayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9E2EC6B50FFA91436A770A89 /* MasterFXImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9829EB4FD77882EEA50E7E62 /* MasterFXImplementation.swift */; };
+		A193508A61D2D042F80AA8CF /* VoiceModule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD196E7566516944B7DAD63A /* VoiceModule.framework */; };
 		A205DF649EBA164C5060809B /* ProjectManagementUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CEFD7B7D3D61E72816BC415 /* ProjectManagementUITests.swift */; };
 		A234DDBD6FD788C31C482D18 /* MasterEffectsProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0933ACDB48CCC71595C36F2B /* MasterEffectsProcessor.swift */; };
 		A2C48A0F56E948BBB70198CE /* ParameterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C41B230B1504ECF994F41C /* ParameterManager.swift */; };
@@ -225,7 +230,9 @@
 		B99376BA1BB6D62009F215C7 /* DigitonePadApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4B83BF4FADE5EF11A135AE /* DigitonePadApp.swift */; };
 		B9CCF3836BCE053CC9C2202E /* WavetoneAudioEngineIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D2BF4F824DEB605F3C139F /* WavetoneAudioEngineIntegrationTests.swift */; };
 		BA66BF3288A9D9C0EE7F8464 /* KeyComboRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5491E649016164B675C68743 /* KeyComboRouter.swift */; };
+		BCBBF7E5B9B359D00B53EADE /* AudioEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 17A1DE5579434E59E933A3D8 /* AudioEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BCFCCD03119702929F37C5DD /* MachineProtocols.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3BB6877737874A9B6221044 /* MachineProtocols.framework */; };
+		BDE958648ED7082B18E4D7B0 /* DataModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7C154BA7FFF9BD6BF27472E /* DataModel.framework */; };
 		BF3C9230DC8ED3A3C95E8B9D /* VoiceModule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD196E7566516944B7DAD63A /* VoiceModule.framework */; };
 		BF540BE2E4E1A7569F01512C /* AudioEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17A1DE5579434E59E933A3D8 /* AudioEngine.framework */; };
 		BF714353BE8163F5C8F2EE73 /* FilterPerformanceOptimizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D1CA9AF5296FFE00761A5F /* FilterPerformanceOptimizer.swift */; };
@@ -294,6 +301,7 @@
 		FA0D9A847DE5C0B3AA1887E1 /* MIDIInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED0FD55281E7CBC819A28C /* MIDIInteractor.swift */; };
 		FB3FE6C45BF3FEDD3EE08502 /* HighPrecisionTimerCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006A60CAE73079F5BF6CDC4C /* HighPrecisionTimerCoreTests.swift */; };
 		FB734FFA9E1955CC35311A4E /* FilterModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1253BD5706B7A4E4348DF3AF /* FilterModuleTests.swift */; };
+		FBD0CB0B05A53E53FB6E46CF /* DataLayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 089ADBEAB80684AD2FB47C50 /* DataLayer.framework */; };
 		FBE6F1D5BB1EA7BF23245799 /* OnScreenKeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98348F5DF7FFE9C760A569EB /* OnScreenKeyboardView.swift */; };
 		FC077CE7A4D00102D2990F59 /* DrumVisualizationComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5054671F7018A34E6B8E3F /* DrumVisualizationComponents.swift */; };
 		FCB18E778ADF6FE6E27D7862 /* FilterMorphing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610A2CD9F87C168489F82E75 /* FilterMorphing.swift */; };
@@ -338,6 +346,13 @@
 			remoteGlobalIDString = D1AB4D1D0DB9079499D2DE68;
 			remoteInfo = MachineProtocols;
 		};
+		14ACAE3AAE54E148B1D1FD89 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 022CB2F9BE05AC2B379F2305 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DBE57ABECF2CA564F666F829;
+			remoteInfo = AudioEngine;
+		};
 		1B5F1376FE49B5837A402421 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 022CB2F9BE05AC2B379F2305 /* Project object */;
@@ -366,12 +381,26 @@
 			remoteGlobalIDString = D1AB4D1D0DB9079499D2DE68;
 			remoteInfo = MachineProtocols;
 		};
+		2FFD6EF4D5BEFF0C5B461A56 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 022CB2F9BE05AC2B379F2305 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D8734934439B87C8ADD856AB;
+			remoteInfo = DataLayer;
+		};
 		31CB11D370C7EFDC3059A417 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 022CB2F9BE05AC2B379F2305 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = C9F6DCC37188C500925E7B94;
 			remoteInfo = SequencerModule;
+		};
+		33273840176AA18D6C0F41C4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 022CB2F9BE05AC2B379F2305 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 177607479C85334D7F1E6765;
+			remoteInfo = VoiceModule;
 		};
 		373D2E8BD2F4C541AADFFBC9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -555,6 +584,13 @@
 			remoteGlobalIDString = D1AB4D1D0DB9079499D2DE68;
 			remoteInfo = MachineProtocols;
 		};
+		D393FB563B2B12731DD8EBDB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 022CB2F9BE05AC2B379F2305 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 39AC046FF8D8F79E64FAFD34;
+			remoteInfo = DataModel;
+		};
 		DB868F002146A419E51BEE25 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 022CB2F9BE05AC2B379F2305 /* Project object */;
@@ -629,6 +665,10 @@
 			dstSubfolderSpec = 10;
 			files = (
 				094941A4943474FAB61F105B /* AppShell.framework in Embed Frameworks */,
+				9BA0C90104DD83210747161C /* DataLayer.framework in Embed Frameworks */,
+				32DB496119CE3290B40BAD0E /* DataModel.framework in Embed Frameworks */,
+				BCBBF7E5B9B359D00B53EADE /* AudioEngine.framework in Embed Frameworks */,
+				2485727CAB87E044A3BC50CE /* VoiceModule.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -922,6 +962,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				035C7624E542C1270827326F /* AppShell.framework in Frameworks */,
+				FBD0CB0B05A53E53FB6E46CF /* DataLayer.framework in Frameworks */,
+				BDE958648ED7082B18E4D7B0 /* DataModel.framework in Frameworks */,
+				90F9CD7BB23FA37EEF7525E2 /* AudioEngine.framework in Frameworks */,
+				A193508A61D2D042F80AA8CF /* VoiceModule.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1864,6 +1908,10 @@
 			);
 			dependencies = (
 				144594AE7A1F73EE97348F20 /* PBXTargetDependency */,
+				DE7571817204C0974F04A8E6 /* PBXTargetDependency */,
+				5C0C87DB0835348090EB75D3 /* PBXTargetDependency */,
+				6B8BA2A3AB1AD6C5EEB57A1B /* PBXTargetDependency */,
+				B24BA981E8BEFA6A6DC5AF9C /* PBXTargetDependency */,
 			);
 			name = DigitonePad;
 			packageProductDependencies = (
@@ -2534,6 +2582,11 @@
 			target = 190FC4469B993B5C86DDC3A8 /* FXModule */;
 			targetProxy = DB868F002146A419E51BEE25 /* PBXContainerItemProxy */;
 		};
+		5C0C87DB0835348090EB75D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 39AC046FF8D8F79E64FAFD34 /* DataModel */;
+			targetProxy = D393FB563B2B12731DD8EBDB /* PBXContainerItemProxy */;
+		};
 		5D252B40AEFE801A08C1DF77 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 39AC046FF8D8F79E64FAFD34 /* DataModel */;
@@ -2548,6 +2601,11 @@
 			isa = PBXTargetDependency;
 			target = D1AB4D1D0DB9079499D2DE68 /* MachineProtocols */;
 			targetProxy = E4E0D961D1862044A5B9ACBB /* PBXContainerItemProxy */;
+		};
+		6B8BA2A3AB1AD6C5EEB57A1B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DBE57ABECF2CA564F666F829 /* AudioEngine */;
+			targetProxy = 14ACAE3AAE54E148B1D1FD89 /* PBXContainerItemProxy */;
 		};
 		711B9DDF8F60EBEE839BE93E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2609,6 +2667,11 @@
 			target = D1AB4D1D0DB9079499D2DE68 /* MachineProtocols */;
 			targetProxy = 94EE2D2F073F7CC085890452 /* PBXContainerItemProxy */;
 		};
+		B24BA981E8BEFA6A6DC5AF9C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 177607479C85334D7F1E6765 /* VoiceModule */;
+			targetProxy = 33273840176AA18D6C0F41C4 /* PBXContainerItemProxy */;
+		};
 		B7CD63B59749DD9521DBD129 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DBE57ABECF2CA564F666F829 /* AudioEngine */;
@@ -2633,6 +2696,11 @@
 			isa = PBXTargetDependency;
 			target = C9F6DCC37188C500925E7B94 /* SequencerModule */;
 			targetProxy = 31CB11D370C7EFDC3059A417 /* PBXContainerItemProxy */;
+		};
+		DE7571817204C0974F04A8E6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D8734934439B87C8ADD856AB /* DataLayer */;
+			targetProxy = 2FFD6EF4D5BEFF0C5B461A56 /* PBXContainerItemProxy */;
 		};
 		EB7D66018D2D2A820093F5FD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2693,7 +2761,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_ASSET_PATHS = "\"Resources/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -2863,7 +2930,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_ASSET_PATHS = "\"Resources/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;

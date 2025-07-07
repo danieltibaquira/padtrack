@@ -44,6 +44,10 @@ targets:
         optional: true
     dependencies:
       - target: AppShell
+      - target: DataLayer
+      - target: DataModel
+      - target: AudioEngine
+      - target: VoiceModule
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.app
@@ -51,7 +55,6 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         ENABLE_PREVIEWS: true
-        DEVELOPMENT_ASSET_PATHS: "\"Resources/Preview Content\""
     info:
       path: Resources/Info.plist
       properties:
