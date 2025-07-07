@@ -14,8 +14,8 @@ public final class FMParameterBridge: ObservableObject {
     // MARK: - Properties
     
     private let voiceMachine: FMToneVoiceMachine?
-    private let audioEngine: AudioEngine?
-    private let coreDataStack: CoreDataStack?
+    private let audioEngine: AudioEngineManager?
+    private let coreDataStack: PersistenceController?
     private var currentPreset: Preset?
     
     // Parameter mapping and scaling
@@ -34,8 +34,8 @@ public final class FMParameterBridge: ObservableObject {
     
     public init(
         voiceMachine: FMToneVoiceMachine? = nil,
-        audioEngine: AudioEngine? = nil,
-        coreDataStack: CoreDataStack? = nil
+        audioEngine: AudioEngineManager? = nil,
+        coreDataStack: PersistenceController? = nil
     ) {
         self.voiceMachine = voiceMachine
         self.audioEngine = audioEngine
@@ -439,10 +439,10 @@ extension FMToneVoiceMachine {
     }
 }
 
-extension AudioEngine {
+extension AudioEngineManager {
     /// Update synthesis parameter in audio engine
     func updateSynthParameter(_ parameterID: FMToneParameterID, value: Float) {
         // This would update the parameter in the audio engine
-        // Implementation depends on the existing AudioEngine interface
+        // Implementation depends on the existing AudioEngineManager interface
     }
 }
