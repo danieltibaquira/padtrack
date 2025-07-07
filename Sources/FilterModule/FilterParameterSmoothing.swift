@@ -260,7 +260,7 @@ public class MultiParameterSmoother {
 // MARK: - Filter-Specific Parameter Smoother
 
 /// Specialized parameter smoother for filter operations
-public class FilterParameterSmoother: MultiParameterSmoother {
+public class FilterSpecificParameterSmoother: MultiParameterSmoother {
     
     // MARK: - Filter-Specific Parameters
     

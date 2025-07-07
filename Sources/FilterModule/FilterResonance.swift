@@ -2,6 +2,12 @@ import Foundation
 import Accelerate
 import simd
 
+// MARK: - Helper Functions
+
+private func mix(_ a: Float, _ b: Float, t: Float) -> Float {
+    return a * (1.0 - t) + b * t
+}
+
 // MARK: - Resonance Configuration
 
 /// Configuration for filter resonance behavior
@@ -254,22 +260,39 @@ public class FilterResonanceEngine {
                 return input
             } else {
                 let excess = abs(input) - threshold
-                let sign = input < 0 ? -1.0 : 1.0
-                return sign * (threshold + excess * amount)
+                let sign: Float = input < 0 ? -1.0 : 1.0
+                return Float(sign * (threshold + excess * amount))
             }
         case .polynomial:
             let x = max(-1.0, min(1.0, input))
             return x - (amount * pow(x, 3) / 3.0)
+        case .atan:
+            return atan(input * (1.0 + amount * 2.0)) / (Float.pi * 0.5) * (1.0 + amount * 0.2)
+        case .cubic:
+            let x = max(-1.0, min(1.0, input))
+            let y = x - pow(x, 3) / 3.0
+            return mix(input, y, t: amount)
+        case .asymmetric:
+            let sign: Float = input < 0 ? -1.0 : 1.0
+            let absInput = abs(input)
+            let positive = tanh(absInput * (1.0 + amount * 2.0))
+            let negative = atan(absInput * (1.0 + amount * 3.0)) / (Float.pi * 0.5)
+            return sign * (input >= 0 ? positive : negative)
+        case .tube:
+            let drive = 1.0 + amount * 4.0
+            let x = input * drive
+            let y = tanh(x * 0.7) + atan(x * 0.3) * 0.5
+            return y / drive * (1.0 + amount * 0.3)
         }
     }
     
     private func applyLimiting(_ input: Float) -> Float {
         guard abs(input) > limiterThreshold else { return input }
         
-        let sign = input < 0 ? -1.0 : 1.0
+        let sign: Float = input < 0 ? -1.0 : 1.0
         let limitedMagnitude = limiterThreshold + (abs(input) - limiterThreshold) * 0.1
         
-        return sign * limitedMagnitude
+        return Float(sign * limitedMagnitude)
     }
     
     // MARK: - State Management

@@ -8,6 +8,12 @@ import SwiftUI
 import Combine
 // import AppShell  // Temporarily commented out due to build issues
 import DataLayer
+import MachineProtocols
+
+// MARK: - Re-export types to resolve import dependencies
+
+// Note: ProjectViewModel is defined in ProjectManagement/ProjectManagementProtocols.swift
+// and should be accessible within the same DigitonePad target
 
 // MARK: - AppState Declaration
 

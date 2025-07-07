@@ -12,17 +12,62 @@ import VoiceModule
 // MARK: - Keyboard Tracking Types
 
 /// Configuration for keyboard tracking behavior
-public struct KeyboardTrackingConfig {
-    public var amount: Float = 0.0               // Tracking amount (0.0 to 1.0)
-    public var keyCenter: UInt8 = 60            // Center note (C4)
-    public var trackingMode: TrackingMode = .linear
-    public var velocitySensitivity: Float = 0.0 // Velocity influence (0.0 to 1.0)
+public struct KeyboardTrackingConfig: Sendable {
+    public var trackingAmount: Float = 0.0      // -100% to +100% (negative = inverse tracking)
+    public var referenceNote: UInt8 = 60        // C4 (MIDI note 60) as reference
+    public var referenceFrequency: Float = 261.63  // C4 frequency in Hz
+    public var trackingCurve: TrackingCurve = .linear
+    public var velocitySensitivity: Float = 0.0 // 0.0 to 1.0
+    public var trackingRange: ClosedRange<Float> = 20.0...20000.0  // Frequency limits
     public var smoothingTime: Float = 0.001     // Smoothing time in seconds
     
+    // Legacy compatibility aliases
+    public var amount: Float {
+        get { trackingAmount / 100.0 }  // Convert percentage to 0-1 range
+        set { trackingAmount = newValue * 100.0 }
+    }
+    public var keyCenter: UInt8 {
+        get { referenceNote }
+        set { referenceNote = newValue }
+    }
+    public var trackingMode: TrackingMode {
+        get {
+            switch trackingCurve {
+            case .linear: return .linear
+            case .exponential: return .exponential
+            default: return .custom
+            }
+        }
+        set {
+            switch newValue {
+            case .linear: trackingCurve = .linear
+            case .exponential: trackingCurve = .exponential
+            case .custom: trackingCurve = .sCurve
+            }
+        }
+    }
+    
     public init() {}
+    
+    public init(trackingAmount: Float = 0.0, referenceNote: UInt8 = 60, referenceFrequency: Float = 261.63, trackingCurve: TrackingCurve = .linear, velocitySensitivity: Float = 0.0, trackingRange: ClosedRange<Float> = 20.0...20000.0) {
+        self.trackingAmount = trackingAmount
+        self.referenceNote = referenceNote
+        self.referenceFrequency = referenceFrequency
+        self.trackingCurve = trackingCurve
+        self.velocitySensitivity = velocitySensitivity
+        self.trackingRange = trackingRange
+    }
 }
 
-/// Keyboard tracking modes
+/// Tracking curve types for different musical behaviors
+public enum TrackingCurve: CaseIterable, Codable, Sendable {
+    case linear      // Direct 1:1 tracking
+    case exponential // Exponential curve for more dramatic high-end tracking
+    case logarithmic // Logarithmic curve for subtle high-end tracking
+    case sCurve      // S-curve for smooth transitions
+}
+
+/// Legacy tracking modes for backward compatibility
 public enum TrackingMode: CaseIterable, Codable {
     case linear      // Linear tracking
     case exponential // Exponential tracking
@@ -36,12 +81,29 @@ public protocol KeyboardTrackingDelegate: AnyObject {
     func trackingValueChanged(engineId: String, note: UInt8, value: Float)
 }
 
+/// Real-time parameters for keyboard tracking modulation
+public struct KeyboardTrackingParameters {
+    public var currentNote: UInt8 = 60          // Currently played MIDI note
+    public var velocity: UInt8 = 100            // MIDI velocity (0-127)
+    public var pitchBend: Float = 0.0           // Pitch bend amount (-1.0 to +1.0)
+    public var isNoteActive: Bool = false       // Whether a note is currently pressed
+    public var portamentoTime: Float = 0.0      // Glide time between notes
+    
+    public init() {}
+}
+
 /// Individual keyboard tracking engine
 public class KeyboardTrackingEngine {
     public var config = KeyboardTrackingConfig()
+    public var parameters = KeyboardTrackingParameters()
+    
     private var lastNote: UInt8 = 60
     private var lastVelocity: UInt8 = 127
     private var currentValue: Float = 0.0
+    private var currentTrackingFrequency: Float = 261.63
+    private var smoothedFrequency: Float = 261.63
+    private var previousNote: UInt8 = 60
+    private var portamentoPhase: Float = 1.0
     
     public init() {}
     
@@ -49,26 +111,31 @@ public class KeyboardTrackingEngine {
     public func calculateTrackingValue(note: UInt8, velocity: UInt8 = 127) -> Float {
         lastNote = note
         lastVelocity = velocity
+        parameters.currentNote = note
+        parameters.velocity = velocity
+        parameters.isNoteActive = true
         
-        guard config.amount > 0.0 else { return 0.0 }
+        guard config.trackingAmount != 0.0 else { return 0.0 }
         
-        let noteOffset = Float(note) - Float(config.keyCenter)
+        let noteOffset = Float(note) - Float(config.referenceNote)
         let velocityFactor = 1.0 + (Float(velocity) / 127.0 - 1.0) * config.velocitySensitivity
         
         var trackingValue: Float
         
-        switch config.trackingMode {
+        switch config.trackingCurve {
         case .linear:
             trackingValue = noteOffset / 12.0 // Octave-based tracking
         case .exponential:
             trackingValue = pow(2.0, noteOffset / 12.0) - 1.0
-        case .custom:
-            // Simple S-curve for custom mode
+        case .logarithmic:
+            trackingValue = log2(1.0 + abs(noteOffset) / 12.0) * sign(noteOffset)
+        case .sCurve:
+            // S-curve for smooth transitions
             let normalized = noteOffset / 24.0 // ±2 octaves
             trackingValue = tanh(normalized * 2.0)
         }
         
-        currentValue = trackingValue * config.amount * velocityFactor
+        currentValue = trackingValue * (config.trackingAmount / 100.0) * velocityFactor
         return currentValue
     }
     
@@ -77,11 +144,122 @@ public class KeyboardTrackingEngine {
         return currentValue
     }
     
+    /// Calculate the tracked cutoff frequency based on current MIDI input
+    public func calculateTrackedFrequency(baseCutoff: Float) -> Float {
+        guard parameters.isNoteActive else {
+            return baseCutoff
+        }
+        
+        let noteOffset = Float(parameters.currentNote) - Float(config.referenceNote)
+        let adjustedNoteOffset = noteOffset + (parameters.pitchBend * 2.0)
+        let frequencyRatio = pow(2.0, adjustedNoteOffset / 12.0)
+        let trackingMultiplier = 1.0 + (config.trackingAmount * 0.01 * (frequencyRatio - 1.0))
+        
+        var trackedFrequency = baseCutoff * trackingMultiplier
+        
+        if config.velocitySensitivity > 0.0 {
+            let velocityFactor = Float(parameters.velocity) / 127.0
+            let velocityModulation = 1.0 + (config.velocitySensitivity * (velocityFactor - 0.5) * 2.0)
+            trackedFrequency *= velocityModulation
+        }
+        
+        trackedFrequency = max(config.trackingRange.lowerBound,
+                              min(config.trackingRange.upperBound, trackedFrequency))
+        
+        currentTrackingFrequency = trackedFrequency
+        return trackedFrequency
+    }
+    
+    /// Handle MIDI note on event
+    public func noteOn(note: UInt8, velocity: UInt8) {
+        previousNote = parameters.currentNote
+        parameters.currentNote = note
+        parameters.velocity = velocity
+        parameters.isNoteActive = true
+        portamentoPhase = 0.0
+        _ = calculateTrackingValue(note: note, velocity: velocity)
+    }
+    
+    /// Handle MIDI note off event
+    public func noteOff(note: UInt8) {
+        if note == parameters.currentNote {
+            parameters.isNoteActive = false
+        }
+    }
+    
+    /// Handle pitch bend event
+    public func pitchBend(amount: Float) {
+        parameters.pitchBend = max(-1.0, min(1.0, amount))
+    }
+    
+    /// Get current tracking state for debugging/display
+    public func getTrackingInfo() -> TrackingInfo {
+        return TrackingInfo(
+            isActive: parameters.isNoteActive,
+            currentNote: parameters.currentNote,
+            referenceNote: config.referenceNote,
+            noteOffset: Float(parameters.currentNote) - Float(config.referenceNote),
+            trackingAmount: config.trackingAmount,
+            currentFrequency: currentTrackingFrequency,
+            smoothedFrequency: smoothedFrequency,
+            velocityFactor: Float(parameters.velocity) / 127.0,
+            pitchBendAmount: parameters.pitchBend,
+            portamentoPhase: portamentoPhase
+        )
+    }
+    
     /// Reset the tracking state
     public func reset() {
         currentValue = 0.0
-        lastNote = config.keyCenter
+        lastNote = config.referenceNote
         lastVelocity = 127
+        parameters = KeyboardTrackingParameters()
+        parameters.currentNote = config.referenceNote
+        currentTrackingFrequency = config.referenceFrequency
+        smoothedFrequency = config.referenceFrequency
+        portamentoPhase = 1.0
+    }
+}
+
+// MARK: - Tracking Info
+
+/// Current state of keyboard tracking for debugging/display
+public struct TrackingInfo {
+    public let isActive: Bool
+    public let currentNote: UInt8
+    public let referenceNote: UInt8
+    public let noteOffset: Float      // Semitones from reference
+    public let trackingAmount: Float  // Percentage (-100 to +100)
+    public let currentFrequency: Float
+    public let smoothedFrequency: Float
+    public let velocityFactor: Float  // 0.0 to 1.0
+    public let pitchBendAmount: Float // -1.0 to +1.0
+    public let portamentoPhase: Float // 0.0 to 1.0
+    
+    /// Format tracking info for display
+    public var displayString: String {
+        let noteName = noteNumberToName(currentNote)
+        let refNoteName = noteNumberToName(referenceNote)
+        let direction = trackingAmount >= 0 ? "Normal" : "Inverse"
+        
+        return """
+        Keyboard Tracking:
+        Current: \(noteName) (\(currentNote))
+        Reference: \(refNoteName) (\(referenceNote))
+        Offset: \(noteOffset > 0 ? "+" : "")\(String(format: "%.1f", noteOffset)) semitones
+        Tracking: \(String(format: "%.1f", abs(trackingAmount)))% (\(direction))
+        Frequency: \(String(format: "%.2f", currentFrequency)) Hz
+        Active: \(isActive ? "Yes" : "No")
+        Portamento: \(String(format: "%.1f", portamentoPhase * 100))% complete
+        """
+    }
+    
+    /// Convert MIDI note number to note name
+    private func noteNumberToName(_ note: UInt8) -> String {
+        let noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+        let octave = Int(note) / 12 - 1
+        let noteIndex = Int(note) % 12
+        return "\(noteNames[noteIndex])\(octave)"
     }
 }
 
@@ -302,6 +480,59 @@ public final class KeyboardTrackingIntegrationManager: @unchecked Sendable {
         for (engineID, engine) in trackingEngines {
             engine.config = globalConfig
             delegate?.configurationUpdated(engineID: engineID)
+        }
+    }
+}
+
+// MARK: - Preset Configurations
+
+extension KeyboardTrackingConfig {
+    
+    /// Common tracking presets for different musical styles
+    public static let trackingPresets: [String: KeyboardTrackingConfig] = [
+        "Off": KeyboardTrackingConfig(trackingAmount: 0.0),
+        
+        "Subtle": KeyboardTrackingConfig(
+            trackingAmount: 25.0,
+            trackingCurve: .linear,
+            velocitySensitivity: 0.1
+        ),
+        
+        "Standard": KeyboardTrackingConfig(
+            trackingAmount: 50.0,
+            trackingCurve: .linear,
+            velocitySensitivity: 0.2
+        ),
+        
+        "Full": KeyboardTrackingConfig(
+            trackingAmount: 100.0,
+            trackingCurve: .linear,
+            velocitySensitivity: 0.3
+        ),
+        
+        "Inverse": KeyboardTrackingConfig(
+            trackingAmount: -50.0,
+            trackingCurve: .linear,
+            velocitySensitivity: 0.1
+        ),
+        
+        "Exponential": KeyboardTrackingConfig(
+            trackingAmount: 75.0,
+            trackingCurve: .exponential,
+            velocitySensitivity: 0.4
+        ),
+        
+        "Smooth": KeyboardTrackingConfig(
+            trackingAmount: 60.0,
+            trackingCurve: .sCurve,
+            velocitySensitivity: 0.25
+        )
+    ]
+    
+    /// Load a preset configuration
+    public mutating func loadPreset(_ presetName: String) {
+        if let preset = Self.trackingPresets[presetName] {
+            self = preset
         }
     }
 }

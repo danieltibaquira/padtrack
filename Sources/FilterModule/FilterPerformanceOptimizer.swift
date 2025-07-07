@@ -83,14 +83,14 @@ public class HighPerformanceFilterEngine {
     /// Process a single sample using SIMD optimization
     public func processSIMDSample(_ input: Float, coefficients: BiquadCoefficients) -> Float {
         // Load coefficients into SIMD registers
-        let b0_vec = simd_float4(coefficients.b0)
-        let b1_vec = simd_float4(coefficients.b1)
-        let b2_vec = simd_float4(coefficients.b2)
-        let a1_vec = simd_float4(coefficients.a1)
-        let a2_vec = simd_float4(coefficients.a2)
+        let b0_vec = simd_float4(repeating: coefficients.b0)
+        let b1_vec = simd_float4(repeating: coefficients.b1)
+        let b2_vec = simd_float4(repeating: coefficients.b2)
+        let a1_vec = simd_float4(repeating: coefficients.a1)
+        let a2_vec = simd_float4(repeating: coefficients.a2)
         
         // Load input into SIMD register
-        let input_vec = simd_float4(input)
+        let input_vec = simd_float4(repeating: input)
         
         // Biquad difference equation using SIMD
         let feedforward = input_vec * b0_vec + filterState.x1 * b1_vec + filterState.x2 * b2_vec
@@ -181,7 +181,11 @@ public class HighPerformanceFilterEngine {
         
         if vectorSize > 0 {
             // Copy input to temp buffer for processing
-            cblas_scopy(Int32(vectorSize), input, 1, tempBuffer, 1)
+            tempBuffer.withUnsafeMutableBufferPointer { dest in
+                input.withUnsafeBufferPointer { src in
+                    cblas_scopy(Int32(vectorSize), src.baseAddress!, 1, dest.baseAddress!, 1)
+                }
+            }
             
             // Apply biquad filter using vector operations
             processBiquadVector(
@@ -222,7 +226,7 @@ public class HighPerformanceFilterEngine {
         let a = [1.0, coefficients.a1, coefficients.a2]
         
         // Use vDSP's biquad filter if available
-        var setupData = vDSP_biquad_SetupD()
+        var setupData: OpaquePointer? = nil
         var delays = [Double](repeating: 0.0, count: 4)
         
         // Convert coefficients to double precision
@@ -325,8 +329,12 @@ public class HighPerformanceFilterEngine {
     /// Reset all filter state
     public func reset() {
         filterState.reset()
-        vDSP_vclr(blockBuffer, 1, vDSP_Length(blockBuffer.count))
-        vDSP_vclr(tempBuffer, 1, vDSP_Length(tempBuffer.count))
+        blockBuffer.withUnsafeMutableBufferPointer { buffer in
+            vDSP_vclr(buffer.baseAddress!, 1, vDSP_Length(blockBuffer.count))
+        }
+        tempBuffer.withUnsafeMutableBufferPointer { buffer in
+            vDSP_vclr(buffer.baseAddress!, 1, vDSP_Length(tempBuffer.count))
+        }
     }
 }
 
@@ -366,7 +374,7 @@ public class FilterPerformanceBenchmark {
     ) -> [OptimizationLevel: FilterPerformanceMetrics] {
         
         var results: [OptimizationLevel: FilterPerformanceMetrics] = [:]
-        let testFrameCount = Int(sampleRate * testDuration)
+        let testFrameCount = Int(Float(sampleRate) * Float(testDuration))
         
         // Generate test signal
         let testInput = generateTestSignal(frameCount: testFrameCount, sampleRate: sampleRate)

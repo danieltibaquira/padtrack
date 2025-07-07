@@ -54,14 +54,11 @@ public class MainLayoutState: ObservableObject {
     public init() {
         setupDefaultState()
         initializeFMToneParameters()
-<<<<<<< HEAD
         setupFMParameterBridge()
-=======
         
         // Connect parameter bridge and voice machine manager
         parameterBridge.setVoiceMachineManager(voiceMachineManager)
         sequencerBridge.setVoiceMachineManager(voiceMachineManager)
->>>>>>> origin/main
     }
     
     // MARK: - FM TONE Mode Management

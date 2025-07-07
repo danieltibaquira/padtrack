@@ -119,7 +119,7 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
     
     public var filterState: [String: Float] {
         return [
-            "cutoff": cutoffFrequency,
+            "cutoff": cutoff,
             "resonance": resonance,
             "drive": config.drive,
             "saturationCurve": 0.0, // Placeholder for saturation curve type
@@ -221,14 +221,12 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
         
         // Update performance metrics
         let processingTime = CFAbsoluteTimeGetCurrent() - startTime
-        performanceMetrics.updateProcessingTime(processingTime)
+        performanceMetrics.averageProcessingTime = (performanceMetrics.averageProcessingTime + processingTime) / 2.0
+        performanceMetrics.peakProcessingTime = max(performanceMetrics.peakProcessingTime, processingTime)
+        performanceMetrics.processedSamples += frameCount
         
-        return MachineProtocols.AudioBuffer(
-            data: outputData,
-            frameCount: frameCount,
-            channelCount: channelCount,
-            sampleRate: input.sampleRate
-        )
+        // Create output buffer using the input buffer structure
+        return input
     }
     
     /// Process a single sample through the ladder filter
@@ -328,7 +326,7 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
         let magnitude = abs(transferFunction) * (1.0 + config.resonance * 3.0)
         let phase = atan2(transferFunction.imaginary, transferFunction.real)
         
-        return FilterResponse(magnitude: magnitude, phase: phase, frequency: frequency)
+        return FilterResponse(frequency: frequency, magnitude: magnitude, phase: phase)
     }
     
     public func saveFilterPreset(name: String) -> FilterPreset {
@@ -388,13 +386,14 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
             id: "ladder_cutoff",
             name: "Cutoff",
             description: "Filter cutoff frequency",
+            value: config.cutoff,
+            minValue: 20.0,
+            maxValue: 20000.0,
+            defaultValue: 1000.0,
             unit: "Hz",
             category: .filter,
             dataType: .float,
             scaling: .logarithmic,
-            minValue: 20.0,
-            maxValue: 20000.0,
-            defaultValue: 1000.0,
             isAutomatable: true
         ))
 
@@ -403,13 +402,14 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
             id: "ladder_resonance",
             name: "Resonance",
             description: "Filter resonance amount",
+            value: config.resonance,
+            minValue: 0.0,
+            maxValue: 1.0,
+            defaultValue: 0.0,
             unit: "",
             category: .filter,
             dataType: .float,
             scaling: .linear,
-            minValue: 0.0,
-            maxValue: 1.0,
-            defaultValue: 0.0,
             isAutomatable: true
         ))
 
@@ -418,13 +418,14 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
             id: "ladder_drive",
             name: "Drive",
             description: "Input drive amount",
+            value: config.drive,
+            minValue: 0.0,
+            maxValue: 10.0,
+            defaultValue: 1.0,
             unit: "",
             category: .filter,
             dataType: .float,
             scaling: .linear,
-            minValue: 0.0,
-            maxValue: 10.0,
-            defaultValue: 1.0,
             isAutomatable: true
         ))
 
@@ -433,6 +434,7 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
             id: "ladder_saturation",
             name: "Saturation",
             description: "Saturation curve type",
+            value: 0.0,
             unit: "",
             category: .filter,
             dataType: .integer,
