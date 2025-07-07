@@ -41,6 +41,22 @@ if [[ -n "$CI_PRIMARY_REPOSITORY_PATH" ]]; then
     ls -la
 fi
 
+# Run API validation to ensure CI matches local environment
+echo "🔍 Running API validation to ensure CI/local consistency..."
+if [[ -f "ci_scripts/ci_api_validation.sh" ]]; then
+    chmod +x ci_scripts/ci_api_validation.sh
+    if ./ci_scripts/ci_api_validation.sh; then
+        echo "✅ API validation passed - CI environment matches local"
+    else
+        echo "❌ API validation failed - CI environment differs from local"
+        echo "This indicates critical differences between CI and local builds"
+        echo "Build will fail due to API mismatches"
+        exit 1
+    fi
+else
+    echo "⚠️  ci_api_validation.sh not found, skipping API validation"
+fi
+
 # Run quick syntax check to catch issues early (like local development)
 echo "🔍 Running quick syntax validation..."
 if [[ -f "quick_syntax_check.sh" ]]; then
