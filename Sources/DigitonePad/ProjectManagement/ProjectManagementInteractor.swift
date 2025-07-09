@@ -1,6 +1,7 @@
 import Foundation
 import CoreData
 import DataLayer
+import DataModel
 import Combine
 
 /// Project Management Interactor - handles business logic for project management

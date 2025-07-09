@@ -1,3 +1,10 @@
+//
+//  Project+CoreDataProperties.swift
+//  DigitonePad
+//
+//  Auto-generated from Core Data model
+//
+
 import Foundation
 import CoreData
 
@@ -7,30 +14,12 @@ extension Project {
         return NSFetchRequest<Project>(entityName: "Project")
     }
 
-    @NSManaged public var id: UUID?
     @NSManaged public var createdAt: Date?
     @NSManaged public var name: String?
     @NSManaged public var updatedAt: Date?
-    @NSManaged public var patterns: NSSet?
     @NSManaged public var kits: NSSet?
+    @NSManaged public var patterns: NSSet?
     @NSManaged public var presets: NSSet?
-
-}
-
-// MARK: Generated accessors for patterns
-extension Project {
-
-    @objc(addPatternsObject:)
-    @NSManaged public func addToPatterns(_ value: Pattern)
-
-    @objc(removePatternsObject:)
-    @NSManaged public func removeFromPatterns(_ value: Pattern)
-
-    @objc(addPatterns:)
-    @NSManaged public func addToPatterns(_ values: NSSet)
-
-    @objc(removePatterns:)
-    @NSManaged public func removeFromPatterns(_ values: NSSet)
 
 }
 
@@ -51,6 +40,23 @@ extension Project {
 
 }
 
+// MARK: Generated accessors for patterns
+extension Project {
+
+    @objc(addPatternsObject:)
+    @NSManaged public func addToPatterns(_ value: Pattern)
+
+    @objc(removePatternsObject:)
+    @NSManaged public func removeFromPatterns(_ value: Pattern)
+
+    @objc(addPatterns:)
+    @NSManaged public func addToPatterns(_ values: NSSet)
+
+    @objc(removePatterns:)
+    @NSManaged public func removeFromPatterns(_ values: NSSet)
+
+}
+
 // MARK: Generated accessors for presets
 extension Project {
 
@@ -66,4 +72,4 @@ extension Project {
     @objc(removePresets:)
     @NSManaged public func removeFromPresets(_ values: NSSet)
 
-} 
+}

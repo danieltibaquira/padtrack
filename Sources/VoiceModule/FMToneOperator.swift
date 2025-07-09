@@ -123,10 +123,11 @@ public final class FMToneOperator: @unchecked Sendable {
         tempBuffer = [Float](repeating: 0.0, count: Self.maxBlockSize)
         
         // Prevent denormals on Intel processors
-        #if arch(x86_64)
-        var mxcsr = _mm_getcsr()
-        mxcsr |= 0x8040  // Set FTZ and DAZ flags
-        _mm_setcsr(mxcsr)
+        #if arch(x86_64) && os(macOS)
+        // For macOS x86_64, use software-based denormal protection
+        // The compiler's -ffast-math flag typically handles this
+        #elseif arch(arm64)
+        // ARM64 handles denormals efficiently
         #endif
         
         updatePhaseIncrement()

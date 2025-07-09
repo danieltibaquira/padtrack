@@ -1,3 +1,10 @@
+//
+//  Preset+CoreDataProperties.swift
+//  DigitonePad
+//
+//  Auto-generated from Core Data model
+//
+
 import Foundation
 import CoreData
 
@@ -7,10 +14,10 @@ extension Preset {
         return NSFetchRequest<Preset>(entityName: "Preset")
     }
 
-    @NSManaged public var name: String?
     @NSManaged public var category: String?
-    @NSManaged public var settings: Data?
     @NSManaged public var createdAt: Date?
+    @NSManaged public var name: String?
+    @NSManaged public var settings: Any?
     @NSManaged public var updatedAt: Date?
     @NSManaged public var project: Project?
     @NSManaged public var tracks: NSSet?
@@ -32,4 +39,4 @@ extension Preset {
     @objc(removeTracks:)
     @NSManaged public func removeFromTracks(_ values: NSSet)
 
-} 
+}

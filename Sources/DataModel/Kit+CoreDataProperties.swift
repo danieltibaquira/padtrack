@@ -1,3 +1,10 @@
+//
+//  Kit+CoreDataProperties.swift
+//  DigitonePad
+//
+//  Auto-generated from Core Data model
+//
+
 import Foundation
 import CoreData
 
@@ -7,13 +14,30 @@ extension Kit {
         return NSFetchRequest<Kit>(entityName: "Kit")
     }
 
+    @NSManaged public var createdAt: Date?
     @NSManaged public var name: String?
     @NSManaged public var soundFiles: [String]?
-    @NSManaged public var createdAt: Date?
     @NSManaged public var updatedAt: Date?
-    @NSManaged public var pattern: Pattern?
+    @NSManaged public var patterns: NSSet?
     @NSManaged public var project: Project?
     @NSManaged public var tracks: NSSet?
+
+}
+
+// MARK: Generated accessors for patterns
+extension Kit {
+
+    @objc(addPatternsObject:)
+    @NSManaged public func addToPatterns(_ value: Pattern)
+
+    @objc(removePatternsObject:)
+    @NSManaged public func removeFromPatterns(_ value: Pattern)
+
+    @objc(addPatterns:)
+    @NSManaged public func addToPatterns(_ values: NSSet)
+
+    @objc(removePatterns:)
+    @NSManaged public func removeFromPatterns(_ values: NSSet)
 
 }
 
@@ -32,4 +56,4 @@ extension Kit {
     @objc(removeTracks:)
     @NSManaged public func removeFromTracks(_ values: NSSet)
 
-} 
+}

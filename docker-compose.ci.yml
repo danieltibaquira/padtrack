@@ -1,0 +1,89 @@
+# Docker Compose for CI Environment Replication
+version: '3.8'
+
+services:
+  # Swift build environment
+  swift-ci:
+    build:
+      context: .
+      dockerfile: Dockerfile.ci
+    volumes:
+      - .:/workspace
+      - swift-cache:/workspace/.build
+      - package-cache:/root/.cache/org.swift.swiftpm
+    environment:
+      - CI=true
+      - SWIFT_PACKAGE_MANAGER=true
+      - LINUX_BUILD=true
+    working_dir: /workspace
+    command: ["ci-build.sh"]
+
+  # Xcode-like environment (macOS only)
+  xcode-ci:
+    image: swift:5.10
+    volumes:
+      - .:/workspace
+      - derived-data:/tmp/DerivedData
+    environment:
+      - CI=true
+      - XCODE_CLOUD_SIMULATION=true
+      - DERIVED_DATA_PATH=/tmp/DerivedData
+    working_dir: /workspace
+    command: >
+      bash -c "
+        echo '🍎 Starting Xcode-like CI build...' &&
+        swift package clean &&
+        swift package resolve &&
+        swift build --configuration debug &&
+        swift test --configuration debug &&
+        swift build --configuration release &&
+        echo '✅ Xcode-like CI build completed'
+      "
+
+  # Fresh environment test
+  fresh-ci:
+    build:
+      context: .
+      dockerfile: Dockerfile.ci
+    volumes:
+      - .:/workspace
+    environment:
+      - CI=true
+      - FRESH_ENVIRONMENT=true
+    working_dir: /workspace
+    command: >
+      bash -c "
+        echo '🆕 Starting fresh environment build...' &&
+        rm -rf .build &&
+        rm -rf ~/.cache/org.swift.swiftpm &&
+        swift package clean &&
+        swift package resolve &&
+        swift build --configuration debug &&
+        swift test --configuration debug &&
+        echo '✅ Fresh environment build completed'
+      "
+
+  # Validation service
+  validation:
+    image: swift:5.10
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    command: >
+      bash -c "
+        echo '🔍 Starting validation checks...' &&
+        echo 'Checking Package.swift...' &&
+        swift package describe --type json > package-info.json &&
+        echo 'Checking source structure...' &&
+        find Sources -name '*.swift' | wc -l &&
+        echo 'Checking test structure...' &&
+        find Tests -name '*.swift' | wc -l &&
+        echo 'Validating syntax...' &&
+        find Sources Tests -name '*.swift' -exec swift -frontend -parse {} \; &&
+        echo '✅ Validation completed'
+      "
+
+volumes:
+  swift-cache:
+  package-cache:
+  derived-data:

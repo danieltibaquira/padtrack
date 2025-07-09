@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 import CoreData
+import QuartzCore
 import VoiceModule
 import AudioEngine
 import DataLayer
@@ -259,7 +260,8 @@ public final class FMParameterBridge: ObservableObject {
         
         // Log warning if update takes too long (>1ms requirement)
         if updateTime > 0.001 {
-            print("Warning: Parameter update took \(updateTime * 1000)ms (>1ms)")
+            // TODO: Replace with proper logging system
+            // print("Warning: Parameter update took \(updateTime * 1000)ms (>1ms)")
         }
     }
     

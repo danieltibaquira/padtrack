@@ -1,5 +1,6 @@
 import Foundation
 import CoreData
+import DataModel
 
 // MARK: - FM Parameter Storage Extension
 
@@ -23,7 +24,7 @@ extension Preset {
     /// Retrieves FM parameter values from the preset's settings data
     /// Returns default values if no parameters are stored or decoding fails
     public func getFMParameters() -> [String: Double] {
-        guard let settingsData = self.settings else {
+        guard let settingsData = self.settings as? Data else {
             return defaultFMParameters()
         }
         
@@ -60,7 +61,7 @@ extension Preset {
     
     /// Returns true if this preset contains FM parameter data
     public var hasFMParameters: Bool {
-        guard let settingsData = self.settings else { return false }
+        guard let settingsData = self.settings as? Data else { return false }
         
         do {
             let decoder = JSONDecoder()
@@ -74,7 +75,7 @@ extension Preset {
     
     /// Returns the FM parameter data version
     public var fmParameterVersion: String? {
-        guard let settingsData = self.settings else { return nil }
+        guard let settingsData = self.settings as? Data else { return nil }
         
         do {
             let decoder = JSONDecoder()

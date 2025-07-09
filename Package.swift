@@ -174,7 +174,7 @@ let package = Package(
         // Test utilities and mock objects
         .target(
             name: "TestUtilities",
-            dependencies: ["MachineProtocols", "DataLayer", "DataModel", "AudioEngine"],
+            dependencies: ["MachineProtocols", "DataLayer", "DataModel", "AudioEngine", "SequencerModule"],
             path: "Tests/TestUtilities"),
 
         .testTarget(

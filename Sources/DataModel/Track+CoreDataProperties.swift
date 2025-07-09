@@ -1,3 +1,10 @@
+//
+//  Track+CoreDataProperties.swift
+//  DigitonePad
+//
+//  Auto-generated from Core Data model
+//
+
 import Foundation
 import CoreData
 
@@ -7,16 +14,16 @@ extension Track {
         return NSFetchRequest<Track>(entityName: "Track")
     }
 
-    @NSManaged public var name: String?
-    @NSManaged public var volume: Float
-    @NSManaged public var pan: Float
+    @NSManaged public var createdAt: Date?
     @NSManaged public var isMuted: Bool
     @NSManaged public var isSolo: Bool
+    @NSManaged public var name: String?
+    @NSManaged public var pan: Float
     @NSManaged public var trackIndex: Int16
-    @NSManaged public var createdAt: Date?
     @NSManaged public var updatedAt: Date?
-    @NSManaged public var pattern: Pattern?
+    @NSManaged public var volume: Float
     @NSManaged public var kit: Kit?
+    @NSManaged public var pattern: Pattern?
     @NSManaged public var preset: Preset?
     @NSManaged public var trigs: NSSet?
 
@@ -37,4 +44,4 @@ extension Track {
     @objc(removeTrigs:)
     @NSManaged public func removeFromTrigs(_ values: NSSet)
 
-} 
+}

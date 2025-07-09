@@ -1,3 +1,10 @@
+//
+//  Pattern+CoreDataProperties.swift
+//  DigitonePad
+//
+//  Auto-generated from Core Data model
+//
+
 import Foundation
 import CoreData
 
@@ -7,14 +14,14 @@ extension Pattern {
         return NSFetchRequest<Pattern>(entityName: "Pattern")
     }
 
-    @NSManaged public var name: String?
-    @NSManaged public var length: Int16
-    @NSManaged public var tempo: Double
     @NSManaged public var createdAt: Date?
+    @NSManaged public var length: Int16
+    @NSManaged public var name: String?
+    @NSManaged public var tempo: Double
     @NSManaged public var updatedAt: Date?
+    @NSManaged public var kit: Kit?
     @NSManaged public var project: Project?
     @NSManaged public var tracks: NSSet?
-    @NSManaged public var kit: Kit?
     @NSManaged public var trigs: NSSet?
 
 }
@@ -51,4 +58,4 @@ extension Pattern {
     @objc(removeTrigs:)
     @NSManaged public func removeFromTrigs(_ values: NSSet)
 
-} 
+}

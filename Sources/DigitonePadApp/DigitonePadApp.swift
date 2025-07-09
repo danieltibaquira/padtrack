@@ -1,12 +1,11 @@
 import SwiftUI
 import UIComponents
-import DigitonePad
 
 @main
 struct DigitonePadApp: App {
     var body: some Scene {
         WindowGroup {
-            MainLayoutView()
+            ContentView()
         }
     }
 }
