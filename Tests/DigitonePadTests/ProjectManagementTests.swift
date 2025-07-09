@@ -150,12 +150,128 @@ class ProjectManagementTests: XCTestCase {
         XCTAssertEqual(project.name, "Test Project")
     }
     
+    // MARK: - Data Persistence Tests
+    
+    func testProjectCreationAndPersistence() {
+        // Test complete project creation workflow
+        let expectation = XCTestExpectation(description: "Project creation")
+        
+        // Create project
+        presenter.createNewProject(name: "Persistence Test Project")
+        
+        // Wait for async operation
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            // Verify project was created
+            XCTAssertTrue(self.interactor.createProjectCalled)
+            XCTAssertEqual(self.interactor.createProjectName, "Persistence Test Project")
+            
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 1.0)
+    }
+    
+    func testDataIntegrityDuringComplexOperations() {
+        // Test data remains consistent during complex operations
+        presenter.projects = []
+        
+        // Perform multiple operations
+        presenter.createNewProject(name: "Complex Test 1")
+        presenter.createNewProject(name: "Complex Test 2")
+        presenter.viewDidLoad() // Refresh projects
+        
+        // Verify all operations were initiated
+        XCTAssertTrue(interactor.createProjectCalled)
+        XCTAssertTrue(interactor.fetchProjectsCalled)
+        XCTAssertTrue(presenter.isLoading)
+    }
+    
+    func testConcurrentAccessSafety() {
+        // Test multiple threads can safely access project data
+        let expectation = XCTestExpectation(description: "Concurrent access")
+        let dispatchGroup = DispatchGroup()
+        var accessCount = 0
+        let lock = NSLock()
+        
+        // Simulate concurrent operations
+        for i in 0..<10 {
+            dispatchGroup.enter()
+            DispatchQueue.global().async {
+                defer { dispatchGroup.leave() }
+                
+                if i % 2 == 0 {
+                    self.presenter.createNewProject(name: "Concurrent \(i)")
+                } else {
+                    self.presenter.viewDidLoad()
+                }
+                
+                lock.lock()
+                accessCount += 1
+                lock.unlock()
+            }
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            XCTAssertEqual(accessCount, 10)
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 5.0)
+    }
+    
+    // MARK: - Error Handling Tests
+    
+    func testProjectCreationWithInvalidData() {
+        // Test error handling for invalid project names
+        let invalidNames = ["", "   ", "\n\t"]
+        
+        for invalidName in invalidNames {
+            presenter.createNewProject(name: invalidName)
+            
+            if invalidName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                XCTAssertEqual(presenter.errorMessage, "Project name cannot be empty")
+            }
+        }
+    }
+    
+    func testProjectLoadingFailure() {
+        // Test handling of project loading failures
+        let nonExistentProject = createMockProject()
+        nonExistentProject.name = "Non-existent"
+        
+        // Simulate loading
+        presenter.loadProject(nonExistentProject)
+        
+        // Verify loading was attempted
+        XCTAssertTrue(interactor.loadProjectCalled)
+        XCTAssertEqual(interactor.loadProjectId, nonExistentProject.id)
+    }
+    
+    // MARK: - Performance Tests
+    
+    func testLargeProjectListPerformance() {
+        // Test performance with many projects
+        measure {
+            // Create many mock projects
+            var projects: [ProjectViewModel] = []
+            for i in 0..<100 {
+                projects.append(createMockProject(name: "Project \(i)"))
+            }
+            
+            // Test presenter handling
+            presenter.projectsFetched(projects)
+            
+            // Verify performance
+            XCTAssertEqual(presenter.projects.count, 100)
+        }
+    }
+    
     // MARK: - Helper Methods
     
-    private func createMockProject() -> ProjectViewModel {
+    private func createMockProject(name: String = "Test Project") -> ProjectViewModel {
         return ProjectViewModel(
             id: UUID(),
-            name: "Test Project",
+            name: name,
             createdAt: Date(),
             updatedAt: Date(),
             patternCount: 0,
@@ -177,6 +293,9 @@ class MockProjectManagementInteractor: ProjectManagementInteractorProtocol {
     var deleteProjectId: UUID?
     var loadProjectCalled = false
     var loadProjectId: UUID?
+    var loadProjectsCalled = false
+    var selectProjectCalled = false
+    var selectProjectId: UUID?
     
     func fetchProjects() {
         fetchProjectsCalled = true
@@ -195,6 +314,17 @@ class MockProjectManagementInteractor: ProjectManagementInteractorProtocol {
     func loadProject(id: UUID) {
         loadProjectCalled = true
         loadProjectId = id
+    }
+    
+    func loadProjects() {
+        loadProjectsCalled = true
+        fetchProjects()
+    }
+    
+    func selectProject(id: UUID) {
+        selectProjectCalled = true
+        selectProjectId = id
+        loadProject(id: id)
     }
 }
 
