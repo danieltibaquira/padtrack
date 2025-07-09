@@ -10,6 +10,12 @@ import DataModel
 
 // Core Data entities are imported from DataModel
 
+// Export new managers
+public typealias PlusDriveManager = PlusDriveManager
+public typealias PresetPool = PresetPool
+public typealias ProjectFileManager = ProjectFileManager
+public typealias DataMigrator = DataMigrator
+
 // MARK: - Error Types
 
 /// Errors that can occur in the DataLayer
