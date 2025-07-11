@@ -1,5 +1,7 @@
 import Foundation
 import SwiftUI
+import DataLayer
+import DataModel
 
 /// Global app state management
 @MainActor
@@ -8,6 +10,10 @@ class AppState: ObservableObject {
     
     @Published var selectedProject: ProjectViewModel?
     @Published var isProjectLoaded = false
+    
+    // Shared instances to avoid redundant creation
+    lazy var driveManager = PlusDriveManager(context: CoreDataStack.shared.context)
+    private var presetPools: [UUID: PresetPool] = [:]
     
     private init() {}
     
@@ -24,5 +30,19 @@ class AppState: ObservableObject {
     func closeProject() {
         selectedProject = nil
         isProjectLoaded = false
+    }
+    
+    /// Get or create a PresetPool for a given project
+    func presetPool(for project: Project) -> PresetPool {
+        let projectID = project.objectID.uriRepresentation().absoluteString
+        let uuid = UUID(uuidString: projectID) ?? UUID()
+        
+        if let existingPool = presetPools[uuid] {
+            return existingPool
+        }
+        
+        let newPool = PresetPool(project: project, context: CoreDataStack.shared.context)
+        presetPools[uuid] = newPool
+        return newPool
     }
 }

@@ -2,6 +2,7 @@ import Foundation
 import CoreData
 import DataModel
 import MachineProtocols
+import CommonCrypto
 
 /// Manages the preset pool for quick access to sounds within a project
 public class PresetPool {
@@ -36,8 +37,7 @@ public class PresetPool {
         cacheLock.lock()
         defer { cacheLock.unlock() }
         
-        if let id = preset.objectID.uriRepresentation().absoluteString.data(using: .utf8) {
-            let uuid = UUID(uuid: uuid_t(tuple: (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))) ?? UUID()
+        if let uuid = getUUID(for: preset) {
             presetCache[uuid] = preset
             
             // Update category cache
@@ -361,14 +361,27 @@ public class PresetPool {
         // Generate a stable UUID from the object ID
         let objectIDString = preset.objectID.uriRepresentation().absoluteString
         
-        // Use a hash of the object ID to create a deterministic UUID
-        var hasher = Hasher()
-        hasher.combine(objectIDString)
-        let hashValue = hasher.finalize()
+        // Use SHA256 hash to create a deterministic UUID
+        guard let data = objectIDString.data(using: .utf8) else { return nil }
         
-        // Convert hash to UUID format
-        let uuidString = String(format: "%08X-0000-0000-0000-000000000000", abs(hashValue))
-        return UUID(uuidString: uuidString)
+        var hash = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
+        data.withUnsafeBytes { bytes in
+            _ = CC_SHA256(bytes.baseAddress, CC_LONG(data.count), &hash)
+        }
+        
+        // Create UUID from first 16 bytes of hash
+        // Set version (4) and variant bits according to UUID v4 spec
+        hash[6] = (hash[6] & 0x0F) | 0x40  // Version 4
+        hash[8] = (hash[8] & 0x3F) | 0x80  // Variant 10
+        
+        let uuid = UUID(uuid: (
+            hash[0], hash[1], hash[2], hash[3],
+            hash[4], hash[5], hash[6], hash[7],
+            hash[8], hash[9], hash[10], hash[11],
+            hash[12], hash[13], hash[14], hash[15]
+        ))
+        
+        return uuid
     }
 }
 

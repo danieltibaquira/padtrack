@@ -39,7 +39,6 @@ public class PlusDriveManager {
         project.name = name
         project.createdAt = Date()
         project.updatedAt = Date()
-        project.bpm = 120.0
         
         // Create default pattern
         let pattern = NSEntityDescription.insertNewObject(forEntityName: "Pattern", into: context) as! Pattern
@@ -371,7 +370,7 @@ class ProjectFileManager {
     
     private func encodeTrack(_ track: Track) throws -> [String: Any] {
         var encoded: [String: Any] = [
-            "number": track.number,
+            "trackIndex": track.trackIndex,
             "isMuted": track.isMuted,
             "volume": track.volume
         ]

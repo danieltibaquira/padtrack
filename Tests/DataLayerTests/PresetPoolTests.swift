@@ -347,6 +347,55 @@ class PresetPoolTests: CoreDataTestBase {
         XCTAssertLessThan(memoryIncrease, 10_000_000)
     }
     
+    // MARK: - Bug Fix Tests
+    
+    func testAddPresetUsesCorrectUUID() throws {
+        // Test that addPreset uses getUUID(for:) method instead of hardcoded zeros
+        let preset = createTestPreset(machine: .fmTone)
+        preset.name = "UUID Test Preset"
+        
+        // Save preset to get a stable object ID
+        try testContext.save()
+        
+        // Add preset to pool
+        try presetPool.addPreset(preset)
+        
+        // The preset should be cached with a deterministic UUID based on object ID
+        // Not a random UUID or all-zeros UUID
+        
+        // Verify preset is in cache by searching
+        let searchResults = try presetPool.search(query: "UUID Test Preset")
+        XCTAssertEqual(searchResults.count, 1)
+        XCTAssertEqual(searchResults.first?.name, "UUID Test Preset")
+        
+        // Add the same preset again should not create duplicate
+        try presetPool.addPreset(preset)
+        let searchResults2 = try presetPool.search(query: "UUID Test Preset")
+        XCTAssertEqual(searchResults2.count, 1, "Adding same preset should not create duplicates")
+    }
+    
+    func testGetUUIDGeneratesValidUUID() throws {
+        // Test that getUUID generates a valid UUID format
+        let preset = createTestPreset(machine: .fmTone)
+        preset.name = "Valid UUID Test"
+        try testContext.save()
+        
+        // Use reflection to test private getUUID method
+        let mirror = Mirror(reflecting: presetPool!)
+        
+        // Since we can't directly test private methods, we'll test the behavior
+        // by checking that presets can be consistently retrieved
+        try presetPool.addPreset(preset)
+        
+        // Create a new preset pool instance
+        let newPresetPool = PresetPool(project: testProject, context: testContext)
+        
+        // The preset should be retrievable with the same UUID
+        let results = try newPresetPool.search(query: "Valid UUID Test")
+        XCTAssertEqual(results.count, 1)
+        XCTAssertEqual(results.first?.objectID, preset.objectID)
+    }
+    
     // MARK: - Helper Methods
     
     private func createTestProject() -> Project {

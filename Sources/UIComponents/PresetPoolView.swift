@@ -326,7 +326,9 @@ public struct PresetPoolView: View {
             selectedPreset = nil
         } else {
             selectedPreset = preset
-            presetPool.trackUsage(of: getCoreDataPreset(for: preset))
+            if let coreDataPreset = getCoreDataPreset(for: preset) {
+                presetPool.trackUsage(of: coreDataPreset)
+            }
         }
     }
     
@@ -381,10 +383,16 @@ public struct PresetPoolView: View {
         return 0
     }
     
-    private func getCoreDataPreset(for viewModel: PresetViewModel) -> Preset {
-        // In real implementation, would map view model to Core Data preset
-        // This is a placeholder
-        return Preset()
+    private func getCoreDataPreset(for viewModel: PresetViewModel) -> Preset? {
+        // Fetch the actual Core Data preset by ID
+        let allPresets = presetPool.allPresets()
+        
+        // Find preset matching the view model
+        return allPresets.first { preset in
+            // Match by name and category since we don't have the Core Data ID in view model
+            preset.name == viewModel.name &&
+            preset.category == viewModel.category
+        }
     }
 }
 

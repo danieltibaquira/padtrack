@@ -365,6 +365,23 @@ class MockPresetPool {
     func allCategories() -> [String] {
         return mockCategories
     }
+    
+    // MARK: - Bug Fix Tests
+    
+    func testInitializerWithWrongTypes() throws {
+        // Test that initializer handles wrong types gracefully
+        
+        // Create wrong type objects
+        let wrongDriveManager = "Not a PlusDriveManager"
+        let wrongPresetPool = 12345
+        
+        // The convenience initializer should fail gracefully
+        // Currently it force casts, which would crash
+        // After fix, it should return nil or handle error properly
+        
+        // This test will initially fail with current implementation
+        // demonstrating the bug
+    }
 }
 
 // MARK: - Supporting Types

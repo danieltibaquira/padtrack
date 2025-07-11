@@ -487,9 +487,14 @@ public struct PatternViewModel: Identifiable {
 // MARK: - Extensions
 
 extension ProjectDetailView {
-    public init(project: ProjectViewModel, driveManager: Any, presetPool: Any) {
+    public init?(project: ProjectViewModel, driveManager: Any, presetPool: Any) {
+        guard let driveManager = driveManager as? PlusDriveManager,
+              let presetPool = presetPool as? PresetPool else {
+            return nil
+        }
+        
         self.project = project
-        self.driveManager = driveManager as! PlusDriveManager
-        self.presetPool = presetPool as! PresetPool
+        self.driveManager = driveManager
+        self.presetPool = presetPool
     }
 }

@@ -301,6 +301,19 @@ class PresetPoolViewTests: XCTestCase {
             _ = try? view.inspect()
         }
     }
+    
+    // MARK: - Bug Fix Tests
+    
+    func testInitializerWithWrongType() throws {
+        // Test that initializer handles wrong types gracefully
+        
+        // Create wrong type object
+        let wrongPresetPool = "Not a PresetPool"
+        
+        // The convenience initializer should return nil for wrong type
+        let view = PresetPoolView(presetPool: wrongPresetPool)
+        XCTAssertNil(view, "Initializer should return nil for wrong type")
+    }
 }
 
 // MARK: - Mock Classes

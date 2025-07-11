@@ -148,14 +148,12 @@ public struct ProjectManagementView: View {
                 }
             }
             .sheet(isPresented: $showingProjectDetail) {
-                if let project = selectedProject {
+                if let project = selectedProject,
+                   let projectEntity = getProjectEntity(for: project) {
                     ProjectDetailView(
                         project: project,
-                        driveManager: PlusDriveManager(context: CoreDataStack.shared.context),
-                        presetPool: PresetPool(
-                            project: getProjectEntity(for: project),
-                            context: CoreDataStack.shared.context
-                        )
+                        driveManager: AppState.shared.driveManager,
+                        presetPool: AppState.shared.presetPool(for: projectEntity)
                     )
                 }
             }
@@ -197,12 +195,39 @@ public struct ProjectManagementView: View {
         // TODO: Implement project export
     }
     
-    private func getProjectEntity(for viewModel: ProjectViewModel) -> Project {
-        // In real implementation, would fetch from Core Data
-        // This is a placeholder
-        let project = Project(context: CoreDataStack.shared.context)
-        project.name = viewModel.name
-        return project
+    private func getProjectEntity(for viewModel: ProjectViewModel) -> Project? {
+        // Fetch existing project from Core Data
+        let context = CoreDataStack.shared.context
+        let fetchRequest: NSFetchRequest<Project> = Project.fetchRequest()
+        
+        // Try to match by name and creation date
+        fetchRequest.predicate = NSPredicate(
+            format: "name == %@ AND createdAt == %@",
+            viewModel.name,
+            viewModel.createdAt as CVarArg
+        )
+        fetchRequest.fetchLimit = 1
+        
+        do {
+            let projects = try context.fetch(fetchRequest)
+            if let existingProject = projects.first {
+                return existingProject
+            }
+            
+            // If not found, create a new project (should rarely happen)
+            let newProject = Project(context: context)
+            newProject.name = viewModel.name
+            newProject.createdAt = viewModel.createdAt
+            newProject.updatedAt = viewModel.updatedAt
+            
+            // Save to persist the new project
+            try context.save()
+            
+            return newProject
+        } catch {
+            print("Error fetching project: \(error)")
+            return nil
+        }
     }
 }
 
