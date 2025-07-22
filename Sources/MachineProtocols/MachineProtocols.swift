@@ -6,6 +6,67 @@
 
 import Foundation
 import Combine
+import os.log
+
+// MARK: - Logging Infrastructure
+
+/// Centralized logging utility for DigitonePad components
+public struct DigitonePadLogger {
+    /// Log levels for different types of messages
+    public enum Level: String, CaseIterable {
+        case debug = "DEBUG"
+        case info = "INFO"
+        case warning = "WARNING" 
+        case error = "ERROR"
+        
+        public var osLogType: OSLogType {
+            switch self {
+            case .debug: return .debug
+            case .info: return .info
+            case .warning: return .default
+            case .error: return .error
+            }
+        }
+    }
+    
+    private let subsystem = "com.digitonepad.app"
+    private let category: String
+    
+    /// Initialize logger for specific component
+    public init(category: String) {
+        self.category = category
+    }
+    
+    /// Log message with specified level
+    public func log(_ level: Level, _ message: String, file: String = #file, function: String = #function, line: Int = #line) {
+        let fileName = URL(fileURLWithPath: file).lastPathComponent
+        let logMessage = "[\(level.rawValue)] \(fileName):\(line) \(function) - \(message)"
+        
+        let logger = Logger(subsystem: subsystem, category: category)
+        logger.log(level: level.osLogType, "\(logMessage)")
+        
+        #if DEBUG
+        print(logMessage)
+        #endif
+    }
+    
+    /// Convenience methods for different log levels
+    public func debug(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
+        log(.debug, message, file: file, function: function, line: line)
+    }
+    
+    public func info(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
+        log(.info, message, file: file, function: function, line: line)
+    }
+    
+    public func warning(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
+        log(.warning, message, file: file, function: function, line: line)
+    }
+    
+    public func error(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
+        log(.error, message, file: file, function: function, line: line)
+    }
+}
 
 // MARK: - Core Protocol Hierarchy
 
@@ -3817,5 +3878,203 @@ public struct AutomationPoint: Sendable, Codable, Equatable {
         self.time = time
         self.value = value
         self.curve = curve
+    }
+}
+
+// MARK: - Filter Support Types
+
+/// Biquad filter coefficients structure
+public struct BiquadCoefficients: Sendable, Codable, Equatable {
+    /// Feedforward coefficients
+    public let b0: Float
+    public let b1: Float
+    public let b2: Float
+    
+    /// Feedback coefficients  
+    public let a1: Float
+    public let a2: Float
+    
+    /// Initialize biquad coefficients
+    public init(b0: Float = 1.0, b1: Float = 0.0, b2: Float = 0.0, a1: Float = 0.0, a2: Float = 0.0) {
+        self.b0 = b0
+        self.b1 = b1
+        self.b2 = b2
+        self.a1 = a1
+        self.a2 = a2
+    }
+    
+    /// Identity coefficients (no filtering)
+    public static let identity = BiquadCoefficients(b0: 1.0, b1: 0.0, b2: 0.0, a1: 0.0, a2: 0.0)
+}
+
+
+/// Saturation curve types for distortion and drive
+public enum SaturationCurve: String, CaseIterable, Codable, Sendable {
+    case tanh = "tanh"
+    case atan = "atan"
+    case cubic = "cubic"
+    case asymmetric = "asymmetric"
+    case tube = "tube"
+    case softClip = "softClip"
+    case polynomial = "polynomial"
+    
+    public var description: String {
+        switch self {
+        case .tanh: return "Hyperbolic Tangent"
+        case .atan: return "Arctangent"
+        case .cubic: return "Cubic"
+        case .asymmetric: return "Asymmetric"
+        case .tube: return "Tube"
+        case .softClip: return "Soft Clipping"
+        case .polynomial: return "Polynomial"
+        }
+    }
+}
+
+/// Filter coefficient configuration
+public struct FilterCoefficientConfig: Sendable, Codable {
+    public var cutoffFrequency: Float = 1000.0
+    public var resonance: Float = 0.7
+    public var gain: Float = 0.0
+    public var sampleRate: Float = 44100.0
+    
+    public init() {}
+    
+    public init(cutoffFrequency: Float, resonance: Float, gain: Float = 0.0, sampleRate: Float = 44100.0) {
+        self.cutoffFrequency = cutoffFrequency
+        self.resonance = resonance
+        self.gain = gain
+        self.sampleRate = sampleRate
+    }
+}
+
+/// Filter coefficient calculator utility
+public struct FilterCoefficientCalculator {
+    
+    /// Calculate biquad coefficients for a given filter type and configuration
+    public static func calculateBiquadCoefficients(type: FilterType, config: FilterCoefficientConfig) -> BiquadCoefficients {
+        let omega = 2.0 * Float.pi * config.cutoffFrequency / config.sampleRate
+        let cos_omega = cos(omega)
+        let sin_omega = sin(omega)
+        let alpha = sin_omega / (2.0 * config.resonance.clamped(to: 0.1...10.0))
+        
+        switch type {
+        case .lowpass:
+            let b0 = (1.0 - cos_omega) / 2.0
+            let b1 = 1.0 - cos_omega
+            let b2 = (1.0 - cos_omega) / 2.0
+            let a0 = 1.0 + alpha
+            let a1 = -2.0 * cos_omega
+            let a2 = 1.0 - alpha
+            return BiquadCoefficients(b0: b0/a0, b1: b1/a0, b2: b2/a0, a1: a1/a0, a2: a2/a0)
+            
+        case .highpass:
+            let b0 = (1.0 + cos_omega) / 2.0
+            let b1 = -(1.0 + cos_omega)
+            let b2 = (1.0 + cos_omega) / 2.0
+            let a0 = 1.0 + alpha
+            let a1 = -2.0 * cos_omega
+            let a2 = 1.0 - alpha
+            return BiquadCoefficients(b0: b0/a0, b1: b1/a0, b2: b2/a0, a1: a1/a0, a2: a2/a0)
+            
+        case .bandpass:
+            let b0 = alpha
+            let b1: Float = 0.0
+            let b2 = -alpha
+            let a0 = 1.0 + alpha
+            let a1 = -2.0 * cos_omega
+            let a2 = 1.0 - alpha
+            return BiquadCoefficients(b0: b0/a0, b1: b1/a0, b2: b2/a0, a1: a1/a0, a2: a2/a0)
+            
+        case .notch:
+            let b0: Float = 1.0
+            let b1 = -2.0 * cos_omega
+            let b2: Float = 1.0
+            let a0 = 1.0 + alpha
+            let a1 = -2.0 * cos_omega
+            let a2 = 1.0 - alpha
+            return BiquadCoefficients(b0: b0/a0, b1: b1/a0, b2: b2/a0, a1: a1/a0, a2: a2/a0)
+            
+        case .peak:
+            let A = pow(10.0, config.gain / 40.0)
+            let b0 = 1.0 + alpha * A
+            let b1 = -2.0 * cos_omega
+            let b2 = 1.0 - alpha * A
+            let a0 = 1.0 + alpha / A
+            let a1 = -2.0 * cos_omega
+            let a2 = 1.0 - alpha / A
+            return BiquadCoefficients(b0: b0/a0, b1: b1/a0, b2: b2/a0, a1: a1/a0, a2: a2/a0)
+            
+        case .lowshelf, .highshelf, .allpass:
+            // Simplified implementations - return identity for now
+            return BiquadCoefficients.identity
+        }
+    }
+}
+
+// MARK: - Extensions
+
+/// Filter performance metrics for monitoring and optimization
+public struct FilterPerformanceMetrics: Codable, Sendable {
+    public var processingTime: Double = 0.0
+    public var throughput: Double = 0.0  // samples per second
+    public var cpuUsage: Double = 0.0   // percentage
+    public var latency: Double = 0.0    // seconds
+    public var memoryUsage: Int = 0     // bytes
+    public var droppedFrames: Int = 0
+    
+    public init() {}
+    
+    public mutating func reset() {
+        processingTime = 0.0
+        throughput = 0.0
+        cpuUsage = 0.0
+        latency = 0.0
+        memoryUsage = 0
+        droppedFrames = 0
+    }
+    
+    /// Update processing time and calculate throughput
+    public mutating func updateProcessingTime(_ time: Double, frameCount: Int = 512) {
+        processingTime = time
+        if time > 0 {
+            throughput = Double(frameCount) / time
+        }
+    }
+    
+    /// Check if performance meets real-time requirements
+    public var isRealTimeCapable: Bool {
+        return cpuUsage < 80.0 && throughput > 44100.0
+    }
+}
+
+/// Validation error types for testing
+public enum ValidationError: Error, Equatable {
+    case invalidParameter(String)
+    case outOfRange(String, expected: ClosedRange<Float>)
+    case nilValue(String)
+    case invalidConfiguration(String)
+    case processingError(String)
+    
+    public var description: String {
+        switch self {
+        case .invalidParameter(let param):
+            return "Invalid parameter: \(param)"
+        case .outOfRange(let param, let range):
+            return "Parameter \(param) out of range: \(range)"
+        case .nilValue(let param):
+            return "Parameter \(param) is nil"
+        case .invalidConfiguration(let desc):
+            return "Invalid configuration: \(desc)"
+        case .processingError(let desc):
+            return "Processing error: \(desc)"
+        }
+    }
+}
+
+extension Float {
+    /// Clamp value to specified range
+    func clamped(to range: ClosedRange<Float>) -> Float {
+        return Swift.max(range.lowerBound, Swift.min(range.upperBound, self))
     }
 }

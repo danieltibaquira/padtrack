@@ -117,7 +117,11 @@ let package = Package(
         // Audio filtering module
         .target(
             name: "FilterModule",
-            dependencies: ["MachineProtocols", "AudioEngine", "VoiceModule"]),
+            dependencies: ["MachineProtocols", "AudioEngine", "VoiceModule"],
+            exclude: [
+                "FilterPerformanceOptimizer.swift.disabled",
+                "MultiModeFilterMachine.swift.disabled"
+            ]),
         
         // Filter machines module
         .target(
@@ -174,7 +178,7 @@ let package = Package(
         // Test utilities and mock objects
         .target(
             name: "TestUtilities",
-            dependencies: ["MachineProtocols", "DataLayer", "DataModel", "AudioEngine"],
+            dependencies: ["MachineProtocols", "DataLayer", "DataModel", "AudioEngine", "SequencerModule"],
             path: "Tests/TestUtilities"),
 
         .testTarget(
