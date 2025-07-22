@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="DigitonePad" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22770" systemVersion="24.0.0" minimumToolsVersion="11.0">
-    <entity name="Project" representedClassName="Project">
+    <entity name="Project" representedClassName="Project" codeGenerationType="manual">
         <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
@@ -8,7 +8,7 @@
         <relationship name="kits" toMany="YES" destinationEntity="Kit" inverseName="project" inverseEntity="Kit" deletionRule="Cascade"/>
         <relationship name="presets" toMany="YES" destinationEntity="Preset" inverseName="project" inverseEntity="Preset" deletionRule="Cascade"/>
     </entity>
-    <entity name="Pattern" representedClassName="Pattern">
+    <entity name="Pattern" representedClassName="Pattern" codeGenerationType="manual">
         <attribute name="name" attributeType="String"/>
         <attribute name="length" attributeType="Integer 16" defaultValueString="64"/>
         <attribute name="tempo" attributeType="Double" defaultValueString="120.0"/>
@@ -19,7 +19,7 @@
         <relationship name="kit" toMany="NO" destinationEntity="Kit" inverseName="patterns" inverseEntity="Kit" deletionRule="Nullify"/>
         <relationship name="trigs" toMany="YES" destinationEntity="Trig" inverseName="pattern" inverseEntity="Trig" deletionRule="Cascade"/>
     </entity>
-    <entity name="Track" representedClassName="Track">
+    <entity name="Track" representedClassName="Track" codeGenerationType="manual">
         <attribute name="name" attributeType="String" defaultValueString="Track"/>
         <attribute name="volume" attributeType="Float" defaultValueString="0.75" minValueString="0.0" maxValueString="1.0"/>
         <attribute name="pan" attributeType="Float" defaultValueString="0.0" minValueString="-1.0" maxValueString="1.0"/>
@@ -33,7 +33,7 @@
         <relationship name="preset" toMany="NO" destinationEntity="Preset" inverseName="tracks" inverseEntity="Preset" deletionRule="Nullify"/>
         <relationship name="trigs" toMany="YES" destinationEntity="Trig" inverseName="track" inverseEntity="Trig" deletionRule="Cascade"/>
     </entity>
-    <entity name="Kit" representedClassName="Kit">
+    <entity name="Kit" representedClassName="Kit" codeGenerationType="manual">
         <attribute name="name" attributeType="String"/>
         <attribute name="soundFiles" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer" customClassName="[String]"/>
         <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
@@ -42,7 +42,7 @@
         <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="kits" inverseEntity="Project" deletionRule="Nullify"/>
         <relationship name="tracks" toMany="YES" destinationEntity="Track" inverseName="kit" inverseEntity="Track" deletionRule="Nullify"/>
     </entity>
-    <entity name="Preset" representedClassName="Preset">
+    <entity name="Preset" representedClassName="Preset" codeGenerationType="manual">
         <attribute name="name" attributeType="String"/>
         <attribute name="category" attributeType="String" optional="YES"/>
         <attribute name="settings" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer"/>
@@ -51,7 +51,7 @@
         <relationship name="project" toMany="NO" destinationEntity="Project" inverseName="presets" inverseEntity="Project" deletionRule="Nullify"/>
         <relationship name="tracks" toMany="YES" destinationEntity="Track" inverseName="preset" inverseEntity="Track" deletionRule="Nullify"/>
     </entity>
-    <entity name="Trig" representedClassName="Trig">
+    <entity name="Trig" representedClassName="Trig" codeGenerationType="manual">
         <attribute name="step" attributeType="Integer 16" defaultValueString="0" minValueString="0" maxValueString="127"/>
         <attribute name="isActive" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="note" attributeType="Integer 16" defaultValueString="60" minValueString="0" maxValueString="127"/>

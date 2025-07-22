@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 import Combine
 import DataLayer
+import DataModel
 
 // MARK: - VIPER Protocols for Project Management
 

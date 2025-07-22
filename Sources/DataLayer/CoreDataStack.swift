@@ -1,5 +1,6 @@
 import CoreData
 import Foundation
+import DataModel
 
 /// Errors that can occur during Core Data operations
 public enum CoreDataError: LocalizedError {
@@ -71,7 +72,7 @@ public final class PersistenceController: @unchecked Sendable {
         let context = controller.container.viewContext
         
         // Add sample data for previews
-        let sampleProject = Project(context: context)
+        let sampleProject = DataModel.Project(context: context)
         sampleProject.name = "Sample Project"
         sampleProject.createdAt = Date()
         sampleProject.updatedAt = Date()
@@ -336,7 +337,7 @@ public extension PersistenceController {
 
 // MARK: - Entity Extensions
 
-extension Project {
+extension DataModel.Project {
     /// Convenience method to create a new Project
     public static func create(in context: NSManagedObjectContext, name: String) -> Project {
         let project = Project(context: context)
@@ -347,7 +348,7 @@ extension Project {
     }
 }
 
-extension Pattern {
+extension DataModel.Pattern {
     /// Convenience method to create a new Pattern
     public static func create(in context: NSManagedObjectContext, name: String, project: Project) -> Pattern {
         let pattern = Pattern(context: context)
@@ -359,7 +360,7 @@ extension Pattern {
     }
 }
 
-extension Kit {
+extension DataModel.Kit {
     /// Convenience method to create a new Kit
     public static func create(in context: NSManagedObjectContext, name: String, project: Project) -> Kit {
         let kit = Kit(context: context)
@@ -372,7 +373,7 @@ extension Kit {
     }
 }
 
-extension Track {
+extension DataModel.Track {
     /// Convenience method to create a new Track
     public static func create(in context: NSManagedObjectContext, name: String, pattern: Pattern, kit: Kit) -> Track {
         let track = Track(context: context)
@@ -390,7 +391,7 @@ extension Track {
     }
 }
 
-extension Preset {
+extension DataModel.Preset {
     /// Convenience method to create a new Preset
     public static func create(in context: NSManagedObjectContext, name: String, category: String?, project: Project) -> Preset {
         let preset = Preset(context: context)
@@ -403,7 +404,7 @@ extension Preset {
     }
 }
 
-extension Trig {
+extension DataModel.Trig {
     /// Convenience method to create a new Trig
     public static func create(in context: NSManagedObjectContext, step: Int16, track: Track, pattern: Pattern) -> Trig {
         let trig = Trig(context: context)

@@ -1,0 +1,180 @@
+name: Xcode Cloud Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-xcode-cloud-setup:
+    name: Validate Xcode Cloud Configuration
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Select Xcode version
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.2'
+        
+    - name: Install xcodegen
+      run: |
+        brew install xcodegen
+        
+    - name: Validate project.yml
+      run: |
+        echo "🔍 Validating project.yml syntax..."
+        xcodegen --spec project.yml --project temp.xcodeproj --quiet
+        rm -rf temp.xcodeproj
+        echo "✅ project.yml syntax is valid"
+        
+    - name: Validate CI scripts
+      run: |
+        echo "🔍 Validating CI scripts..."
+        
+        # Check that CI scripts exist and are executable
+        if [ -f "ci_scripts/ci_post_clone.sh" ]; then
+          echo "✅ ci_post_clone.sh exists"
+          if [ -x "ci_scripts/ci_post_clone.sh" ]; then
+            echo "✅ ci_post_clone.sh is executable"
+          else
+            echo "❌ ci_post_clone.sh is not executable"
+            exit 1
+          fi
+        else
+          echo "❌ ci_post_clone.sh missing"
+          exit 1
+        fi
+        
+        if [ -f "ci_scripts/ci_pre_xcodebuild.sh" ]; then
+          echo "✅ ci_pre_xcodebuild.sh exists"
+          if [ -x "ci_scripts/ci_pre_xcodebuild.sh" ]; then
+            echo "✅ ci_pre_xcodebuild.sh is executable"
+          else
+            echo "❌ ci_pre_xcodebuild.sh is not executable"
+            exit 1
+          fi
+        else
+          echo "❌ ci_pre_xcodebuild.sh missing"
+          exit 1
+        fi
+        
+        if [ -f "ci_scripts/ci_post_xcodebuild.sh" ]; then
+          echo "✅ ci_post_xcodebuild.sh exists"
+          if [ -x "ci_scripts/ci_post_xcodebuild.sh" ]; then
+            echo "✅ ci_post_xcodebuild.sh is executable"
+          else
+            echo "❌ ci_post_xcodebuild.sh is not executable"
+            exit 1
+          fi
+        else
+          echo "❌ ci_post_xcodebuild.sh missing"
+          exit 1
+        fi
+        
+    - name: Generate Xcode project
+      run: |
+        echo "🔨 Generating Xcode project..."
+        xcodegen generate
+        echo "✅ Xcode project generated successfully"
+        
+    - name: Validate project structure
+      run: |
+        echo "🔍 Validating generated project structure..."
+        
+        if [ -d "DigitonePad.xcodeproj" ]; then
+          echo "✅ DigitonePad.xcodeproj created"
+        else
+          echo "❌ DigitonePad.xcodeproj not found"
+          exit 1
+        fi
+        
+        # Check that required schemes exist
+        if xcodebuild -list -project DigitonePad.xcodeproj | grep -q "DigitonePad"; then
+          echo "✅ DigitonePad scheme found"
+        else
+          echo "❌ DigitonePad scheme not found"
+          xcodebuild -list -project DigitonePad.xcodeproj
+          exit 1
+        fi
+        
+    - name: Validate build configuration
+      run: |
+        echo "🔍 Validating build configuration..."
+        
+        # Check build settings for main target
+        BUILD_SETTINGS=$(xcodebuild -project DigitonePad.xcodeproj -target DigitonePad -configuration Release -showBuildSettings)
+        
+        # Validate bundle identifier
+        if echo "$BUILD_SETTINGS" | grep -q "PRODUCT_BUNDLE_IDENTIFIER = com.digitonepad.app"; then
+          echo "✅ Bundle identifier configured correctly"
+        else
+          echo "❌ Bundle identifier not configured correctly"
+          echo "$BUILD_SETTINGS" | grep "PRODUCT_BUNDLE_IDENTIFIER"
+          exit 1
+        fi
+        
+        # Validate development team
+        if echo "$BUILD_SETTINGS" | grep -q "DEVELOPMENT_TEAM = GN9UGD54YC"; then
+          echo "✅ Development team configured correctly"
+        else
+          echo "❌ Development team not configured correctly"
+          echo "$BUILD_SETTINGS" | grep "DEVELOPMENT_TEAM"
+          exit 1
+        fi
+        
+        # Validate code signing style
+        if echo "$BUILD_SETTINGS" | grep -q "CODE_SIGN_STYLE = Automatic"; then
+          echo "✅ Code signing style configured correctly"
+        else
+          echo "❌ Code signing style not configured correctly"
+          echo "$BUILD_SETTINGS" | grep "CODE_SIGN_STYLE"
+          exit 1
+        fi
+        
+    - name: Test build for simulator
+      run: |
+        echo "🔨 Testing build for iPad simulator..."
+        xcodebuild -project DigitonePad.xcodeproj \
+          -scheme DigitonePad \
+          -destination 'platform=iOS Simulator,name=iPad Pro (12.9-inch) (6th generation),OS=17.2' \
+          -configuration Release \
+          -quiet \
+          build
+        echo "✅ Simulator build successful"
+        
+    - name: Validate test plan
+      run: |
+        echo "🔍 Validating test plan..."
+        
+        if [ -f "DigitonePad.xctestplan" ]; then
+          echo "✅ Test plan exists"
+          
+          # Validate test plan JSON syntax
+          if python3 -m json.tool DigitonePad.xctestplan > /dev/null; then
+            echo "✅ Test plan JSON syntax is valid"
+          else
+            echo "❌ Test plan JSON syntax is invalid"
+            exit 1
+          fi
+        else
+          echo "❌ Test plan missing"
+          exit 1
+        fi
+        
+    - name: Summary
+      run: |
+        echo "🎉 Xcode Cloud validation completed successfully!"
+        echo ""
+        echo "📋 Configuration Summary:"
+        echo "   • Bundle ID: com.digitonepad.app"
+        echo "   • Development Team: GN9UGD54YC"
+        echo "   • Code Signing: Automatic"
+        echo "   • Target Platform: iOS 16.0+"
+        echo "   • CI Scripts: ✅ Configured"
+        echo "   • Test Plan: ✅ Configured"
+        echo ""
+        echo "🚀 Ready for Xcode Cloud setup!"

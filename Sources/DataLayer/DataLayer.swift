@@ -6,6 +6,9 @@
 import Foundation
 import CoreData
 import MachineProtocols
+import DataModel
+
+// Core Data entities are imported from DataModel
 
 // MARK: - Error Types
 
@@ -227,7 +230,7 @@ public final class DataLayerManager: @unchecked Sendable {
     /// - Parameter name: The project name
     /// - Returns: The newly created project with default pattern and kit
     /// - Throws: DataLayerError if creation fails
-    public func createNewProject(name: String) throws -> Project {
+    public func createNewProject(name: String) throws -> DataModel.Project {
         let project = projectRepository.createProject(name: name)
 
         // Create default pattern
@@ -256,7 +259,7 @@ public final class DataLayerManager: @unchecked Sendable {
     ///   - newName: The name for the duplicated project
     /// - Returns: The duplicated project
     /// - Throws: DataLayerError if duplication fails
-    public func duplicateProject(_ project: Project, withName newName: String) throws -> Project {
+    public func duplicateProject(_ project: DataModel.Project, withName newName: String) throws -> DataModel.Project {
         let newProject = projectRepository.createProject(name: newName)
 
         // Duplicate all patterns
@@ -290,7 +293,7 @@ public final class DataLayerManager: @unchecked Sendable {
     ///   - project: The target project
     /// - Returns: The duplicated pattern
     /// - Throws: DataLayerError if duplication fails
-    public func duplicatePattern(_ pattern: Pattern, toProject project: Project) throws -> Pattern {
+    public func duplicatePattern(_ pattern: DataModel.Pattern, toProject project: DataModel.Project) throws -> DataModel.Pattern {
         let newPattern = patternRepository.createPattern(
             name: pattern.name ?? "Duplicated Pattern",
             project: project,
@@ -314,7 +317,7 @@ public final class DataLayerManager: @unchecked Sendable {
     ///   - pattern: The target pattern
     /// - Returns: The duplicated track
     /// - Throws: DataLayerError if duplication fails
-    public func duplicateTrack(_ track: Track, toPattern pattern: Pattern) throws -> Track {
+    public func duplicateTrack(_ track: DataModel.Track, toPattern pattern: DataModel.Pattern) throws -> DataModel.Track {
         let newTrack = trackRepository.createTrack(
             name: track.name ?? "Duplicated Track",
             pattern: pattern,
@@ -344,7 +347,7 @@ public final class DataLayerManager: @unchecked Sendable {
     ///   - track: The target track
     /// - Returns: The duplicated trig
     /// - Throws: DataLayerError if duplication fails
-    public func duplicateTrig(_ trig: Trig, toTrack track: Track) throws -> Trig {
+    public func duplicateTrig(_ trig: DataModel.Trig, toTrack track: DataModel.Track) throws -> DataModel.Trig {
         let newTrig = trigRepository.createTrig(
             step: trig.step,
             note: trig.note,
@@ -369,7 +372,7 @@ public final class DataLayerManager: @unchecked Sendable {
     ///   - project: The target project
     /// - Returns: The duplicated kit
     /// - Throws: DataLayerError if duplication fails
-    public func duplicateKit(_ kit: Kit, toProject project: Project) throws -> Kit {
+    public func duplicateKit(_ kit: DataModel.Kit, toProject project: DataModel.Project) throws -> DataModel.Kit {
         let newKit = kitRepository.createKit(
             name: kit.name ?? "Duplicated Kit"
         )
@@ -385,7 +388,7 @@ public final class DataLayerManager: @unchecked Sendable {
     ///   - project: The target project
     /// - Returns: The duplicated preset
     /// - Throws: DataLayerError if duplication fails
-    public func duplicatePreset(_ preset: Preset, toProject project: Project) throws -> Preset {
+    public func duplicatePreset(_ preset: DataModel.Preset, toProject project: DataModel.Project) throws -> DataModel.Preset {
         let newPreset = presetRepository.createPreset(
             name: preset.name ?? "Duplicated Preset",
             project: project
@@ -401,7 +404,7 @@ public final class DataLayerManager: @unchecked Sendable {
     /// Removes unused presets from a project
     /// - Parameter project: The project to clean up
     /// - Throws: DataLayerError if cleanup fails
-    public func removeUnusedPresets(from project: Project) throws {
+    public func removeUnusedPresets(from project: DataModel.Project) throws {
         let presets = try presetRepository.fetchPresets(for: project)
 
         for preset in presets {
@@ -416,7 +419,7 @@ public final class DataLayerManager: @unchecked Sendable {
     /// Removes empty patterns from a project
     /// - Parameter project: The project to clean up
     /// - Throws: DataLayerError if cleanup fails
-    public func removeEmptyPatterns(from project: Project) throws {
+    public func removeEmptyPatterns(from project: DataModel.Project) throws {
         let patterns = try patternRepository.fetchPatterns(for: project)
 
         for pattern in patterns {
@@ -680,13 +683,17 @@ public class BaseRepository<T: NSManagedObject>: Repository {
 }
 
 /// Project repository with specific operations
-public class ProjectRepository: BaseRepository<Project> {
+public class ProjectRepository: BaseRepository<DataModel.Project> {
+    
+    public override init(context: NSManagedObjectContext) {
+        super.init(context: context)
+    }
 
     /// Creates a new project with default values
     /// - Parameter name: The project name
     /// - Returns: The newly created project
-    public func createProject(name: String) -> Project {
-        let project = create()
+    public func createProject(name: String) -> DataModel.Project {
+        let project: DataModel.Project = create()
         project.name = name
         return project
     }
@@ -710,14 +717,18 @@ public class ProjectRepository: BaseRepository<Project> {
     /// Finds a project by name
     /// - Parameter name: The project name to search for
     /// - Returns: The project if found
-    public func findProject(byName name: String) throws -> Project? {
+    public func findProject(byName name: String) throws -> DataModel.Project? {
         let predicate = NSPredicate(format: "name == %@", name)
         return try fetchFirst(predicate: predicate)
     }
 }
 
 /// Pattern repository with specific operations
-public class PatternRepository: BaseRepository<Pattern> {
+public class PatternRepository: BaseRepository<DataModel.Pattern> {
+    
+    public override init(context: NSManagedObjectContext) {
+        super.init(context: context)
+    }
 
     /// Creates a new pattern for a project
     /// - Parameters:
@@ -726,8 +737,8 @@ public class PatternRepository: BaseRepository<Pattern> {
     ///   - length: The pattern length (default: 16)
     ///   - tempo: The pattern tempo (default: 120.0)
     /// - Returns: The newly created pattern
-    public func createPattern(name: String, project: Project, length: Int16 = 16, tempo: Double = 120.0) -> Pattern {
-        let pattern = create()
+    public func createPattern(name: String, project: DataModel.Project, length: Int16 = 16, tempo: Double = 120.0) -> DataModel.Pattern {
+        let pattern: DataModel.Pattern = create()
         pattern.name = name
         pattern.project = project
         pattern.length = length
@@ -738,7 +749,7 @@ public class PatternRepository: BaseRepository<Pattern> {
     /// Fetches all patterns for a project
     /// - Parameter project: The project to fetch patterns for
     /// - Returns: Array of patterns sorted by name
-    public func fetchPatterns(for project: Project) throws -> [Pattern] {
+    public func fetchPatterns(for project: DataModel.Project) throws -> [Pattern] {
         let predicate = NSPredicate(format: "project == %@", project)
         let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
         return try fetch(predicate: predicate, sortDescriptors: [sortDescriptor])
@@ -757,7 +768,11 @@ public class PatternRepository: BaseRepository<Pattern> {
 }
 
 /// Track repository with specific operations
-public class TrackRepository: BaseRepository<Track> {
+public class TrackRepository: BaseRepository<DataModel.Track> {
+    
+    public override init(context: NSManagedObjectContext) {
+        super.init(context: context)
+    }
 
     /// Creates a new track for a pattern
     /// - Parameters:
@@ -765,8 +780,8 @@ public class TrackRepository: BaseRepository<Track> {
     ///   - pattern: The parent pattern
     ///   - trackIndex: The track index (0-15)
     /// - Returns: The newly created track
-    public func createTrack(name: String, pattern: Pattern, trackIndex: Int16) -> Track {
-        let track = create()
+    public func createTrack(name: String, pattern: DataModel.Pattern, trackIndex: Int16) -> DataModel.Track {
+        let track: DataModel.Track = create()
         track.name = name
         track.pattern = pattern
         track.trackIndex = trackIndex
@@ -776,7 +791,7 @@ public class TrackRepository: BaseRepository<Track> {
     /// Fetches all tracks for a pattern
     /// - Parameter pattern: The pattern to fetch tracks for
     /// - Returns: Array of tracks sorted by track index
-    public func fetchTracks(for pattern: Pattern) throws -> [Track] {
+    public func fetchTracks(for pattern: DataModel.Pattern) throws -> [Track] {
         let predicate = NSPredicate(format: "pattern == %@", pattern)
         let sortDescriptor = NSSortDescriptor(key: "trackIndex", ascending: true)
         return try fetch(predicate: predicate, sortDescriptors: [sortDescriptor])
@@ -798,7 +813,11 @@ public class TrackRepository: BaseRepository<Track> {
 }
 
 /// Trig repository with specific operations
-public class TrigRepository: BaseRepository<Trig> {
+public class TrigRepository: BaseRepository<DataModel.Trig> {
+    
+    public override init(context: NSManagedObjectContext) {
+        super.init(context: context)
+    }
 
     /// Creates a new trig for a track
     /// - Parameters:
@@ -807,8 +826,8 @@ public class TrigRepository: BaseRepository<Trig> {
     ///   - velocity: The velocity
     ///   - track: The parent track
     /// - Returns: The newly created trig
-    public func createTrig(step: Int16, note: Int16, velocity: Int16, track: Track) -> Trig {
-        let trig = create()
+    public func createTrig(step: Int16, note: Int16, velocity: Int16, track: DataModel.Track) -> DataModel.Trig {
+        let trig: DataModel.Trig = create()
         trig.step = step
         trig.note = note
         trig.velocity = velocity
@@ -821,7 +840,7 @@ public class TrigRepository: BaseRepository<Trig> {
     /// Fetches all trigs for a track
     /// - Parameter track: The track to fetch trigs for
     /// - Returns: Array of trigs sorted by step
-    public func fetchTrigs(for track: Track) throws -> [Trig] {
+    public func fetchTrigs(for track: DataModel.Track) throws -> [Trig] {
         let predicate = NSPredicate(format: "track == %@", track)
         let sortDescriptor = NSSortDescriptor(key: "step", ascending: true)
         return try fetch(predicate: predicate, sortDescriptors: [sortDescriptor])
@@ -830,7 +849,7 @@ public class TrigRepository: BaseRepository<Trig> {
     /// Fetches active trigs for a track
     /// - Parameter track: The track to fetch active trigs for
     /// - Returns: Array of active trigs sorted by step
-    public func fetchActiveTrigs(for track: Track) throws -> [Trig] {
+    public func fetchActiveTrigs(for track: DataModel.Track) throws -> [Trig] {
         let predicate = NSPredicate(format: "track == %@ AND isActive == YES", track)
         let sortDescriptor = NSSortDescriptor(key: "step", ascending: true)
         return try fetch(predicate: predicate, sortDescriptors: [sortDescriptor])
@@ -842,7 +861,7 @@ public class TrigRepository: BaseRepository<Trig> {
     ///   - endStep: The end step
     ///   - track: The track to search in
     /// - Returns: Array of trigs within the step range
-    public func fetchTrigs(startStep: Int16, endStep: Int16, track: Track) throws -> [Trig] {
+    public func fetchTrigs(startStep: Int16, endStep: Int16, track: DataModel.Track) throws -> [Trig] {
         let predicate = NSPredicate(format: "track == %@ AND step >= %d AND step <= %d", track, startStep, endStep)
         let sortDescriptor = NSSortDescriptor(key: "step", ascending: true)
         return try fetch(predicate: predicate, sortDescriptors: [sortDescriptor])
@@ -850,13 +869,17 @@ public class TrigRepository: BaseRepository<Trig> {
 }
 
 /// Kit repository with specific operations
-public class KitRepository: BaseRepository<Kit> {
+public class KitRepository: BaseRepository<DataModel.Kit> {
+    
+    public override init(context: NSManagedObjectContext) {
+        super.init(context: context)
+    }
 
     /// Creates a new kit
     /// - Parameter name: The kit name
     /// - Returns: The newly created kit
-    public func createKit(name: String) -> Kit {
-        let kit = create()
+    public func createKit(name: String) -> DataModel.Kit {
+        let kit: DataModel.Kit = create()
         kit.name = name
         return kit
     }
@@ -871,22 +894,26 @@ public class KitRepository: BaseRepository<Kit> {
     /// Finds a kit by name
     /// - Parameter name: The kit name to search for
     /// - Returns: The kit if found
-    public func findKit(byName name: String) throws -> Kit? {
+    public func findKit(byName name: String) throws -> DataModel.Kit? {
         let predicate = NSPredicate(format: "name == %@", name)
         return try fetchFirst(predicate: predicate)
     }
 }
 
 /// Preset repository with specific operations
-public class PresetRepository: BaseRepository<Preset> {
+public class PresetRepository: BaseRepository<DataModel.Preset> {
+    
+    public override init(context: NSManagedObjectContext) {
+        super.init(context: context)
+    }
 
     /// Creates a new preset for a project
     /// - Parameters:
     ///   - name: The preset name
     ///   - project: The parent project
     /// - Returns: The newly created preset
-    public func createPreset(name: String, project: Project) -> Preset {
-        let preset = create()
+    public func createPreset(name: String, project: DataModel.Project) -> DataModel.Preset {
+        let preset: DataModel.Preset = create()
         preset.name = name
         preset.project = project
         return preset
@@ -895,7 +922,7 @@ public class PresetRepository: BaseRepository<Preset> {
     /// Fetches all presets for a project
     /// - Parameter project: The project to fetch presets for
     /// - Returns: Array of presets sorted by name
-    public func fetchPresets(for project: Project) throws -> [Preset] {
+    public func fetchPresets(for project: DataModel.Project) throws -> [Preset] {
         let predicate = NSPredicate(format: "project == %@", project)
         let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
         return try fetch(predicate: predicate, sortDescriptors: [sortDescriptor])
@@ -906,7 +933,7 @@ public class PresetRepository: BaseRepository<Preset> {
     ///   - name: The preset name to search for
     ///   - project: The project to search in
     /// - Returns: The preset if found
-    public func findPreset(byName name: String, in project: Project) throws -> Preset? {
+    public func findPreset(byName name: String, in project: DataModel.Project) throws -> DataModel.Preset? {
         let predicate = NSPredicate(format: "name == %@ AND project == %@", name, project)
         return try fetchFirst(predicate: predicate)
     }

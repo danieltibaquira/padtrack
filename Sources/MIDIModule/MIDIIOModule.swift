@@ -443,7 +443,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
     public func reset() throws {
         stop()
 
-        try ioQueue.sync {
+        ioQueue.sync {
             // Reset all components
             routingEngine.reset()
             messageProcessor.reset()
@@ -467,7 +467,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
     /// Discover available MIDI devices
     public func discoverDevices() throws {
-        try deviceQueue.sync {
+        deviceQueue.sync {
             var discoveredDevices: [EnhancedMIDIDevice] = []
 
             // Discover input devices
@@ -558,7 +558,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
     /// Disconnect an output device
     public func disconnectOutputDevice(_ device: EnhancedMIDIDevice) throws {
-        try deviceQueue.sync {
+        deviceQueue.sync {
             DispatchQueue.main.async {
                 self.connectedOutputDevices.removeAll { $0.id == device.id }
                 self.deviceDisconnectedHandler?(device)
@@ -793,7 +793,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
 
         // Prepare MIDI data
         let statusByte = message.type.rawValue | (message.channel & 0x0F)
-        var midiData: [UInt8] = [statusByte, message.data1, message.data2]
+        let midiData: [UInt8]
 
         // Adjust data length based on message type
         switch message.type {
@@ -802,7 +802,7 @@ public final class MIDIIOModule: ObservableObject, @unchecked Sendable {
         case .timingClock, .start, .continue, .stop:
             midiData = [statusByte]
         default:
-            break
+            midiData = [statusByte, message.data1, message.data2]
         }
 
         // Send packet

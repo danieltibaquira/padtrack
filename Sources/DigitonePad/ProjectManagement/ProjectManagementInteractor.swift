@@ -1,6 +1,7 @@
 import Foundation
 import CoreData
 import DataLayer
+import DataModel
 import Combine
 import MachineProtocols
 

@@ -7559,8 +7559,8 @@ public final class MultiChannelFormatConverter: @unchecked Sendable {
 // MARK: - Audio Engine Manager
 
 /// Main interface for audio operations with comprehensive lifecycle management
-@objc public final class AudioEngineManager: NSObject, @unchecked Sendable {
-    @objc public static let shared = AudioEngineManager()
+public final class AudioEngineManager: @unchecked Sendable {
+    public static let shared = AudioEngineManager()
 
     // MARK: - Private Properties
 
@@ -7691,8 +7691,7 @@ public final class MultiChannelFormatConverter: @unchecked Sendable {
 
     // MARK: - Initialization
 
-    private override init() {
-        super.init()
+    private init() {
         setupNotificationObservers()
     }
 
@@ -7779,7 +7778,7 @@ public final class MultiChannelFormatConverter: @unchecked Sendable {
     }
 
     /// Start the audio engine
-    @objc public func start() throws {
+    public func start() throws {
         try queue.sync {
             guard _status == .ready || _status == .stopped else {
                 throw AudioEngineError.engineStartFailed("Engine not ready to start. Current status: \(_status)")
@@ -7824,7 +7823,7 @@ public final class MultiChannelFormatConverter: @unchecked Sendable {
     }
 
     /// Stop the audio engine
-    @objc public func stop() throws {
+    public func stop() throws {
         try queue.sync {
             guard _status == .running || _status == .starting else {
                 throw AudioEngineError.engineStopFailed("Engine not running. Current status: \(_status)")
@@ -7841,7 +7840,7 @@ public final class MultiChannelFormatConverter: @unchecked Sendable {
     }
 
     /// Suspend the audio engine (for interruptions)
-    @objc public func suspend() throws {
+    public func suspend() throws {
         try queue.sync {
             guard _status == .running else {
                 throw AudioEngineError.interruptionError("Cannot suspend engine that is not running")
@@ -7853,7 +7852,7 @@ public final class MultiChannelFormatConverter: @unchecked Sendable {
     }
 
     /// Resume the audio engine (after interruption)
-    @objc public func resume() throws {
+    public func resume() throws {
         try queue.sync {
             guard _status == .suspended else {
                 throw AudioEngineError.interruptionError("Cannot resume engine that is not suspended")
@@ -7871,7 +7870,7 @@ public final class MultiChannelFormatConverter: @unchecked Sendable {
     }
 
     /// Reset the audio engine to initial state
-    @objc public func reset() {
+    public func reset() {
         queue.sync {
             cleanup()
             _status = .uninitialized

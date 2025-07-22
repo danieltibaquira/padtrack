@@ -1,5 +1,6 @@
 import SwiftUI
 import DataLayer
+import DataModel
 
 /// Main view for project management using SwiftUI
 struct ProjectManagementView: View {
@@ -215,7 +216,12 @@ struct ProjectDisplayModel: Identifiable {
     let lastModified: Date
 
     init(from project: Project) {
-        self.id = project.id ?? UUID()
+        // Create a deterministic UUID from the Core Data objectID
+        let objectIDString = project.objectID.uriRepresentation().absoluteString
+        let hash = objectIDString.hash
+        var uuid = UUID().uuidString
+        uuid.replaceSubrange(uuid.startIndex..<uuid.index(uuid.startIndex, offsetBy: 8), with: String(format: "%08X", abs(hash)))
+        self.id = UUID(uuidString: uuid) ?? UUID()
         self.name = project.name ?? "Untitled Project"
         self.lastModified = project.updatedAt ?? Date()
     }

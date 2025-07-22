@@ -13,7 +13,7 @@ settings:
     PRODUCT_NAME: DigitonePad
     MARKETING_VERSION: "1.0.0"
     CURRENT_PROJECT_VERSION: "1"
-    SWIFT_VERSION: "5.9"
+    SWIFT_VERSION: "5.10"
     IPHONEOS_DEPLOYMENT_TARGET: "16.0"
     TARGETED_DEVICE_FAMILY: "1,2"
     SUPPORTS_MACCATALYST: false
@@ -22,7 +22,7 @@ settings:
     # Reduce code signing verbosity for simulator builds
     CODE_SIGN_IDENTITY[sdk=iphonesimulator*]: ""
     CODE_SIGN_STYLE: Automatic
-    DEVELOPMENT_TEAM: ""
+    DEVELOPMENT_TEAM: GN9UGD54YC
 
 # External packages can be added here when needed
 # packages:
@@ -44,6 +44,10 @@ targets:
         optional: true
     dependencies:
       - target: AppShell
+      - target: DataLayer
+      - target: DataModel
+      - target: AudioEngine
+      - target: VoiceModule
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.digitonepad.app
@@ -51,7 +55,6 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         ENABLE_PREVIEWS: true
-        DEVELOPMENT_ASSET_PATHS: "\"Resources/Preview Content\""
     info:
       path: Resources/Info.plist
       properties:

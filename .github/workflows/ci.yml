@@ -40,7 +40,6 @@ jobs:
       run: |
         # Run tests that don't require iOS runtime
         swift test --filter MachineProtocolsTests || echo "Tests may fail without iOS runtime - expected"
-
   # macOS Build - Full iOS/Audio Support
   ios-build-and-test:
     name: iOS Build and Test
@@ -70,13 +69,11 @@ jobs:
           brew install xcodegen
         fi
         xcodegen --version
-
     - name: Cache XcodeGen
       uses: actions/cache@v4
       with:
         path: ~/.cache/xcodegen
         key: xcodegen-${{ runner.os }}-${{ hashFiles('project.yml') }}
-
     - name: Generate Xcode Project
       run: |
         echo "🏗️ Generating Xcode Project..."
@@ -112,7 +109,6 @@ jobs:
         # Check for excessive warnings
         WARNINGS=$(swift build 2>&1 | grep -c "warning:" || true)
         echo "Build completed with $WARNINGS warnings"
-        
         if [ "$WARNINGS" -gt 50 ]; then
           echo "⚠️ Warning: $WARNINGS build warnings detected (threshold: 50)"
         fi
@@ -140,8 +136,6 @@ jobs:
           -destination 'platform=iOS Simulator,name=iPad Pro (12.9-inch) (6th generation),OS=latest' \
           test \
           | xcpretty || echo "iOS tests may fail - this is expected during development"
-
-  # Code Quality and Security
   lint:
     name: Code Quality (SwiftLint)
     runs-on: ${{ env.MACOS_VERSION }}
@@ -161,8 +155,6 @@ jobs:
         echo "🔍 Running SwiftLint..."
         swiftlint --version
         swiftlint lint --reporter github-actions-logging || echo "SwiftLint issues found"
-
-  # Security Scanning
   security:
     name: Security Scan
     runs-on: ubuntu-latest

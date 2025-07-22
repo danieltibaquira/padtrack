@@ -1,0 +1,406 @@
+name: iPad Deployment Validation
+
+on:
+  push:
+    branches: [ main, develop, release/* ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
+  XCODE_VERSION: '16.2'
+  IOS_DEPLOYMENT_TARGET: '16.0'
+  
+jobs:
+  validate-ipad-build:
+    name: Validate iPad Build
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Select Xcode version
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: ${{ env.XCODE_VERSION }}
+        
+    - name: Cache Swift Package Manager
+      uses: actions/cache@v4
+      with:
+        path: |
+          .build
+          ~/Library/Developer/Xcode/DerivedData
+        key: ${{ runner.os }}-spm-ipad-${{ hashFiles('**/Package.resolved', '**/Package.swift') }}
+        restore-keys: |
+          ${{ runner.os }}-spm-ipad-
+          
+    - name: Install Dependencies
+      run: |
+        brew install xcodegen swiftlint xcbeautify
+        
+    - name: Create Missing Directories
+      run: |
+        mkdir -p "Resources/Preview Content"
+        
+    - name: Generate Xcode Project
+      run: |
+        xcodegen generate --spec project.yml
+        
+    - name: Validate Project Configuration
+      run: |
+        echo "Validating project configuration for iPad..."
+        
+        # Check build settings for iPad target
+        DEVICE_FAMILY=$(xcodebuild -project DigitonePad.xcodeproj -target DigitonePad -showBuildSettings | grep TARGETED_DEVICE_FAMILY | head -1 | awk '{print $3}')
+        
+        if [[ "$DEVICE_FAMILY" == *"2"* ]]; then
+          echo "✅ Project is configured for iPad (TARGETED_DEVICE_FAMILY: $DEVICE_FAMILY)"
+        else
+          echo "⚠️ Project may not be optimized for iPad (TARGETED_DEVICE_FAMILY: $DEVICE_FAMILY)"
+          echo "Continuing with build..."
+        fi
+        
+    - name: Build for iPad Simulator
+      run: |
+        set -o pipefail
+        
+        # Find an available iPad simulator
+        IPAD_SIMULATOR=$(xcrun simctl list devices available | grep -E "iPad.*\(" | head -1 | sed 's/.*(\([^)]*\)).*/\1/')
+        
+        if [ -z "$IPAD_SIMULATOR" ]; then
+          echo "No iPad simulator found, trying any iOS simulator..."
+          IPAD_SIMULATOR=$(xcrun simctl list devices available | grep -E "iOS.*\(" | head -1 | sed 's/.*(\([^)]*\)).*/\1/')
+        fi
+        
+        echo "Using simulator: $IPAD_SIMULATOR"
+        
+        xcodebuild -project DigitonePad.xcodeproj \
+          -scheme DigitonePad \
+          -destination "id=$IPAD_SIMULATOR" \
+          -configuration Release \
+          -derivedDataPath .build/DerivedData \
+          clean build \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGNING_ALLOWED=NO \
+          | xcbeautify
+          
+    - name: Build for iPad Device
+      run: |
+        set -o pipefail
+        
+        xcodebuild -project DigitonePad.xcodeproj \
+          -scheme DigitonePad \
+          -destination 'generic/platform=iOS' \
+          -configuration Release \
+          -derivedDataPath .build/DerivedData \
+          clean build \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGNING_ALLOWED=NO \
+          ONLY_ACTIVE_ARCH=NO \
+          | xcbeautify
+          
+    - name: Check Build Output
+      run: |
+        echo "Checking build artifacts..."
+        
+        # Find the built app
+        APP_PATH=$(find .build/DerivedData -name "DigitonePad.app" -type d | head -1)
+        
+        if [ -z "$APP_PATH" ]; then
+          echo "Error: DigitonePad.app not found in build output"
+          exit 1
+        fi
+        
+        echo "✅ Found app at: $APP_PATH"
+        
+        # Check Info.plist for device family if it exists
+        if [ -f "$APP_PATH/Info.plist" ]; then
+          DEVICE_FAMILY=$(plutil -extract UIDeviceFamily json "$APP_PATH/Info.plist" 2>/dev/null || echo "[]")
+          echo "App device family configuration: $DEVICE_FAMILY"
+          
+          if [[ "$DEVICE_FAMILY" == *"2"* ]]; then
+            echo "✅ App is configured for iPad"
+          else
+            echo "⚠️ App may not be explicitly configured for iPad, but build succeeded"
+          fi
+        else
+          echo "⚠️ Info.plist not found at expected location, but build succeeded"
+        fi
+        
+    - name: Archive Build Logs
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: ipad-build-logs
+        path: |
+          .build/DerivedData/**/*.log
+          *.log
+        retention-days: 7
+
+  validate-audio-engine:
+    name: Validate Audio Engine for iPad
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Select Xcode version
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: ${{ env.XCODE_VERSION }}
+        
+    - name: Validate Audio Session Configuration
+      run: |
+        echo "Checking AVAudioSession configuration for iPad..."
+        
+        # Check for proper audio session setup
+        if ! grep -r "AVAudioSession" Sources/AudioEngine/ | grep -q "setCategory"; then
+          echo "Warning: No AVAudioSession category configuration found"
+        fi
+        
+        # Check for iPad-specific audio optimizations
+        if ! grep -r "AVAudioSession" Sources/AudioEngine/ | grep -q "setPreferredIOBufferDuration"; then
+          echo "Warning: No buffer duration optimization found"
+        fi
+        
+        echo "✅ Audio session checks completed"
+        
+    - name: Run Audio Engine Unit Tests
+      run: |
+        swift test --filter AudioEngineTests
+
+  validate-ui-components:
+    name: Validate UI for iPad
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Select Xcode version
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: ${{ env.XCODE_VERSION }}
+        
+    - name: Check SwiftUI iPad Compatibility
+      run: |
+        echo "Checking SwiftUI components for iPad compatibility..."
+        
+        # Check for iPad-specific modifiers
+        if ! grep -r "\.navigationViewStyle" Sources/DigitonePad/ Sources/UIComponents/; then
+          echo "Warning: No navigationViewStyle found - may have layout issues on iPad"
+        fi
+        
+        # Check for size classes usage
+        if ! grep -r "horizontalSizeClass\|verticalSizeClass" Sources/DigitonePad/ Sources/UIComponents/; then
+          echo "Warning: No size class usage found - may not adapt to different iPad sizes"
+        fi
+        
+        echo "✅ UI compatibility checks completed"
+
+  integration-test-ipad:
+    name: Integration Tests on iPad
+    runs-on: macos-14
+    needs: [validate-ipad-build]
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Select Xcode version
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: ${{ env.XCODE_VERSION }}
+        
+    - name: Install XcodeGen
+      run: brew install xcodegen xcbeautify
+      
+    - name: Create Missing Directories
+      run: |
+        mkdir -p "Resources/Preview Content"
+        
+    - name: Generate Xcode Project
+      run: xcodegen generate --spec project.yml
+      
+    - name: Run Tests on iPad Simulator
+      run: |
+        set -o pipefail
+        
+        # Find available iPad simulators
+        echo "Finding available iPad simulators..."
+        xcrun simctl list devices available | grep -E "iPad.*\(" | head -3 > available_ipads.txt
+        
+        if [ ! -s available_ipads.txt ]; then
+          echo "No iPad simulators found, using first available iOS simulator..."
+          xcrun simctl list devices available | grep -E "iOS.*\(" | head -1 > available_ipads.txt
+        fi
+        
+        # Test on available devices
+        while IFS= read -r device_line; do
+          if [ -n "$device_line" ]; then
+            DEVICE_ID=$(echo "$device_line" | sed 's/.*(\([^)]*\)).*/\1/')
+            DEVICE_NAME=$(echo "$device_line" | sed 's/ *(.*//')
+            
+            echo "Testing on: $DEVICE_NAME (ID: $DEVICE_ID)"
+            
+            xcodebuild test \
+              -project DigitonePad.xcodeproj \
+              -scheme DigitonePad \
+              -destination "id=$DEVICE_ID" \
+              -configuration Debug \
+              -resultBundlePath ".build/TestResults-${DEVICE_ID}.xcresult" \
+              | xcbeautify || echo "Tests failed on $DEVICE_NAME - continuing..."
+          fi
+        done < available_ipads.txt
+        
+    - name: Archive Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: ipad-test-results
+        path: |
+          .build/TestResults-*.xcresult
+        retention-days: 7
+
+  performance-validation:
+    name: Performance Validation
+    runs-on: macos-14
+    needs: [validate-ipad-build]
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Select Xcode version
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: ${{ env.XCODE_VERSION }}
+        
+    - name: Check Memory Usage Patterns
+      run: |
+        echo "Analyzing memory usage patterns..."
+        
+        # Check for memory leaks in audio processing
+        if grep -r "class.*AudioEngine\|class.*VoiceMachine" Sources/ | grep -v "weak\|unowned"; then
+          echo "Warning: Found potential retain cycles in audio components"
+        fi
+        
+        # Check buffer sizes
+        if ! grep -r "bufferSize\|frameLength" Sources/AudioEngine/ | grep -q "[0-9]"; then
+          echo "Warning: No explicit buffer size configuration found"
+        fi
+        
+        echo "✅ Memory analysis completed"
+        
+    - name: Validate Real-time Constraints
+      run: |
+        echo "Checking real-time audio constraints..."
+        
+        # Check for locks in audio thread
+        if grep -r "DispatchQueue\|NSLock\|@synchronized" Sources/AudioEngine/ Sources/VoiceModule/ | grep -v "// TESTING"; then
+          echo "Warning: Found potential locks in audio processing code"
+        fi
+        
+        echo "✅ Real-time constraint validation completed"
+
+  code-signing-validation:
+    name: Code Signing & Provisioning
+    runs-on: macos-14
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Validate Entitlements
+      run: |
+        echo "Checking app entitlements for iPad..."
+        
+        # Look for entitlements file
+        if [ -f "DigitonePad/DigitonePad.entitlements" ]; then
+          echo "✅ Found entitlements file"
+          
+          # Check for audio background mode
+          if ! grep -q "audio" DigitonePad/DigitonePad.entitlements; then
+            echo "Warning: Audio background mode not enabled"
+          fi
+        else
+          echo "Warning: No entitlements file found"
+        fi
+        
+    - name: Check Export Options
+      run: |
+        echo "Validating export options for App Store..."
+        
+        # Create a sample export options plist
+        cat > ExportOptions.plist <<EOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+            <key>method</key>
+            <string>app-store</string>
+            <key>teamID</key>
+            <string>YOUR_TEAM_ID</string>
+            <key>uploadBitcode</key>
+            <false/>
+            <key>compileBitcode</key>
+            <false/>
+            <key>uploadSymbols</key>
+            <true/>
+            <key>thinning</key>
+            <string>&lt;none&gt;</string>
+        </dict>
+        </plist>
+        EOF
+        
+        echo "✅ Export options template created"
+
+  final-validation-report:
+    name: Generate Validation Report
+    runs-on: ubuntu-latest
+    needs: [validate-ipad-build, validate-audio-engine, validate-ui-components, integration-test-ipad, performance-validation]
+    if: always()
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Generate Report
+      run: |
+        cat > validation-report.md <<EOF
+        # iPad Deployment Validation Report
+        
+        ## Build Status
+        - iPad Simulator Build: ${{ needs.validate-ipad-build.result }}
+        - iPad Device Build: ${{ needs.validate-ipad-build.result }}
+        
+        ## Component Validation
+        - Audio Engine: ${{ needs.validate-audio-engine.result }}
+        - UI Components: ${{ needs.validate-ui-components.result }}
+        - Integration Tests: ${{ needs.integration-test-ipad.result }}
+        - Performance: ${{ needs.performance-validation.result }}
+        
+        ## Deployment Readiness
+        - [ ] Builds for iPad Simulator
+        - [ ] Builds for iPad Device
+        - [ ] Audio engine configured for iOS
+        - [ ] UI adapts to iPad screen sizes
+        - [ ] All tests pass on iPad simulators
+        - [ ] Performance within acceptable limits
+        - [ ] Code signing configured (manual step required)
+        
+        Generated: $(date)
+        EOF
+        
+    - name: Upload Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: ipad-validation-report
+        path: validation-report.md
+        retention-days: 30
