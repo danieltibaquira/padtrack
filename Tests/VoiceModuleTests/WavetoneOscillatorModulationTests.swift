@@ -16,7 +16,7 @@ final class WavetoneOscillatorModulationTests: XCTestCase {
         
         // Initialize wavetable manager and test wavetable
         wavetableManager = WavetableManager()
-        testWavetable = wavetableManager.getBuiltInWavetables().first
+        testWavetable = wavetableManager.getAllWavetables().first
         
         // Initialize oscillators
         oscillator1 = WavetoneOscillator(sampleRate: 44100.0)
@@ -63,8 +63,8 @@ final class WavetoneOscillatorModulationTests: XCTestCase {
     func testRingModulationAmountControl() {
         oscillator1.setModulation(type: .ringModulation, amount: 0.5)
         
-        let osc1Sample = oscillator1.processSample()
-        let osc2Sample = oscillator2.processSample()
+        _ = oscillator1.processSample()
+        _ = oscillator2.processSample()
         
         // Reset oscillators to get same samples
         oscillator1.resetPhase()

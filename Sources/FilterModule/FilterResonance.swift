@@ -1,12 +1,7 @@
 import Foundation
 import Accelerate
 import simd
-
-// MARK: - Helper Functions
-
-private func mix(_ a: Float, _ b: Float, t: Float) -> Float {
-    return a * (1.0 - t) + b * t
-}
+import MachineProtocols
 
 // MARK: - Resonance Configuration
 
@@ -50,7 +45,7 @@ public class FilterResonanceEngine {
     private var stabilityCounter: Int = 0
     
     // Saturation and limiting
-    private var saturationCurve: SaturationCurve = .tanh
+    private var saturationCurve: MachineProtocols.SaturationCurve = .tanh
     private var limiterThreshold: Float = 0.95
     
     // Self-oscillation detection and control
@@ -261,28 +256,29 @@ public class FilterResonanceEngine {
             } else {
                 let excess = abs(input) - threshold
                 let sign: Float = input < 0 ? -1.0 : 1.0
-                return Float(sign * (threshold + excess * amount))
+                return sign * (threshold + excess * amount)
             }
         case .polynomial:
             let x = max(-1.0, min(1.0, input))
             return x - (amount * pow(x, 3) / 3.0)
         case .atan:
-            return atan(input * (1.0 + amount * 2.0)) / (Float.pi * 0.5) * (1.0 + amount * 0.2)
+            return atan(input) * (2.0 / Float.pi)
         case .cubic:
-            let x = max(-1.0, min(1.0, input))
-            let y = x - pow(x, 3) / 3.0
-            return mix(input, y, t: amount)
+            let absX = abs(input)
+            if absX <= 1.0 {
+                return input * (1.0 - absX * absX / 3.0)
+            } else {
+                return input > 0 ? 2.0/3.0 : -2.0/3.0
+            }
         case .asymmetric:
-            let sign: Float = input < 0 ? -1.0 : 1.0
-            let absInput = abs(input)
-            let positive = tanh(absInput * (1.0 + amount * 2.0))
-            let negative = atan(absInput * (1.0 + amount * 3.0)) / (Float.pi * 0.5)
-            return sign * (input >= 0 ? positive : negative)
+            if input >= 0 {
+                return input / (1.0 + input)
+            } else {
+                return input / (1.0 - input)
+            }
         case .tube:
-            let drive = 1.0 + amount * 4.0
-            let x = input * drive
-            let y = tanh(x * 0.7) + atan(x * 0.3) * 0.5
-            return y / drive * (1.0 + amount * 0.3)
+            let x2 = input * input
+            return input * (1.0 + x2) / (1.0 + x2 + x2 * x2 * 0.1)
         }
     }
     
@@ -292,7 +288,7 @@ public class FilterResonanceEngine {
         let sign: Float = input < 0 ? -1.0 : 1.0
         let limitedMagnitude = limiterThreshold + (abs(input) - limiterThreshold) * 0.1
         
-        return Float(sign * limitedMagnitude)
+        return sign * limitedMagnitude
     }
     
     // MARK: - State Management

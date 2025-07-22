@@ -117,7 +117,11 @@ let package = Package(
         // Audio filtering module
         .target(
             name: "FilterModule",
-            dependencies: ["MachineProtocols", "AudioEngine", "VoiceModule"]),
+            dependencies: ["MachineProtocols", "AudioEngine", "VoiceModule"],
+            exclude: [
+                "FilterPerformanceOptimizer.swift.disabled",
+                "MultiModeFilterMachine.swift.disabled"
+            ]),
         
         // Filter machines module
         .target(

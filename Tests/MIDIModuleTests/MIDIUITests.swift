@@ -71,7 +71,7 @@ final class MIDIUITests: XCTestCase {
                 manufacturer: "Test",
                 isOnline: true,
                 isConnected: false,
-                type: .input
+                connectionDirection: .input
             ),
             MIDIDevice(
                 id: 2,
@@ -79,7 +79,7 @@ final class MIDIUITests: XCTestCase {
                 manufacturer: "Test",
                 isOnline: true,
                 isConnected: false,
-                type: .output
+                connectionDirection: .output
             )
         ]
 
@@ -112,7 +112,7 @@ final class MIDIUITests: XCTestCase {
             manufacturer: "Test",
             isOnline: true,
             isConnected: true,
-            type: .input
+            connectionDirection: .input
         )
 
         viewModel.showConnectedDevices([connectedDevice])
@@ -239,7 +239,7 @@ final class MIDISwiftUIViewTests: XCTestCase {
                 manufacturer: "Test",
                 isOnline: true,
                 isConnected: false,
-                type: .input
+                connectionDirection: .input
             )
         ]
 
@@ -261,7 +261,7 @@ final class MIDISwiftUIViewTests: XCTestCase {
             manufacturer: "Test",
             isOnline: true,
             isConnected: false,
-            type: .input
+            connectionDirection: .input
         )
         
         let deviceRow = MIDIDeviceRow(
@@ -295,7 +295,7 @@ final class MIDIUIIntegrationTests: XCTestCase {
                 manufacturer: "Test",
                 isOnline: true,
                 isConnected: false,
-                type: .input
+                connectionDirection: .input
             ),
             MIDIDevice(
                 id: 2,
@@ -303,7 +303,7 @@ final class MIDIUIIntegrationTests: XCTestCase {
                 manufacturer: "Test",
                 isOnline: true,
                 isConnected: false,
-                type: .output
+                connectionDirection: .output
             )
         ]
         

@@ -1,6 +1,8 @@
 import XCTest
 import CoreData
 @testable import DataLayer
+@testable import DataModel
+@testable import TestUtilities
 
 // Import test utilities and mocks
 
@@ -10,8 +12,8 @@ final class DataLayerTests: DigitonePadTestCase {
     var mockDataLayerManager: MockDataLayerManager!
     var testContext: NSManagedObjectContext!
 
-    override func setUpWithError() throws {
-        try super.setUpWithError()
+    override func setUp() {
+        super.setUp()
 
         // Set up mock data layer manager for testing
         mockDataLayerManager = MockDataLayerManager()
@@ -20,11 +22,11 @@ final class DataLayerTests: DigitonePadTestCase {
         // This will be updated once we resolve the Core Data model loading issue in tests
     }
 
-    override func tearDownWithError() throws {
+    override func tearDown() {
         dataLayerManager = nil
         mockDataLayerManager = nil
         testContext = nil
-        try super.tearDownWithError()
+        super.tearDown()
     }
 
     // MARK: - Basic Tests

@@ -3,12 +3,14 @@ import CoreData
 import DataLayer
 import DataModel
 import Combine
+import MachineProtocols
 
 /// Project Management Interactor - handles business logic for project management
 class ProjectManagementInteractor: ProjectManagementInteractorProtocol, @unchecked Sendable {
     
     weak var presenter: ProjectManagementPresenterProtocol?
     private let dataLayerManager: DataLayerManager
+    private let logger = DigitonePadLogger(category: "ProjectManagement")
     
     // MARK: - Initialization
     init(dataLayerManager: DataLayerManager = DataLayerManager.shared) {
@@ -18,13 +20,19 @@ class ProjectManagementInteractor: ProjectManagementInteractorProtocol, @uncheck
     // MARK: - Project Management
     
     func fetchProjects() {
+        logger.debug("Starting project fetch operation")
+        
         Task { [weak self] in
             do {
                 let projects = try self?.dataLayerManager.projectRepository.fetch() ?? []
+                self?.logger.info("Successfully fetched \(projects.count) projects")
+                
                 await MainActor.run {
                     self?.presenter?.projectsFetchSucceeded(projects)
                 }
             } catch {
+                self?.logger.error("Failed to fetch projects: \(error.localizedDescription)")
+                
                 await MainActor.run {
                     self?.presenter?.projectsFetchFailed(error)
                 }
@@ -33,8 +41,12 @@ class ProjectManagementInteractor: ProjectManagementInteractorProtocol, @uncheck
     }
     
     func createProject(name: String) {
+        logger.debug("Creating project with name: '\(name)'")
+        
         Task { [weak self] in
             guard !name.trimmingCharacters(in: .whitespaces).isEmpty else {
+                self?.logger.warning("Project creation failed: empty or invalid name")
+                
                 await MainActor.run {
                     self?.presenter?.projectCreationFailed(ProjectManagementError.invalidProjectName)
                 }
@@ -44,12 +56,17 @@ class ProjectManagementInteractor: ProjectManagementInteractorProtocol, @uncheck
             do {
                 let project = self?.dataLayerManager.projectRepository.createProject(name: name)
                 try self?.dataLayerManager.save()
+                
+                self?.logger.info("Successfully created project: '\(name)'")
+                
                 await MainActor.run {
                     if let project = project {
                         self?.presenter?.projectCreationSucceeded(project)
                     }
                 }
             } catch {
+                self?.logger.error("Failed to create project '\(name)': \(error.localizedDescription)")
+                
                 await MainActor.run {
                     self?.presenter?.projectCreationFailed(error)
                 }
@@ -141,17 +158,16 @@ class ProjectManagementInteractor: ProjectManagementInteractorProtocol, @uncheck
     }
     
     func selectProject(_ project: Project) {
+        logger.debug("Selecting project: '\(project.name ?? "Unnamed")'")
+        
         Task { [weak self] in
-            do {
-                // Store active project ID in UserDefaults for now
-                UserDefaults.standard.set(project.objectID.uriRepresentation().absoluteString, forKey: "ActiveProjectID")
-                await MainActor.run {
-                    self?.presenter?.projectSelectionSucceeded(project)
-                }
-            } catch {
-                await MainActor.run {
-                    self?.presenter?.projectSelectionFailed(error)
-                }
+            // Store active project ID in UserDefaults
+            UserDefaults.standard.set(project.objectID.uriRepresentation().absoluteString, forKey: "ActiveProjectID")
+            
+            self?.logger.info("Successfully selected project: '\(project.name ?? "Unnamed")'")
+            
+            await MainActor.run {
+                self?.presenter?.projectSelectionSucceeded(project)
             }
         }
     }

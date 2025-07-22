@@ -47,8 +47,6 @@ public enum SaturationCurve: String, CaseIterable, Codable {
     case cubic = "cubic"
     case asymmetric = "asymmetric"
     case tube = "tube"
-    case softClip = "softClip"
-    case polynomial = "polynomial"
     
     public var description: String {
         switch self {
@@ -57,8 +55,6 @@ public enum SaturationCurve: String, CaseIterable, Codable {
         case .cubic: return "Cubic"
         case .asymmetric: return "Asymmetric"
         case .tube: return "Tube"
-        case .softClip: return "Soft Clip"
-        case .polynomial: return "Polynomial"
         }
     }
 }
@@ -225,8 +221,12 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
         performanceMetrics.peakProcessingTime = max(performanceMetrics.peakProcessingTime, processingTime)
         performanceMetrics.processedSamples += frameCount
         
-        // Create output buffer using the input buffer structure
-        return input
+        return AudioBuffer(
+            data: outputData,
+            frameCount: frameCount,
+            channelCount: channelCount,
+            sampleRate: input.sampleRate
+        )
     }
     
     /// Process a single sample through the ladder filter
@@ -386,7 +386,7 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
             id: "ladder_cutoff",
             name: "Cutoff",
             description: "Filter cutoff frequency",
-            value: config.cutoff,
+            value: 1000.0,
             minValue: 20.0,
             maxValue: 20000.0,
             defaultValue: 1000.0,
@@ -394,7 +394,10 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
             category: .filter,
             dataType: .float,
             scaling: .logarithmic,
-            isAutomatable: true
+            isAutomatable: true,
+            stepSize: nil,
+            enumerationValues: nil,
+            changeCallback: nil
         ))
 
         // Resonance parameter
@@ -402,7 +405,7 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
             id: "ladder_resonance",
             name: "Resonance",
             description: "Filter resonance amount",
-            value: config.resonance,
+            value: 0.0,
             minValue: 0.0,
             maxValue: 1.0,
             defaultValue: 0.0,
@@ -410,7 +413,10 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
             category: .filter,
             dataType: .float,
             scaling: .linear,
-            isAutomatable: true
+            isAutomatable: true,
+            stepSize: nil,
+            enumerationValues: nil,
+            changeCallback: nil
         ))
 
         // Drive parameter
@@ -418,7 +424,7 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
             id: "ladder_drive",
             name: "Drive",
             description: "Input drive amount",
-            value: config.drive,
+            value: 1.0,
             minValue: 0.0,
             maxValue: 10.0,
             defaultValue: 1.0,
@@ -426,7 +432,10 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
             category: .filter,
             dataType: .float,
             scaling: .linear,
-            isAutomatable: true
+            isAutomatable: true,
+            stepSize: nil,
+            enumerationValues: nil,
+            changeCallback: nil
         ))
 
         // Saturation curve parameter
@@ -442,7 +451,10 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
             category: .filter,
             dataType: .integer,
             scaling: .linear,
-            isAutomatable: true
+            isAutomatable: true,
+            stepSize: nil,
+            enumerationValues: nil,
+            changeCallback: nil
         ))
 
         // Set parameter update callback
@@ -509,20 +521,6 @@ public final class FourPoleLadderFilter: FilterMachineProtocol, @unchecked Senda
         case .tube:
             let x2 = x * x
             return x * (1.0 + x2) / (1.0 + x2 + x2 * x2 * 0.1)
-            
-        case .softClip:
-            let threshold: Float = 0.7
-            if abs(x) <= threshold {
-                return x
-            } else {
-                let sign: Float = x < 0 ? -1.0 : 1.0
-                let excess = abs(x) - threshold
-                return sign * (threshold + excess * 0.3)
-            }
-            
-        case .polynomial:
-            let clampedX = max(-1.0, min(1.0, x))
-            return clampedX - pow(clampedX, 3) / 3.0
         }
     }
 
