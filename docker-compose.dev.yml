@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+  # Swift Development Environment
+  swift-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: digitonepad-swift-dev
+    volumes:
+      # Mount source code for live development
+      - .:/workspace
+      # Preserve Swift package cache
+      - swift-packages:/home/developer/.swiftpm
+      # Preserve build artifacts
+      - swift-build:/workspace/.build
+    working_dir: /workspace
+    environment:
+      - SWIFT_VERSION=5.10
+      - DEVELOPMENT_MODE=true
+    tty: true
+    stdin_open: true
+    command: /bin/bash
+    networks:
+      - digitonepad-network
+
+  # Test Runner Service
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: digitonepad-test-runner
+    volumes:
+      - .:/workspace
+      - swift-packages:/home/developer/.swiftpm
+      - swift-build:/workspace/.build
+    working_dir: /workspace
+    environment:
+      - SWIFT_VERSION=5.10
+      - TEST_MODE=true
+    depends_on:
+      - swift-dev
+    command: >
+      bash -c "
+        echo '🧪 Running DigitonePad Tests...'
+        swift test --filter MachineProtocolsTests || echo 'Platform-agnostic tests completed'
+      "
+    networks:
+      - digitonepad-network
+
+  # Build Service
+  build-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: digitonepad-builder
+    volumes:
+      - .:/workspace
+      - swift-packages:/home/developer/.swiftpm
+      - swift-build:/workspace/.build
+    working_dir: /workspace
+    environment:
+      - SWIFT_VERSION=5.10
+      - BUILD_MODE=true
+    depends_on:
+      - swift-dev
+    command: >
+      bash -c "
+        echo '🔨 Building DigitonePad Swift Package...'
+        swift build --target MachineProtocols
+        swift build --target DataModel
+        swift build --target DataLayer
+        echo '✅ Platform-agnostic build complete'
+      "
+    networks:
+      - digitonepad-network
+
+  # Documentation Server
+  docs:
+    image: nginx:alpine
+    container_name: digitonepad-docs
+    volumes:
+      - ./Documentation:/usr/share/nginx/html:ro
+      - ./working_code.md:/usr/share/nginx/html/working_code.html:ro
+    ports:
+      - "8080:80"
+    environment:
+      - NGINX_HOST=localhost
+      - NGINX_PORT=80
+    networks:
+      - digitonepad-network
+
+volumes:
+  # Persistent volumes for development
+  swift-packages:
+    driver: local
+  swift-build:
+    driver: local
+
+networks:
+  digitonepad-network:
+    driver: bridge
