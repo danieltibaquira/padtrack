@@ -46,8 +46,8 @@ final class WavetoneOscillatorModulationTests: XCTestCase {
         oscillator1.setModulation(type: .ringModulation, amount: 1.0)
         
         // Generate test samples
-        _ = oscillator1.processSample()
-        _ = oscillator2.processSample()
+        let osc1Sample = oscillator1.processSample()
+        let osc2Sample = oscillator2.processSample()
         
         // Test ring modulation with full amount
         let ringModulatedSample = oscillator1.processSample(modulationInput: osc2Sample)
