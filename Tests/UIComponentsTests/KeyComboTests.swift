@@ -1,6 +1,7 @@
 import XCTest
 @testable import UIComponents
 @testable import MachineProtocols
+@testable import TestUtilities
 
 // Import test utilities
 
@@ -14,33 +15,34 @@ final class KeyComboTests: DigitonePadTestCase {
     var mockActionExecutor: MockKeyComboActionExecutor!
     var mockContextProvider: MockKeyComboContextProvider!
     
-    override func setUpWithError() throws {
-        try super.setUpWithError()
+    override func setUp() {
+        super.setUp()
         
         keyComboRegistry = KeyComboRegistry()
         mockPresenter = MockKeyComboPresenter()
         mockActionExecutor = MockKeyComboActionExecutor()
         mockContextProvider = MockKeyComboContextProvider()
+        keyComboDetector = KeyComboDetector()
         
         keyComboInteractor = KeyComboInteractor(
             registry: keyComboRegistry,
             contextProvider: mockContextProvider,
             actionExecutor: mockActionExecutor,
+            detector: keyComboDetector,
             presenter: mockPresenter
         )
         
-        keyComboDetector = KeyComboDetector()
         keyComboDetector.interactor = keyComboInteractor
     }
     
-    override func tearDownWithError() throws {
+    override func tearDown() {
         keyComboRegistry = nil
         keyComboDetector = nil
         keyComboInteractor = nil
         mockPresenter = nil
         mockActionExecutor = nil
         mockContextProvider = nil
-        try super.tearDownWithError()
+        super.tearDown()
     }
     
     // MARK: - KeyCombo Entity Tests
@@ -305,7 +307,7 @@ final class KeyComboTests: DigitonePadTestCase {
         }
         
         // WHEN & THEN: Detection should be performant
-        measure {
+        self.measure {
             for i in 1...100 {
                 _ = keyComboInteractor.detectKeyCombo(modifier: .func, key: .pad(i % 16 + 1))
             }
@@ -313,7 +315,7 @@ final class KeyComboTests: DigitonePadTestCase {
     }
     
     func testRegistryPerformance() throws {
-        measure {
+        self.measure {
             for i in 1...1000 {
                 let combo = createTestKeyCombo(id: "combo_\(i)")
                 keyComboRegistry.register(combo)

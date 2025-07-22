@@ -51,7 +51,7 @@ final class MIDIModuleTests: XCTestCase {
             manufacturer: "Test Manufacturer",
             isOnline: true,
             isConnected: false,
-            type: .input
+            connectionDirection: .input
         )
         
         XCTAssertEqual(device.id, 1)
@@ -59,7 +59,7 @@ final class MIDIModuleTests: XCTestCase {
         XCTAssertEqual(device.manufacturer, "Test Manufacturer")
         XCTAssertTrue(device.isOnline)
         XCTAssertFalse(device.isConnected)
-        XCTAssertEqual(device.type, .input)
+        XCTAssertEqual(device.connectionDirection, .input)
     }
     
     // MARK: - MIDI Configuration Tests
@@ -125,7 +125,7 @@ final class MIDIModuleTests: XCTestCase {
             manufacturer: "Test",
             isOnline: true,
             isConnected: false,
-            type: .input
+            connectionDirection: .input
         )
         
         // Initially no devices connected
